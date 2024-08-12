@@ -14,10 +14,10 @@
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag.html" />
 
-    <!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
+    <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>autorag - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -388,18 +388,15 @@
 <span class="kn">from</span> <span class="nn">llama_index.embeddings.openai</span> <span class="kn">import</span> <span class="n">OpenAIEmbedding</span>
 <span class="kn">from</span> <span class="nn">llama_index.embeddings.openai</span> <span class="kn">import</span> <span class="n">OpenAIEmbeddingModelType</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.huggingface</span> <span class="kn">import</span> <span class="n">HuggingFaceLLM</span>
-<span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.ollama</span> <span class="kn">import</span> <span class="n">Ollama</span>
+<span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai_like</span> <span class="kn">import</span> <span class="n">OpenAILike</span>
 <span class="kn">from</span> <span class="nn">rich.logging</span> <span class="kn">import</span> <span class="n">RichHandler</span>
-<span class="kn">from</span> <span class="nn">swifter</span> <span class="kn">import</span> <span class="n">set_defaults</span>
 
 <span class="n">version_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;VERSION&#39;</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">version_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">__version__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-<span class="n">set_defaults</span><span class="p">(</span><span class="n">allow_dask_on_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="LazyInit">

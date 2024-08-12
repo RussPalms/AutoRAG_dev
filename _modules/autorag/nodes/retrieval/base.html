@@ -14,10 +14,10 @@
     <link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/nodes/retrieval/base.html" />
 
-    <!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
+    <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>autorag.nodes.retrieval.base - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -436,7 +436,7 @@
         <span class="k">assert</span> <span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must have query column.&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;queries&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span>
-        <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cast_queries</span><span class="p">)</span>
+        <span class="n">previous_result</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;queries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cast_queries</span><span class="p">)</span>
         <span class="n">queries</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
         <span class="c1"># run retrieval function</span>

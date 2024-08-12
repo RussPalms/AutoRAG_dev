@@ -14,10 +14,10 @@
     <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/deploy.html" />
 
-    <!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
+    <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>autorag.deploy - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -452,7 +452,7 @@
     <span class="n">summary_df</span><span class="p">[</span><span class="s1">&#39;categorical_node_line_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">summary_df</span><span class="p">[</span><span class="s1">&#39;node_line_name&#39;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="n">node_line_names</span><span class="p">,</span>
                                                               <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">summary_df</span> <span class="o">=</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;categorical_node_line_name&#39;</span><span class="p">)</span>
-    <span class="n">grouped</span> <span class="o">=</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;categorical_node_line_name&#39;</span><span class="p">)</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;categorical_node_line_name&#39;</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">node_lines</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
