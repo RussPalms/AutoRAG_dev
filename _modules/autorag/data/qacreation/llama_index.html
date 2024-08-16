@@ -383,6 +383,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.base.llms.types</span> <span class="kn">import</span> <span class="n">ChatMessage</span><span class="p">,</span> <span class="n">MessageRole</span>
 <span class="kn">from</span> <span class="nn">llama_index.core.service_context_elements.llm_predictor</span> <span class="kn">import</span> <span class="n">LLMPredictorType</span>
 
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">process_batch</span>
@@ -428,6 +429,34 @@
     <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">async_qa_gen_llama_index</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">question_num_per_content</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">contents</span>
+    <span class="p">]</span>
+    <span class="n">loops</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">loops</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+
+<div class="viewcode-block" id="generate_answers">
+<a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.generate_answers">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_answers</span><span class="p">(</span>
+    <span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
+    <span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate qa sets from the list of contents using existing queries.</span>
+
+<span class="sd">    :param llm: Llama index model</span>
+<span class="sd">    :param contents: List of content strings.</span>
+<span class="sd">    :param queries: List of existing queries.</span>
+<span class="sd">    :param batch: The batch size to process asynchronously.</span>
+<span class="sd">    :return: 2-d list of dictionaries containing the query and generation_gt.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">generate_basic_answer</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">content</span><span class="p">,</span> <span class="n">query</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">queries</span><span class="p">)</span>
     <span class="p">]</span>
     <span class="n">loops</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">loops</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
@@ -532,6 +561,24 @@
         <span class="k">raise</span> <span class="ne">InterruptedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to generate output of length </span><span class="si">{</span><span class="n">question_num</span><span class="si">}</span><span class="s2"> after </span><span class="si">{</span><span class="n">max_retries</span><span class="si">}</span><span class="s2"> retries.&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="k">await</span> <span class="n">generate</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">llm</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_basic_answer">
+<a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.generate_basic_answer">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">generate_basic_answer</span><span class="p">(</span><span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span> <span class="n">passage_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">basic_answer_system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are an AI assistant to answer the given question in the provide evidence text.</span>
+<span class="s2">    You can find the evidence from the given text about question, and you have to write a proper answer to the given question.</span>
+<span class="s2">    You have to preserve the question&#39;s language at the answer.</span>
+<span class="s2">    For example, if the input question is Korean, the output answer must be in Korean.</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">user_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Text:</span><span class="se">\n</span><span class="s2">&lt;|text_start|&gt;</span><span class="se">\n</span><span class="si">{</span><span class="n">passage_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&lt;|text_end|&gt;</span><span class="se">\n\n</span><span class="s2">Question:</span><span class="se">\n</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Answer:&quot;</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm</span><span class="o">.</span><span class="n">achat</span><span class="p">(</span><span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">basic_answer_system_prompt</span><span class="p">),</span>
+        <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">user_prompt</span><span class="p">)</span>
+    <span class="p">],</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span></div>
 
 
 

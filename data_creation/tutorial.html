@@ -396,6 +396,7 @@
 <li><p><a class="reference internal" href="#make-qa-data-from-corpus-data"><span class="xref myst">Corpus data to QA data</span></a></p></li>
 <li><p><a class="reference internal" href="#use-custom-prompt"><span class="xref myst">Use custom prompt</span></a></p></li>
 <li><p><a class="reference internal" href="#use-multiple-prompts"><span class="xref myst">Use multiple prompts</span></a></p></li>
+<li><p><a class="reference internal" href="#when-you-have-existing-queries"><span class="xref myst">If there are existing queries</span></a></p></li>
 </ol>
 </section>
 <section id="overview">
@@ -543,6 +544,47 @@ The dictionary must have the key, which is the prompt text file path, and the va
 <p>Remeber all prompts must have the placeholders <code class="docutils literal notranslate"><span class="pre">{{text}}</span></code> and <code class="docutils literal notranslate"><span class="pre">{{num_questions}}</span></code>.</p>
 </div>
 </section>
+<section id="when-you-have-existing-queries">
+<h2>When you have existing queries<a class="headerlink" href="#when-you-have-existing-queries" title="Link to this heading">¶</a></h2>
+<p>When you have existing queries, you can use it for AutoRAG.
+The real user’s question is valuable data, so it is always great to use it prior to generating synthetic data.</p>
+<p>But you have to make retrieval_gt for existing queries from your corpus data.
+The process to find the retrieval_gt at the corpus is hard, but must be accurate.
+For making it less hard, we use an embedding model and vectordb for finding relevant passages.
+After that, you have to clarify the retrieval_gt is right.
+If retrieval_gt is not relevant, you have to remove it on the dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_queries</span><span class="p">,</span> <span class="n">generate_answers</span>
+
+<span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
+<span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It have to contain &#39;query&#39; column</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_queries</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                      <span class="n">answer_creation_func</span><span class="o">=</span><span class="n">generate_answers</span><span class="p">,</span>
+                                      <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">output_filepath</span><span class="o">=</span><span class="s1">&#39;path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">cache_batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                                      <span class="n">embedding_model</span><span class="o">=</span><span class="s1">&#39;openai_embed_3_large&#39;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">PersistentClient</span></code> for saving corpus embeddings locally as well.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">chromadb</span>
+<span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_queries</span><span class="p">,</span> <span class="n">generate_answers</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="s1">&#39;path/to/chromadb&#39;</span><span class="p">)</span>
+<span class="n">collection</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span><span class="s1">&#39;auto-rag&#39;</span><span class="p">)</span>
+
+<span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
+<span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It have to contain &#39;query&#39; column</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_queries</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                      <span class="n">answer_creation_func</span><span class="o">=</span><span class="n">generate_answers</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>
+                                      <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">output_filepath</span><span class="o">=</span><span class="s1">&#39;path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">cache_batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                                      <span class="n">embedding_model</span><span class="o">=</span><span class="s1">&#39;openai_embed_3_large&#39;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 
         </article>
@@ -607,6 +649,7 @@ The dictionary must have the key, which is the prompt text file path, and the va
 <li><a class="reference internal" href="#make-qa-data-from-corpus-data">Make qa data from corpus data</a></li>
 <li><a class="reference internal" href="#use-custom-prompt">Use custom prompt</a></li>
 <li><a class="reference internal" href="#use-multiple-prompts">Use multiple prompts</a></li>
+<li><a class="reference internal" href="#when-you-have-existing-queries">When you have existing queries</a></li>
 </ul>
 </li>
 </ul>
