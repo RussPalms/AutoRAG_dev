@@ -393,41 +393,43 @@
 <div class="viewcode-block" id="generator_node">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.base.generator_node">[docs]</a>
 <span class="k">def</span> <span class="nf">generator_node</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_tokens&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_log_probs&quot;</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-            <span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
-            <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-            <span class="n">llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This decorator makes a generator module to be a node.</span>
-<span class="sd">        It automatically extracts prompts from previous_result and runs the generator function.</span>
-<span class="sd">        Plus, it retrieves the llm instance from autorag.generator_models.</span>
-<span class="sd">        </span>
-<span class="sd">        :param project_dir: The project directory.</span>
-<span class="sd">        :param previous_result: The previous result that contains prompts,</span>
-<span class="sd">        :param llm: The llm name that you want to use.</span>
-<span class="sd">        :param kwargs: The extra parameters for initializing the llm instance.</span>
-<span class="sd">        :return: Pandas dataframe that contains generated texts, generated tokens, and generated log probs.</span>
-<span class="sd">            Each column is &quot;generated_texts&quot;, &quot;generated_tokens&quot;, and &quot;generated_log_probs&quot;.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running generator node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="s1">&#39;prompts&#39;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must contain prompts column.&quot;</span>
-        <span class="n">prompts</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s1">&#39;prompts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;llama_index_llm&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">generator_models</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">llm</span><span class="si">}</span><span class="s2"> is not a valid llm name. Please check the llm name.&quot;</span>
-                                 <span class="s2">&quot;You can check valid llm names from autorag.generator_models.&quot;</span><span class="p">)</span>
-            <span class="n">batch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;batch&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
-            <span class="n">llm_instance</span> <span class="o">=</span> <span class="n">generator_models</span><span class="p">[</span><span class="n">llm</span><span class="p">](</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">prompts</span><span class="o">=</span><span class="n">prompts</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm_instance</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="n">batch</span><span class="p">)</span>
-            <span class="k">del</span> <span class="n">llm_instance</span>
-            <span class="k">return</span> <span class="n">result</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompts</span><span class="o">=</span><span class="n">prompts</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_tokens&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_log_probs&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
+		<span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This decorator makes a generator module to be a node.</span>
+<span class="sd">		It automatically extracts prompts from previous_result and runs the generator function.</span>
+<span class="sd">		Plus, it retrieves the llm instance from autorag.generator_models.</span>
 
-    <span class="k">return</span> <span class="n">wrapper</span></div>
+<span class="sd">		:param project_dir: The project directory.</span>
+<span class="sd">		:param previous_result: The previous result that contains prompts,</span>
+<span class="sd">		:param llm: The llm name that you want to use.</span>
+<span class="sd">		:param kwargs: The extra parameters for initializing the llm instance.</span>
+<span class="sd">		:return: Pandas dataframe that contains generated texts, generated tokens, and generated log probs.</span>
+<span class="sd">		    Each column is &quot;generated_texts&quot;, &quot;generated_tokens&quot;, and &quot;generated_log_probs&quot;.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running generator node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="s2">&quot;prompts&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
+		<span class="p">),</span> <span class="s2">&quot;previous_result must contain prompts column.&quot;</span>
+		<span class="n">prompts</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;prompts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;llama_index_llm&quot;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">generator_models</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+					<span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">llm</span><span class="si">}</span><span class="s2"> is not a valid llm name. Please check the llm name.&quot;</span>
+					<span class="s2">&quot;You can check valid llm names from autorag.generator_models.&quot;</span>
+				<span class="p">)</span>
+			<span class="n">batch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+			<span class="n">llm_instance</span> <span class="o">=</span> <span class="n">generator_models</span><span class="p">[</span><span class="n">llm</span><span class="p">](</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">prompts</span><span class="o">=</span><span class="n">prompts</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm_instance</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="n">batch</span><span class="p">)</span>
+			<span class="k">del</span> <span class="n">llm_instance</span>
+			<span class="k">return</span> <span class="n">result</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompts</span><span class="o">=</span><span class="n">prompts</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">wrapper</span></div>
 
 </pre></div>
         </article>

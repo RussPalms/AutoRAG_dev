@@ -387,108 +387,118 @@
 <div class="viewcode-block" id="EncT5Tokenizer">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.tokenization_enc_t5.EncT5Tokenizer">[docs]</a>
 <span class="k">class</span> <span class="nc">EncT5Tokenizer</span><span class="p">(</span><span class="n">T5Tokenizer</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">vocab_file</span><span class="p">,</span>
-            <span class="n">bos_token</span><span class="o">=</span><span class="s2">&quot;&lt;s&gt;&quot;</span><span class="p">,</span>
-            <span class="n">eos_token</span><span class="o">=</span><span class="s2">&quot;&lt;/s&gt;&quot;</span><span class="p">,</span>
-            <span class="n">unk_token</span><span class="o">=</span><span class="s2">&quot;&lt;unk&gt;&quot;</span><span class="p">,</span>
-            <span class="n">pad_token</span><span class="o">=</span><span class="s2">&quot;&lt;pad&gt;&quot;</span><span class="p">,</span>
-            <span class="n">extra_ids</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-            <span class="n">additional_special_tokens</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">sp_model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">sp_model_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">sp_model_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">sp_model_kwargs</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">vocab_file</span><span class="p">,</span>
+		<span class="n">bos_token</span><span class="o">=</span><span class="s2">&quot;&lt;s&gt;&quot;</span><span class="p">,</span>
+		<span class="n">eos_token</span><span class="o">=</span><span class="s2">&quot;&lt;/s&gt;&quot;</span><span class="p">,</span>
+		<span class="n">unk_token</span><span class="o">=</span><span class="s2">&quot;&lt;unk&gt;&quot;</span><span class="p">,</span>
+		<span class="n">pad_token</span><span class="o">=</span><span class="s2">&quot;&lt;pad&gt;&quot;</span><span class="p">,</span>
+		<span class="n">extra_ids</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+		<span class="n">additional_special_tokens</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">sp_model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">sp_model_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">sp_model_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">sp_model_kwargs</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">vocab_file</span><span class="o">=</span><span class="n">vocab_file</span><span class="p">,</span>
-            <span class="n">bos_token</span><span class="o">=</span><span class="n">bos_token</span><span class="p">,</span>
-            <span class="n">eos_token</span><span class="o">=</span><span class="n">eos_token</span><span class="p">,</span>
-            <span class="n">unk_token</span><span class="o">=</span><span class="n">unk_token</span><span class="p">,</span>
-            <span class="n">pad_token</span><span class="o">=</span><span class="n">pad_token</span><span class="p">,</span>
-            <span class="n">extra_ids</span><span class="o">=</span><span class="n">extra_ids</span><span class="p">,</span>
-            <span class="n">additional_special_tokens</span><span class="o">=</span><span class="n">additional_special_tokens</span><span class="p">,</span>
-            <span class="n">sp_model_kwargs</span><span class="o">=</span><span class="n">sp_model_kwargs</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+			<span class="n">vocab_file</span><span class="o">=</span><span class="n">vocab_file</span><span class="p">,</span>
+			<span class="n">bos_token</span><span class="o">=</span><span class="n">bos_token</span><span class="p">,</span>
+			<span class="n">eos_token</span><span class="o">=</span><span class="n">eos_token</span><span class="p">,</span>
+			<span class="n">unk_token</span><span class="o">=</span><span class="n">unk_token</span><span class="p">,</span>
+			<span class="n">pad_token</span><span class="o">=</span><span class="n">pad_token</span><span class="p">,</span>
+			<span class="n">extra_ids</span><span class="o">=</span><span class="n">extra_ids</span><span class="p">,</span>
+			<span class="n">additional_special_tokens</span><span class="o">=</span><span class="n">additional_special_tokens</span><span class="p">,</span>
+			<span class="n">sp_model_kwargs</span><span class="o">=</span><span class="n">sp_model_kwargs</span><span class="p">,</span>
+			<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+		<span class="p">)</span>
 
 <div class="viewcode-block" id="EncT5Tokenizer.get_special_tokens_mask">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.tokenization_enc_t5.EncT5Tokenizer.get_special_tokens_mask">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_special_tokens_mask</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">token_ids_0</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">token_ids_1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">already_has_special_tokens</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve sequence ids from a token list that has no special tokens added. This method is called when adding</span>
-<span class="sd">        special tokens using the tokenizer `prepare_for_model` method.</span>
-<span class="sd">        Args:</span>
-<span class="sd">            token_ids_0 (`List[int]`):</span>
-<span class="sd">                List of IDs.</span>
-<span class="sd">            token_ids_1 (`List[int]`, *optional*):</span>
-<span class="sd">                Optional second list of IDs for sequence pairs.</span>
-<span class="sd">            already_has_special_tokens (`bool`, *optional*, defaults to `False`):</span>
-<span class="sd">                Whether or not the token list is already formatted with special tokens for the model.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            `List[int]`: A list of integers in the range [0, 1]: 1 for a special token, 0 for a sequence token.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">already_has_special_tokens</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_special_tokens_mask</span><span class="p">(</span>
-                <span class="n">token_ids_0</span><span class="o">=</span><span class="n">token_ids_0</span><span class="p">,</span> <span class="n">token_ids_1</span><span class="o">=</span><span class="n">token_ids_1</span><span class="p">,</span> <span class="n">already_has_special_tokens</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
+	<span class="k">def</span> <span class="nf">get_special_tokens_mask</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">token_ids_0</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+		<span class="n">token_ids_1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+		<span class="n">already_has_special_tokens</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Retrieve sequence ids from a token list that has no special tokens added. This method is called when adding</span>
+<span class="sd">		special tokens using the tokenizer `prepare_for_model` method.</span>
+<span class="sd">		Args:</span>
+<span class="sd">		    token_ids_0 (`List[int]`):</span>
+<span class="sd">		        List of IDs.</span>
+<span class="sd">		    token_ids_1 (`List[int]`, *optional*):</span>
+<span class="sd">		        Optional second list of IDs for sequence pairs.</span>
+<span class="sd">		    already_has_special_tokens (`bool`, *optional*, defaults to `False`):</span>
+<span class="sd">		        Whether or not the token list is already formatted with special tokens for the model.</span>
+<span class="sd">		Returns:</span>
+<span class="sd">		    `List[int]`: A list of integers in the range [0, 1]: 1 for a special token, 0 for a sequence token.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">already_has_special_tokens</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_special_tokens_mask</span><span class="p">(</span>
+				<span class="n">token_ids_0</span><span class="o">=</span><span class="n">token_ids_0</span><span class="p">,</span>
+				<span class="n">token_ids_1</span><span class="o">=</span><span class="n">token_ids_1</span><span class="p">,</span>
+				<span class="n">already_has_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+			<span class="p">)</span>
 
-        <span class="c1"># normal case: some special tokens</span>
-        <span class="k">if</span> <span class="n">token_ids_1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_ids_0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_ids_0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_ids_1</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+		<span class="c1"># normal case: some special tokens</span>
+		<span class="k">if</span> <span class="n">token_ids_1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_ids_0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_ids_0</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_ids_1</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="EncT5Tokenizer.create_token_type_ids_from_sequences">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.tokenization_enc_t5.EncT5Tokenizer.create_token_type_ids_from_sequences">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_token_type_ids_from_sequences</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">token_ids_0</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">token_ids_1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a mask from the two sequences passed to be used in a sequence-pair classification task. T5 does not make</span>
-<span class="sd">        use of token type ids, therefore a list of zeros is returned.</span>
-<span class="sd">        Args:</span>
-<span class="sd">            token_ids_0 (`List[int]`):</span>
-<span class="sd">                List of IDs.</span>
-<span class="sd">            token_ids_1 (`List[int]`, *optional*):</span>
-<span class="sd">                Optional second list of IDs for sequence pairs.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            `List[int]`: List of zeros.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">bos</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bos_token_id</span><span class="p">]</span>
-        <span class="n">eos</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">]</span>
+	<span class="k">def</span> <span class="nf">create_token_type_ids_from_sequences</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span> <span class="n">token_ids_0</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">token_ids_1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Create a mask from the two sequences passed to be used in a sequence-pair classification task. T5 does not make</span>
+<span class="sd">		use of token type ids, therefore a list of zeros is returned.</span>
+<span class="sd">		Args:</span>
+<span class="sd">		    token_ids_0 (`List[int]`):</span>
+<span class="sd">		        List of IDs.</span>
+<span class="sd">		    token_ids_1 (`List[int]`, *optional*):</span>
+<span class="sd">		        Optional second list of IDs for sequence pairs.</span>
+<span class="sd">		Returns:</span>
+<span class="sd">		    `List[int]`: List of zeros.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">bos</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bos_token_id</span><span class="p">]</span>
+		<span class="n">eos</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">token_ids_1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">bos</span> <span class="o">+</span> <span class="n">token_ids_0</span> <span class="o">+</span> <span class="n">eos</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">bos</span> <span class="o">+</span> <span class="n">token_ids_0</span> <span class="o">+</span> <span class="n">eos</span> <span class="o">+</span> <span class="n">token_ids_1</span> <span class="o">+</span> <span class="n">eos</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+		<span class="k">if</span> <span class="n">token_ids_1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">bos</span> <span class="o">+</span> <span class="n">token_ids_0</span> <span class="o">+</span> <span class="n">eos</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">bos</span> <span class="o">+</span> <span class="n">token_ids_0</span> <span class="o">+</span> <span class="n">eos</span> <span class="o">+</span> <span class="n">token_ids_1</span> <span class="o">+</span> <span class="n">eos</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="EncT5Tokenizer.build_inputs_with_special_tokens">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.tokenization_enc_t5.EncT5Tokenizer.build_inputs_with_special_tokens">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_inputs_with_special_tokens</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">token_ids_0</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">token_ids_1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Build model inputs from a sequence or a pair of sequence for sequence classification tasks by concatenating and</span>
-<span class="sd">        adding special tokens. A sequence has the following format:</span>
-<span class="sd">        - single sequence: `&lt;s&gt; X &lt;/s&gt;`</span>
-<span class="sd">        - pair of sequences: `&lt;s&gt; A &lt;/s&gt; B &lt;/s&gt;`</span>
-<span class="sd">        Args:</span>
-<span class="sd">            token_ids_0 (`List[int]`):</span>
-<span class="sd">                List of IDs to which the special tokens will be added.</span>
-<span class="sd">            token_ids_1 (`List[int]`, *optional*):</span>
-<span class="sd">                Optional second list of IDs for sequence pairs.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            `List[int]`: List of [input IDs](../glossary#input-ids) with the appropriate special tokens.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">token_ids_1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bos_token_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">token_ids_0</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bos_token_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">token_ids_0</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">token_ids_1</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">]</span></div>
+	<span class="k">def</span> <span class="nf">build_inputs_with_special_tokens</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span> <span class="n">token_ids_0</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">token_ids_1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Build model inputs from a sequence or a pair of sequence for sequence classification tasks by concatenating and</span>
+<span class="sd">		adding special tokens. A sequence has the following format:</span>
+<span class="sd">		- single sequence: `&lt;s&gt; X &lt;/s&gt;`</span>
+<span class="sd">		- pair of sequences: `&lt;s&gt; A &lt;/s&gt; B &lt;/s&gt;`</span>
+<span class="sd">		Args:</span>
+<span class="sd">		    token_ids_0 (`List[int]`):</span>
+<span class="sd">		        List of IDs to which the special tokens will be added.</span>
+<span class="sd">		    token_ids_1 (`List[int]`, *optional*):</span>
+<span class="sd">		        Optional second list of IDs for sequence pairs.</span>
+<span class="sd">		Returns:</span>
+<span class="sd">		    `List[int]`: List of [input IDs](../glossary#input-ids) with the appropriate special tokens.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">token_ids_1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bos_token_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">token_ids_0</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="p">(</span>
+				<span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bos_token_id</span><span class="p">]</span>
+				<span class="o">+</span> <span class="n">token_ids_0</span>
+				<span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">]</span>
+				<span class="o">+</span> <span class="n">token_ids_1</span>
+				<span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">]</span>
+			<span class="p">)</span></div>
 </div>
 
 </pre></div>

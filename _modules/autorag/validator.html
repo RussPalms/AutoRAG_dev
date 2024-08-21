@@ -385,7 +385,11 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">autorag.evaluator</span> <span class="kn">import</span> <span class="n">Evaluator</span>
-<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">cast_qa_dataset</span><span class="p">,</span> <span class="n">cast_corpus_dataset</span><span class="p">,</span> <span class="n">validate_qa_from_corpus_dataset</span>
+<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">cast_qa_dataset</span><span class="p">,</span>
+	<span class="n">cast_corpus_dataset</span><span class="p">,</span>
+	<span class="n">validate_qa_from_corpus_dataset</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
@@ -393,60 +397,72 @@
 <div class="viewcode-block" id="Validator">
 <a class="viewcode-back" href="../../api_spec/autorag.html#autorag.validator.Validator">[docs]</a>
 <span class="k">class</span> <span class="nc">Validator</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qa_data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">corpus_data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize a Validator object.</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qa_data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">corpus_data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initialize a Validator object.</span>
 
-<span class="sd">        :param qa_data_path: The path to the QA dataset.</span>
-<span class="sd">            Must be parquet file.</span>
-<span class="sd">        :param corpus_data_path: The path to the corpus dataset.</span>
-<span class="sd">            Must be parquet file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># validate data paths</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">qa_data_path</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;QA data path </span><span class="si">{</span><span class="n">qa_data_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">corpus_data_path</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corpus data path </span><span class="si">{</span><span class="n">corpus_data_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">qa_data_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.parquet&#39;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;QA data path </span><span class="si">{</span><span class="n">qa_data_path</span><span class="si">}</span><span class="s2"> is not a parquet file.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">corpus_data_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.parquet&#39;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corpus data path </span><span class="si">{</span><span class="n">corpus_data_path</span><span class="si">}</span><span class="s2"> is not a parquet file.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">qa_data_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;pyarrow&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">corpus_data_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;pyarrow&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span> <span class="o">=</span> <span class="n">cast_qa_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span> <span class="o">=</span> <span class="n">cast_corpus_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="p">)</span>
+<span class="sd">		:param qa_data_path: The path to the QA dataset.</span>
+<span class="sd">		    Must be parquet file.</span>
+<span class="sd">		:param corpus_data_path: The path to the corpus dataset.</span>
+<span class="sd">		    Must be parquet file.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># validate data paths</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">qa_data_path</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;QA data path </span><span class="si">{</span><span class="n">qa_data_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">corpus_data_path</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corpus data path </span><span class="si">{</span><span class="n">corpus_data_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">qa_data_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.parquet&quot;</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;QA data path </span><span class="si">{</span><span class="n">qa_data_path</span><span class="si">}</span><span class="s2"> is not a parquet file.&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">corpus_data_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.parquet&quot;</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+				<span class="sa">f</span><span class="s2">&quot;Corpus data path </span><span class="si">{</span><span class="n">corpus_data_path</span><span class="si">}</span><span class="s2"> is not a parquet file.&quot;</span>
+			<span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">qa_data_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">corpus_data_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span> <span class="o">=</span> <span class="n">cast_qa_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span> <span class="o">=</span> <span class="n">cast_corpus_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Validator.validate">
 <a class="viewcode-back" href="../../api_spec/autorag.html#autorag.validator.Validator.validate">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">qa_cnt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">):</span>
-        <span class="c1"># sample QA data</span>
-        <span class="n">sample_qa_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">qa_cnt</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
-        <span class="n">sample_qa_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">qa_cnt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">):</span>
+		<span class="c1"># sample QA data</span>
+		<span class="n">sample_qa_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">qa_cnt</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+		<span class="n">sample_qa_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># get doc_id</span>
-        <span class="n">temp_qa_df</span> <span class="o">=</span> <span class="n">sample_qa_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">flatten_retrieval_gts</span> <span class="o">=</span> <span class="n">temp_qa_df</span><span class="p">[</span><span class="s1">&#39;retrieval_gt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">target_doc_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">flatten_retrieval_gts</span><span class="p">))</span>
+		<span class="c1"># get doc_id</span>
+		<span class="n">temp_qa_df</span> <span class="o">=</span> <span class="n">sample_qa_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="n">flatten_retrieval_gts</span> <span class="o">=</span> <span class="p">(</span>
+			<span class="n">temp_qa_df</span><span class="p">[</span><span class="s2">&quot;retrieval_gt&quot;</span><span class="p">]</span>
+			<span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+			<span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="p">)</span>
+		<span class="n">target_doc_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">flatten_retrieval_gts</span><span class="p">))</span>
 
-        <span class="c1"># make sample corpus data</span>
-        <span class="n">sample_corpus_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="p">[</span><span class="s1">&#39;doc_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">target_doc_ids</span><span class="p">)]</span>
-        <span class="n">sample_corpus_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="c1"># make sample corpus data</span>
+		<span class="n">sample_corpus_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">target_doc_ids</span><span class="p">)</span>
+		<span class="p">]</span>
+		<span class="n">sample_corpus_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">validate_qa_from_corpus_dataset</span><span class="p">(</span><span class="n">sample_qa_df</span><span class="p">,</span> <span class="n">sample_corpus_df</span><span class="p">)</span>
+		<span class="n">validate_qa_from_corpus_dataset</span><span class="p">(</span><span class="n">sample_qa_df</span><span class="p">,</span> <span class="n">sample_corpus_df</span><span class="p">)</span>
 
-        <span class="c1"># start Evaluate at temp project directory</span>
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.parquet&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">qa_path</span><span class="p">,</span> \
-                <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.parquet&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">corpus_path</span><span class="p">,</span> \
-                <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_project_dir</span><span class="p">:</span>
-            <span class="n">sample_qa_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">qa_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">sample_corpus_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">corpus_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+		<span class="c1"># start Evaluate at temp project directory</span>
+		<span class="k">with</span> <span class="p">(</span>
+			<span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.parquet&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">qa_path</span><span class="p">,</span>
+			<span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.parquet&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">corpus_path</span><span class="p">,</span>
+			<span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_project_dir</span><span class="p">,</span>
+		<span class="p">):</span>
+			<span class="n">sample_qa_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">qa_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+			<span class="n">sample_corpus_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">corpus_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="n">evaluator</span> <span class="o">=</span> <span class="n">Evaluator</span><span class="p">(</span><span class="n">qa_data_path</span><span class="o">=</span><span class="n">qa_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">corpus_data_path</span><span class="o">=</span><span class="n">corpus_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                  <span class="n">project_dir</span><span class="o">=</span><span class="n">temp_project_dir</span><span class="p">)</span>
-            <span class="n">evaluator</span><span class="o">.</span><span class="n">start_trial</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
+			<span class="n">evaluator</span> <span class="o">=</span> <span class="n">Evaluator</span><span class="p">(</span>
+				<span class="n">qa_data_path</span><span class="o">=</span><span class="n">qa_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+				<span class="n">corpus_data_path</span><span class="o">=</span><span class="n">corpus_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+				<span class="n">project_dir</span><span class="o">=</span><span class="n">temp_project_dir</span><span class="p">,</span>
+			<span class="p">)</span>
+			<span class="n">evaluator</span><span class="o">.</span><span class="n">start_trial</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validation complete.&quot;</span><span class="p">)</span></div>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validation complete.&quot;</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

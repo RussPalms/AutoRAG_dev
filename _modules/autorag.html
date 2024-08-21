@@ -393,59 +393,69 @@
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai_like</span> <span class="kn">import</span> <span class="n">OpenAILike</span>
 <span class="kn">from</span> <span class="nn">rich.logging</span> <span class="kn">import</span> <span class="n">RichHandler</span>
 
-<span class="n">version_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;VERSION&#39;</span><span class="p">)</span>
+<span class="n">version_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;VERSION&quot;</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">version_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">__version__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">version_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+	<span class="n">__version__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="LazyInit">
 <a class="viewcode-back" href="../api_spec/autorag.html#autorag.LazyInit">[docs]</a>
 <span class="k">class</span> <span class="nc">LazyInit</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span> <span class="o">=</span> <span class="n">factory</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">args</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_factory</span> <span class="o">=</span> <span class="n">factory</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">args</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span>
+	<span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span>
 
-    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+	<span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
 
 <span class="n">embedding_models</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;openai&#39;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">OpenAIEmbedding</span><span class="p">),</span>  <span class="c1"># default model is OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002</span>
-    <span class="s1">&#39;openai_embed_3_large&#39;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">OpenAIEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="n">OpenAIEmbeddingModelType</span><span class="o">.</span><span class="n">TEXT_EMBED_3_LARGE</span><span class="p">),</span>
-    <span class="s1">&#39;openai_embed_3_small&#39;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">OpenAIEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="n">OpenAIEmbeddingModelType</span><span class="o">.</span><span class="n">TEXT_EMBED_3_SMALL</span><span class="p">),</span>
-    <span class="c1"># you can use your own model in this way.</span>
-    <span class="s1">&#39;huggingface_baai_bge_small&#39;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">HuggingFaceEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;BAAI/bge-small-en-v1.5&quot;</span><span class="p">),</span>
-    <span class="s1">&#39;huggingface_cointegrated_rubert_tiny2&#39;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">HuggingFaceEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;cointegrated/rubert-tiny2&quot;</span><span class="p">),</span>
-    <span class="s1">&#39;huggingface_all_mpnet_base_v2&#39;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">HuggingFaceEmbedding</span><span class="p">,</span>
-                                              <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;sentence-transformers/all-mpnet-base-v2&quot;</span><span class="p">,</span>
-                                              <span class="n">max_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="p">),</span>
-    <span class="s1">&#39;huggingface_bge_m3&#39;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">HuggingFaceEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;BAAI/bge-m3&quot;</span><span class="p">),</span>
+	<span class="s2">&quot;openai&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span>
+		<span class="n">OpenAIEmbedding</span>
+	<span class="p">),</span>  <span class="c1"># default model is OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002</span>
+	<span class="s2">&quot;openai_embed_3_large&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span>
+		<span class="n">OpenAIEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="n">OpenAIEmbeddingModelType</span><span class="o">.</span><span class="n">TEXT_EMBED_3_LARGE</span>
+	<span class="p">),</span>
+	<span class="s2">&quot;openai_embed_3_small&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span>
+		<span class="n">OpenAIEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="n">OpenAIEmbeddingModelType</span><span class="o">.</span><span class="n">TEXT_EMBED_3_SMALL</span>
+	<span class="p">),</span>
+	<span class="c1"># you can use your own model in this way.</span>
+	<span class="s2">&quot;huggingface_baai_bge_small&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span>
+		<span class="n">HuggingFaceEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;BAAI/bge-small-en-v1.5&quot;</span>
+	<span class="p">),</span>
+	<span class="s2">&quot;huggingface_cointegrated_rubert_tiny2&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span>
+		<span class="n">HuggingFaceEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;cointegrated/rubert-tiny2&quot;</span>
+	<span class="p">),</span>
+	<span class="s2">&quot;huggingface_all_mpnet_base_v2&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span>
+		<span class="n">HuggingFaceEmbedding</span><span class="p">,</span>
+		<span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;sentence-transformers/all-mpnet-base-v2&quot;</span><span class="p">,</span>
+		<span class="n">max_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+	<span class="p">),</span>
+	<span class="s2">&quot;huggingface_bge_m3&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">HuggingFaceEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;BAAI/bge-m3&quot;</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="n">generator_models</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;openai&#39;</span><span class="p">:</span> <span class="n">OpenAI</span><span class="p">,</span>
-    <span class="s1">&#39;huggingfacellm&#39;</span><span class="p">:</span> <span class="n">HuggingFaceLLM</span><span class="p">,</span>
-    <span class="s1">&#39;openailike&#39;</span><span class="p">:</span> <span class="n">OpenAILike</span><span class="p">,</span>
-    <span class="s1">&#39;ollama&#39;</span><span class="p">:</span> <span class="n">Ollama</span><span class="p">,</span>
-    <span class="s1">&#39;mock&#39;</span><span class="p">:</span> <span class="n">MockLLM</span><span class="p">,</span>
+	<span class="s2">&quot;openai&quot;</span><span class="p">:</span> <span class="n">OpenAI</span><span class="p">,</span>
+	<span class="s2">&quot;huggingfacellm&quot;</span><span class="p">:</span> <span class="n">HuggingFaceLLM</span><span class="p">,</span>
+	<span class="s2">&quot;openailike&quot;</span><span class="p">:</span> <span class="n">OpenAILike</span><span class="p">,</span>
+	<span class="s2">&quot;ollama&quot;</span><span class="p">:</span> <span class="n">Ollama</span><span class="p">,</span>
+	<span class="s2">&quot;mock&quot;</span><span class="p">:</span> <span class="n">MockLLM</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">rich_format</span> <span class="o">=</span> <span class="s2">&quot;[</span><span class="si">%(filename)s</span><span class="s2">:</span><span class="si">%(lineno)s</span><span class="s2">] &gt;&gt; </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-    <span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
-    <span class="nb">format</span><span class="o">=</span><span class="n">rich_format</span><span class="p">,</span>
-    <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">RichHandler</span><span class="p">(</span><span class="n">rich_tracebacks</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+	<span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">rich_format</span><span class="p">,</span> <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">RichHandler</span><span class="p">(</span><span class="n">rich_tracebacks</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
 <span class="p">)</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
@@ -453,9 +463,8 @@
 <div class="viewcode-block" id="handle_exception">
 <a class="viewcode-back" href="../api_spec/autorag.html#autorag.handle_exception">[docs]</a>
 <span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_traceback</span><span class="p">):</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unexpected exception&quot;</span><span class="p">,</span>
-                 <span class="n">exc_info</span><span class="o">=</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_traceback</span><span class="p">))</span></div>
+	<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
+	<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unexpected exception&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_traceback</span><span class="p">))</span></div>
 
 
 

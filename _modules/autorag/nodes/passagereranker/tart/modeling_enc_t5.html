@@ -392,146 +392,150 @@
 <div class="viewcode-block" id="EncT5ForSequenceClassification">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification">[docs]</a>
 <span class="k">class</span> <span class="nc">EncT5ForSequenceClassification</span><span class="p">(</span><span class="n">T5PreTrainedModel</span><span class="p">):</span>
-    <span class="n">_keys_to_ignore_on_load_missing</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="sa">r</span><span class="s2">&quot;encoder\.embed_tokens\.weight&quot;</span><span class="p">,</span>
-    <span class="p">]</span>
+	<span class="n">_keys_to_ignore_on_load_missing</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="sa">r</span><span class="s2">&quot;encoder\.embed_tokens\.weight&quot;</span><span class="p">,</span>
+	<span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">T5Config</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">num_labels</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">T5Config</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">num_labels</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">shared</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">d_model</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">shared</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">d_model</span><span class="p">)</span>
 
-        <span class="n">encoder_config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="n">encoder_config</span><span class="o">.</span><span class="n">use_cache</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">encoder_config</span><span class="o">.</span><span class="n">is_encoder_decoder</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">T5Stack</span><span class="p">(</span><span class="n">encoder_config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared</span><span class="p">)</span>
+		<span class="n">encoder_config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+		<span class="n">encoder_config</span><span class="o">.</span><span class="n">use_cache</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="n">encoder_config</span><span class="o">.</span><span class="n">is_encoder_decoder</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">T5Stack</span><span class="p">(</span><span class="n">encoder_config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">num_labels</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">num_labels</span><span class="p">)</span>
 
-        <span class="c1"># Initialize weights and apply final processing</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">post_init</span><span class="p">()</span>
+		<span class="c1"># Initialize weights and apply final processing</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">post_init</span><span class="p">()</span>
 
-        <span class="c1"># Model parallel</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_parallel</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device_map</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="c1"># Model parallel</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model_parallel</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">device_map</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="EncT5ForSequenceClassification.parallelize">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification.parallelize">[docs]</a>
-    <span class="k">def</span> <span class="nf">parallelize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device_map</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">get_device_map</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">block</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">()))</span>
-            <span class="k">if</span> <span class="n">device_map</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="k">else</span> <span class="n">device_map</span>
-        <span class="p">)</span>
-        <span class="n">assert_device_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device_map</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">block</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device_map</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">first_device</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_parallel</span> <span class="o">=</span> <span class="kc">True</span></div>
+	<span class="k">def</span> <span class="nf">parallelize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">device_map</span> <span class="o">=</span> <span class="p">(</span>
+			<span class="n">get_device_map</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">block</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">()))</span>
+			<span class="k">if</span> <span class="n">device_map</span> <span class="ow">is</span> <span class="kc">None</span>
+			<span class="k">else</span> <span class="n">device_map</span>
+		<span class="p">)</span>
+		<span class="n">assert_device_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device_map</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">block</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device_map</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">first_device</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model_parallel</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="EncT5ForSequenceClassification.deparallelize">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification.deparallelize">[docs]</a>
-    <span class="k">def</span> <span class="nf">deparallelize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">deparallelize</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_parallel</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device_map</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span></div>
+	<span class="k">def</span> <span class="nf">deparallelize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">deparallelize</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model_parallel</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">device_map</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="EncT5ForSequenceClassification.get_input_embeddings">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification.get_input_embeddings">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_input_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared</span></div>
+	<span class="k">def</span> <span class="nf">get_input_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared</span></div>
 
 
 <div class="viewcode-block" id="EncT5ForSequenceClassification.set_input_embeddings">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification.set_input_embeddings">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_input_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_embeddings</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">shared</span> <span class="o">=</span> <span class="n">new_embeddings</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">set_input_embeddings</span><span class="p">(</span><span class="n">new_embeddings</span><span class="p">)</span></div>
+	<span class="k">def</span> <span class="nf">set_input_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_embeddings</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">shared</span> <span class="o">=</span> <span class="n">new_embeddings</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">set_input_embeddings</span><span class="p">(</span><span class="n">new_embeddings</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="EncT5ForSequenceClassification.get_encoder">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification.get_encoder">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_encoder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span></div>
+	<span class="k">def</span> <span class="nf">get_encoder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_prune_heads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heads_to_prune</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Prunes heads of the model. heads_to_prune: dict of {layer_num: list of heads to prune in this layer} See base</span>
-<span class="sd">        class PreTrainedModel</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">layer</span><span class="p">,</span> <span class="n">heads</span> <span class="ow">in</span> <span class="n">heads_to_prune</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">attention</span><span class="o">.</span><span class="n">prune_heads</span><span class="p">(</span><span class="n">heads</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">_prune_heads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heads_to_prune</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Prunes heads of the model. heads_to_prune: dict of {layer_num: list of heads to prune in this layer} See base</span>
+<span class="sd">		class PreTrainedModel</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">layer</span><span class="p">,</span> <span class="n">heads</span> <span class="ow">in</span> <span class="n">heads_to_prune</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">attention</span><span class="o">.</span><span class="n">prune_heads</span><span class="p">(</span><span class="n">heads</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EncT5ForSequenceClassification.forward">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification.forward">[docs]</a>
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">input_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">attention_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">head_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">inputs_embeds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">output_attentions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">output_hidden_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">return_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="n">return_dict</span> <span class="o">=</span> <span class="n">return_dict</span> <span class="k">if</span> <span class="n">return_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">use_return_dict</span>
+	<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">input_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">attention_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">head_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">inputs_embeds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">output_attentions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">output_hidden_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+		<span class="n">return_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+	<span class="p">):</span>
+		<span class="n">return_dict</span> <span class="o">=</span> <span class="p">(</span>
+			<span class="n">return_dict</span> <span class="k">if</span> <span class="n">return_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">use_return_dict</span>
+		<span class="p">)</span>
 
-        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span>
-            <span class="n">input_ids</span><span class="o">=</span><span class="n">input_ids</span><span class="p">,</span>
-            <span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
-            <span class="n">inputs_embeds</span><span class="o">=</span><span class="n">inputs_embeds</span><span class="p">,</span>
-            <span class="n">head_mask</span><span class="o">=</span><span class="n">head_mask</span><span class="p">,</span>
-            <span class="n">output_attentions</span><span class="o">=</span><span class="n">output_attentions</span><span class="p">,</span>
-            <span class="n">output_hidden_states</span><span class="o">=</span><span class="n">output_hidden_states</span><span class="p">,</span>
-            <span class="n">return_dict</span><span class="o">=</span><span class="n">return_dict</span><span class="p">,</span>
-        <span class="p">)</span>
+		<span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span>
+			<span class="n">input_ids</span><span class="o">=</span><span class="n">input_ids</span><span class="p">,</span>
+			<span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
+			<span class="n">inputs_embeds</span><span class="o">=</span><span class="n">inputs_embeds</span><span class="p">,</span>
+			<span class="n">head_mask</span><span class="o">=</span><span class="n">head_mask</span><span class="p">,</span>
+			<span class="n">output_attentions</span><span class="o">=</span><span class="n">output_attentions</span><span class="p">,</span>
+			<span class="n">output_hidden_states</span><span class="o">=</span><span class="n">output_hidden_states</span><span class="p">,</span>
+			<span class="n">return_dict</span><span class="o">=</span><span class="n">return_dict</span><span class="p">,</span>
+		<span class="p">)</span>
 
-        <span class="n">hidden_states</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">pooled_output</span> <span class="o">=</span> <span class="n">hidden_states</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># Take bos token (equiv. to &lt;s&gt;)</span>
+		<span class="n">hidden_states</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="n">pooled_output</span> <span class="o">=</span> <span class="n">hidden_states</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># Take bos token (equiv. to &lt;s&gt;)</span>
 
-        <span class="n">pooled_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">pooled_output</span><span class="p">)</span>
-        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">pooled_output</span><span class="p">)</span>
+		<span class="n">pooled_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">pooled_output</span><span class="p">)</span>
+		<span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">pooled_output</span><span class="p">)</span>
 
-        <span class="n">loss</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">=</span> <span class="s2">&quot;regression&quot;</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">long</span> <span class="ow">or</span> <span class="n">labels</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">=</span> <span class="s2">&quot;single_label_classification&quot;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">=</span> <span class="s2">&quot;multi_label_classification&quot;</span>
+		<span class="n">loss</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">=</span> <span class="s2">&quot;regression&quot;</span>
+				<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span>
+					<span class="n">labels</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">long</span> <span class="ow">or</span> <span class="n">labels</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">int</span>
+				<span class="p">):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">=</span> <span class="s2">&quot;single_label_classification&quot;</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">=</span> <span class="s2">&quot;multi_label_classification&quot;</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">==</span> <span class="s2">&quot;regression&quot;</span><span class="p">:</span>
-                <span class="n">loss_fct</span> <span class="o">=</span> <span class="n">MSELoss</span><span class="p">()</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">labels</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">==</span> <span class="s2">&quot;single_label_classification&quot;</span><span class="p">:</span>
-                <span class="n">loss_fct</span> <span class="o">=</span> <span class="n">CrossEntropyLoss</span><span class="p">()</span>
-                <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span><span class="p">),</span> <span class="n">labels</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">==</span> <span class="s2">&quot;multi_label_classification&quot;</span><span class="p">:</span>
-                <span class="n">loss_fct</span> <span class="o">=</span> <span class="n">BCEWithLogitsLoss</span><span class="p">()</span>
-                <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">return_dict</span><span class="p">:</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="p">(</span><span class="n">logits</span><span class="p">,)</span> <span class="o">+</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="k">return</span> <span class="p">((</span><span class="n">loss</span><span class="p">,)</span> <span class="o">+</span> <span class="n">output</span><span class="p">)</span> <span class="k">if</span> <span class="n">loss</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">output</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">==</span> <span class="s2">&quot;regression&quot;</span><span class="p">:</span>
+				<span class="n">loss_fct</span> <span class="o">=</span> <span class="n">MSELoss</span><span class="p">()</span>
+				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+					<span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">labels</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">==</span> <span class="s2">&quot;single_label_classification&quot;</span><span class="p">:</span>
+				<span class="n">loss_fct</span> <span class="o">=</span> <span class="n">CrossEntropyLoss</span><span class="p">()</span>
+				<span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span><span class="p">),</span> <span class="n">labels</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_type</span> <span class="o">==</span> <span class="s2">&quot;multi_label_classification&quot;</span><span class="p">:</span>
+				<span class="n">loss_fct</span> <span class="o">=</span> <span class="n">BCEWithLogitsLoss</span><span class="p">()</span>
+				<span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">return_dict</span><span class="p">:</span>
+			<span class="n">output</span> <span class="o">=</span> <span class="p">(</span><span class="n">logits</span><span class="p">,)</span> <span class="o">+</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+			<span class="k">return</span> <span class="p">((</span><span class="n">loss</span><span class="p">,)</span> <span class="o">+</span> <span class="n">output</span><span class="p">)</span> <span class="k">if</span> <span class="n">loss</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">output</span>
 
-        <span class="k">return</span> <span class="n">SequenceClassifierOutput</span><span class="p">(</span>
-            <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span>
-            <span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">,</span>
-            <span class="n">hidden_states</span><span class="o">=</span><span class="n">outputs</span><span class="o">.</span><span class="n">hidden_states</span><span class="p">,</span>
-            <span class="n">attentions</span><span class="o">=</span><span class="n">outputs</span><span class="o">.</span><span class="n">attentions</span><span class="p">,</span>
-        <span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">SequenceClassifierOutput</span><span class="p">(</span>
+			<span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span>
+			<span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">,</span>
+			<span class="n">hidden_states</span><span class="o">=</span><span class="n">outputs</span><span class="o">.</span><span class="n">hidden_states</span><span class="p">,</span>
+			<span class="n">attentions</span><span class="o">=</span><span class="n">outputs</span><span class="o">.</span><span class="n">attentions</span><span class="p">,</span>
+		<span class="p">)</span></div>
 </div>
 
 </pre></div>

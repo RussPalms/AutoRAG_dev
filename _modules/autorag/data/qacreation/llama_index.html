@@ -394,249 +394,268 @@
 <div class="viewcode-block" id="generate_qa_llama_index">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.generate_qa_llama_index">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_qa_llama_index</span><span class="p">(</span>
-        <span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
-        <span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">question_num_per_content</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
+	<span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">question_num_per_content</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a qa set from the list of contents.</span>
-<span class="sd">    It uses a single prompt for all contents.</span>
-<span class="sd">    If you want to use more than one prompt for generating qa,</span>
-<span class="sd">    you can consider using generate_qa_llama_index_by_ratio.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Generate a qa set from the list of contents.</span>
+<span class="sd">	It uses a single prompt for all contents.</span>
+<span class="sd">	If you want to use more than one prompt for generating qa,</span>
+<span class="sd">	you can consider using generate_qa_llama_index_by_ratio.</span>
 
-<span class="sd">    :param llm: Llama index model</span>
-<span class="sd">    :param contents: List of content strings.</span>
-<span class="sd">    :param prompt: The prompt to use for the qa generation.</span>
-<span class="sd">        The prompt must include the following placeholders:</span>
-<span class="sd">        - {{text}}: The content string</span>
-<span class="sd">        - {{num_questions}}: The number of questions to generate</span>
-<span class="sd">        As default, the prompt is set to the default prompt for the question type.</span>
-<span class="sd">    :param question_num_per_content: Number of questions to generate for each content.</span>
-<span class="sd">        Default is 1.</span>
-<span class="sd">    :param max_retries: The maximum number of retries when generated question number is not equal to the target number.</span>
-<span class="sd">        Default is 3.</span>
-<span class="sd">    :param batch: The batch size to process asynchronously.</span>
-<span class="sd">        Default is 4.</span>
-<span class="sd">    :return: 2-d list of dictionaries containing the query and generation_gt.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># load default prompt</span>
-    <span class="k">if</span> <span class="n">prompt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">prompt</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">package_dir</span><span class="p">,</span> <span class="s2">&quot;llama_index_default_prompt.txt&quot;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="sd">	:param llm: Llama index model</span>
+<span class="sd">	:param contents: List of content strings.</span>
+<span class="sd">	:param prompt: The prompt to use for the qa generation.</span>
+<span class="sd">	    The prompt must include the following placeholders:</span>
+<span class="sd">	    - {{text}}: The content string</span>
+<span class="sd">	    - {{num_questions}}: The number of questions to generate</span>
+<span class="sd">	    As default, the prompt is set to the default prompt for the question type.</span>
+<span class="sd">	:param question_num_per_content: Number of questions to generate for each content.</span>
+<span class="sd">	    Default is 1.</span>
+<span class="sd">	:param max_retries: The maximum number of retries when generated question number is not equal to the target number.</span>
+<span class="sd">	    Default is 3.</span>
+<span class="sd">	:param batch: The batch size to process asynchronously.</span>
+<span class="sd">	    Default is 4.</span>
+<span class="sd">	:return: 2-d list of dictionaries containing the query and generation_gt.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># load default prompt</span>
+	<span class="k">if</span> <span class="n">prompt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">prompt</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span>
+			<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">package_dir</span><span class="p">,</span> <span class="s2">&quot;llama_index_default_prompt.txt&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
-    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">async_qa_gen_llama_index</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">question_num_per_content</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">contents</span>
-    <span class="p">]</span>
-    <span class="n">loops</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">loops</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">results</span></div>
+	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">async_qa_gen_llama_index</span><span class="p">(</span>
+			<span class="n">content</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">question_num_per_content</span><span class="p">,</span> <span class="n">max_retries</span>
+		<span class="p">)</span>
+		<span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">contents</span>
+	<span class="p">]</span>
+	<span class="n">loops</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="n">loops</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">results</span></div>
 
 
 
 <div class="viewcode-block" id="generate_answers">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.generate_answers">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_answers</span><span class="p">(</span>
-    <span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
-    <span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
+	<span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate qa sets from the list of contents using existing queries.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Generate qa sets from the list of contents using existing queries.</span>
 
-<span class="sd">    :param llm: Llama index model</span>
-<span class="sd">    :param contents: List of content strings.</span>
-<span class="sd">    :param queries: List of existing queries.</span>
-<span class="sd">    :param batch: The batch size to process asynchronously.</span>
-<span class="sd">    :return: 2-d list of dictionaries containing the query and generation_gt.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">	:param llm: Llama index model</span>
+<span class="sd">	:param contents: List of content strings.</span>
+<span class="sd">	:param queries: List of existing queries.</span>
+<span class="sd">	:param batch: The batch size to process asynchronously.</span>
+<span class="sd">	:return: 2-d list of dictionaries containing the query and generation_gt.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 
-    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">generate_basic_answer</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">content</span><span class="p">,</span> <span class="n">query</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">queries</span><span class="p">)</span>
-    <span class="p">]</span>
-    <span class="n">loops</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">loops</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">results</span></div>
+	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">generate_basic_answer</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">content</span><span class="p">,</span> <span class="n">query</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">queries</span><span class="p">)</span>
+	<span class="p">]</span>
+	<span class="n">loops</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="n">loops</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">results</span></div>
 
 
 
 <div class="viewcode-block" id="generate_qa_llama_index_by_ratio">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.generate_qa_llama_index_by_ratio">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_qa_llama_index_by_ratio</span><span class="p">(</span>
-        <span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
-        <span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">prompts_ratio</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
-        <span class="n">question_num_per_content</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
-        <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
+	<span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">prompts_ratio</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+	<span class="n">question_num_per_content</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+	<span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a qa set from the list of contents.</span>
-<span class="sd">    You can set the ratio of prompts that you want to use for generating qa.</span>
-<span class="sd">    It distributes the number of questions to generate for each content by the ratio randomly.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Generate a qa set from the list of contents.</span>
+<span class="sd">	You can set the ratio of prompts that you want to use for generating qa.</span>
+<span class="sd">	It distributes the number of questions to generate for each content by the ratio randomly.</span>
 
-<span class="sd">    :param llm: Llama index model</span>
-<span class="sd">    :param contents: List of content strings.</span>
-<span class="sd">    :param prompts_ratio: Dictionary of prompt paths and their ratios.</span>
-<span class="sd">        Example: {&quot;prompt/prompt1.txt&quot;: 0.5, &quot;prompt/prompt2.txt&quot;: 0.5}</span>
-<span class="sd">        The value sum doesn&#39;t have to be 1.</span>
-<span class="sd">        The path must be the absolute path, and the file must exist.</span>
-<span class="sd">        Plus, it has to be a text file which contains proper prompt.</span>
-<span class="sd">        Each prompt must contain the following placeholders:</span>
-<span class="sd">        - {{text}}: The content string</span>
-<span class="sd">        - {{num_questions}}: The number of questions to generate</span>
-<span class="sd">    :param question_num_per_content: Number of questions to generate for each content.</span>
-<span class="sd">        Default is 1.</span>
-<span class="sd">    :param max_retries: The maximum number of retries when generated question number is not equal to the target number.</span>
-<span class="sd">        Default is 3.</span>
-<span class="sd">    :param random_state: Random seed</span>
-<span class="sd">        Default is 42.</span>
-<span class="sd">    :param batch: The batch size to process asynchronously.</span>
-<span class="sd">        Default is 4.</span>
-<span class="sd">    :return: 2-d list of dictionaries containing the query and generation_gt.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">path</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">prompts_ratio</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">validate_llama_index_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span> <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span><span class="p">])</span>
+<span class="sd">	:param llm: Llama index model</span>
+<span class="sd">	:param contents: List of content strings.</span>
+<span class="sd">	:param prompts_ratio: Dictionary of prompt paths and their ratios.</span>
+<span class="sd">	    Example: {&quot;prompt/prompt1.txt&quot;: 0.5, &quot;prompt/prompt2.txt&quot;: 0.5}</span>
+<span class="sd">	    The value sum doesn&#39;t have to be 1.</span>
+<span class="sd">	    The path must be the absolute path, and the file must exist.</span>
+<span class="sd">	    Plus, it has to be a text file which contains proper prompt.</span>
+<span class="sd">	    Each prompt must contain the following placeholders:</span>
+<span class="sd">	    - {{text}}: The content string</span>
+<span class="sd">	    - {{num_questions}}: The number of questions to generate</span>
+<span class="sd">	:param question_num_per_content: Number of questions to generate for each content.</span>
+<span class="sd">	    Default is 1.</span>
+<span class="sd">	:param max_retries: The maximum number of retries when generated question number is not equal to the target number.</span>
+<span class="sd">	    Default is 3.</span>
+<span class="sd">	:param random_state: Random seed</span>
+<span class="sd">	    Default is 42.</span>
+<span class="sd">	:param batch: The batch size to process asynchronously.</span>
+<span class="sd">	    Default is 4.</span>
+<span class="sd">	:return: 2-d list of dictionaries containing the query and generation_gt.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">path</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">prompts_ratio</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+	<span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">validate_llama_index_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span> <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span><span class="p">])</span>
 
-    <span class="n">content_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">)))</span>
-    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
-    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">content_indices</span><span class="p">)</span>
+	<span class="n">content_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">)))</span>
+	<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+	<span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">content_indices</span><span class="p">)</span>
 
-    <span class="n">slice_content_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">distribute_list_by_ratio</span><span class="p">(</span><span class="n">content_indices</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">prompts_ratio</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-    <span class="n">temp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;idx&#39;</span><span class="p">:</span> <span class="n">slice_content_indices</span><span class="p">,</span> <span class="s1">&#39;prompt&#39;</span><span class="p">:</span> <span class="n">prompts</span><span class="p">})</span>
-    <span class="n">temp_df</span> <span class="o">=</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;idx&#39;</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">temp_df</span> <span class="o">=</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;idx&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">slice_content_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">distribute_list_by_ratio</span><span class="p">(</span>
+		<span class="n">content_indices</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">prompts_ratio</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+	<span class="p">)</span>
+	<span class="n">temp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;idx&quot;</span><span class="p">:</span> <span class="n">slice_content_indices</span><span class="p">,</span> <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">prompts</span><span class="p">})</span>
+	<span class="n">temp_df</span> <span class="o">=</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;idx&quot;</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">temp_df</span> <span class="o">=</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;idx&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">contents</span><span class="p">,</span> <span class="s1">&#39;prompt&#39;</span><span class="p">:</span> <span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;prompt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
+	<span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">contents</span><span class="p">,</span> <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">temp_df</span><span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
 
-    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">async_qa_gen_llama_index</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">question_num_per_content</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">content</span><span class="p">,</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">final_df</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">final_df</span><span class="p">[</span><span class="s1">&#39;prompt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-    <span class="p">]</span>
+	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">async_qa_gen_llama_index</span><span class="p">(</span>
+			<span class="n">content</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">question_num_per_content</span><span class="p">,</span> <span class="n">max_retries</span>
+		<span class="p">)</span>
+		<span class="k">for</span> <span class="n">content</span><span class="p">,</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+			<span class="n">final_df</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">final_df</span><span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="p">)</span>
+	<span class="p">]</span>
 
-    <span class="n">loops</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">loops</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
+	<span class="n">loops</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="n">loops</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">results</span></div>
+	<span class="k">return</span> <span class="n">results</span></div>
 
 
 
 <div class="viewcode-block" id="async_qa_gen_llama_index">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.async_qa_gen_llama_index">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">async_qa_gen_llama_index</span><span class="p">(</span>
-        <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
-        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">question_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+	<span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
+	<span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">question_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a qa set by using the given content and the llama index model.</span>
-<span class="sd">    You must select the question type.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Generate a qa set by using the given content and the llama index model.</span>
+<span class="sd">	You must select the question type.</span>
 
-<span class="sd">    :param content: Content string</span>
-<span class="sd">    :param llm: Llama index model</span>
-<span class="sd">    :param prompt: The prompt to use for the qa generation.</span>
-<span class="sd">        The prompt must include the following placeholders:</span>
-<span class="sd">        - {{text}}: The content string</span>
-<span class="sd">        - {{num_questions}}: The number of questions to generate</span>
-<span class="sd">    :param question_num: The number of questions to generate</span>
-<span class="sd">    :param max_retries: Maximum number of retries when generated question number is not equal to the target number</span>
-<span class="sd">    :return: List of dictionaries containing the query and generation_gt</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">validate_llama_index_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<span class="sd">	:param content: Content string</span>
+<span class="sd">	:param llm: Llama index model</span>
+<span class="sd">	:param prompt: The prompt to use for the qa generation.</span>
+<span class="sd">	    The prompt must include the following placeholders:</span>
+<span class="sd">	    - {{text}}: The content string</span>
+<span class="sd">	    - {{num_questions}}: The number of questions to generate</span>
+<span class="sd">	:param question_num: The number of questions to generate</span>
+<span class="sd">	:param max_retries: Maximum number of retries when generated question number is not equal to the target number</span>
+<span class="sd">	:return: List of dictionaries containing the query and generation_gt</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">validate_llama_index_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retries</span><span class="p">):</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm</span><span class="o">.</span><span class="n">acomplete</span><span class="p">(</span>
-                <span class="n">prompt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;{{text}}&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;{{num_questions}}&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">question_num</span><span class="p">)))</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">parse_output</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="n">question_num</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">result</span>
-        <span class="k">raise</span> <span class="ne">InterruptedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to generate output of length </span><span class="si">{</span><span class="n">question_num</span><span class="si">}</span><span class="s2"> after </span><span class="si">{</span><span class="n">max_retries</span><span class="si">}</span><span class="s2"> retries.&quot;</span><span class="p">)</span>
+	<span class="k">async</span> <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retries</span><span class="p">):</span>
+			<span class="n">output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm</span><span class="o">.</span><span class="n">acomplete</span><span class="p">(</span>
+				<span class="n">prompt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;{{text}}&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+					<span class="s2">&quot;{{num_questions}}&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">question_num</span><span class="p">)</span>
+				<span class="p">)</span>
+			<span class="p">)</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">parse_output</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="n">question_num</span><span class="p">:</span>
+				<span class="k">return</span> <span class="n">result</span>
+		<span class="k">raise</span> <span class="ne">InterruptedError</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;Failed to generate output of length </span><span class="si">{</span><span class="n">question_num</span><span class="si">}</span><span class="s2"> after </span><span class="si">{</span><span class="n">max_retries</span><span class="si">}</span><span class="s2"> retries.&quot;</span>
+		<span class="p">)</span>
 
-    <span class="k">return</span> <span class="k">await</span> <span class="n">generate</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">llm</span><span class="p">)</span></div>
+	<span class="k">return</span> <span class="k">await</span> <span class="n">generate</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">llm</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="generate_basic_answer">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.generate_basic_answer">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">generate_basic_answer</span><span class="p">(</span><span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span> <span class="n">passage_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="n">basic_answer_system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are an AI assistant to answer the given question in the provide evidence text.</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">generate_basic_answer</span><span class="p">(</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span> <span class="n">passage_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="n">basic_answer_system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are an AI assistant to answer the given question in the provide evidence text.</span>
 <span class="s2">    You can find the evidence from the given text about question, and you have to write a proper answer to the given question.</span>
 <span class="s2">    You have to preserve the question&#39;s language at the answer.</span>
 <span class="s2">    For example, if the input question is Korean, the output answer must be in Korean.</span>
 <span class="s2">    &quot;&quot;&quot;</span>
-    <span class="n">user_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Text:</span><span class="se">\n</span><span class="s2">&lt;|text_start|&gt;</span><span class="se">\n</span><span class="si">{</span><span class="n">passage_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&lt;|text_end|&gt;</span><span class="se">\n\n</span><span class="s2">Question:</span><span class="se">\n</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Answer:&quot;</span>
+	<span class="n">user_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Text:</span><span class="se">\n</span><span class="s2">&lt;|text_start|&gt;</span><span class="se">\n</span><span class="si">{</span><span class="n">passage_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&lt;|text_end|&gt;</span><span class="se">\n\n</span><span class="s2">Question:</span><span class="se">\n</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Answer:&quot;</span>
 
-    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm</span><span class="o">.</span><span class="n">achat</span><span class="p">(</span><span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">basic_answer_system_prompt</span><span class="p">),</span>
-        <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">user_prompt</span><span class="p">)</span>
-    <span class="p">],</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span></div>
+	<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm</span><span class="o">.</span><span class="n">achat</span><span class="p">(</span>
+		<span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+			<span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">basic_answer_system_prompt</span><span class="p">),</span>
+			<span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">user_prompt</span><span class="p">),</span>
+		<span class="p">],</span>
+		<span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+	<span class="p">)</span>
+	<span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span></div>
 
 
 
 <div class="viewcode-block" id="validate_llama_index_prompt">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.validate_llama_index_prompt">[docs]</a>
 <span class="k">def</span> <span class="nf">validate_llama_index_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Validate the prompt for the llama index model.</span>
-<span class="sd">    The prompt must include the following placeholders:</span>
-<span class="sd">    - {{text}}: The content string</span>
-<span class="sd">    - {{num_questions}}: The number of questions to generate</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;{{text}}&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prompt</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The prompt must include the placeholder {{text}}.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;{{num_questions}}&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prompt</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The prompt must include the placeholder {{num_questions}}.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kc">True</span></div>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Validate the prompt for the llama index model.</span>
+<span class="sd">	The prompt must include the following placeholders:</span>
+<span class="sd">	- {{text}}: The content string</span>
+<span class="sd">	- {{num_questions}}: The number of questions to generate</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="s2">&quot;{{text}}&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prompt</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The prompt must include the placeholder {{text}}.&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="s2">&quot;{{num_questions}}&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prompt</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The prompt must include the placeholder {{num_questions}}.&quot;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="kc">True</span></div>
 
 
 
 <div class="viewcode-block" id="parse_output">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.parse_output">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_output</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[Q]:&quot;</span><span class="p">)</span>
-    <span class="n">final_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">res</span> <span class="ow">and</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[A]:&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-            <span class="n">qa</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[A]:&quot;</span><span class="p">)</span>
-            <span class="n">final_result</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">qa</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
-                <span class="s1">&#39;generation_gt&#39;</span><span class="p">:</span> <span class="n">qa</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="p">})</span>
-    <span class="k">return</span> <span class="n">final_result</span></div>
+	<span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[Q]:&quot;</span><span class="p">)</span>
+	<span class="n">final_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">res</span> <span class="ow">and</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[A]:&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+			<span class="n">qa</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[A]:&quot;</span><span class="p">)</span>
+			<span class="n">final_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+				<span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">qa</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;generation_gt&quot;</span><span class="p">:</span> <span class="n">qa</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()}</span>
+			<span class="p">)</span>
+	<span class="k">return</span> <span class="n">final_result</span></div>
 
 
 
 <div class="viewcode-block" id="distribute_list_by_ratio">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.llama_index.distribute_list_by_ratio">[docs]</a>
 <span class="k">def</span> <span class="nf">distribute_list_by_ratio</span><span class="p">(</span><span class="n">input_list</span><span class="p">,</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-    <span class="n">total_ratio</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
-    <span class="n">total_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_list</span><span class="p">)</span>
+	<span class="n">total_ratio</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+	<span class="n">total_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_list</span><span class="p">)</span>
 
-    <span class="c1"># Calculate the length of each slice</span>
-    <span class="n">slice_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">r</span> <span class="o">/</span> <span class="n">total_ratio</span><span class="p">)</span> <span class="o">*</span> <span class="n">total_length</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ratio</span><span class="p">]</span>
+	<span class="c1"># Calculate the length of each slice</span>
+	<span class="n">slice_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">r</span> <span class="o">/</span> <span class="n">total_ratio</span><span class="p">)</span> <span class="o">*</span> <span class="n">total_length</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ratio</span><span class="p">]</span>
 
-    <span class="c1"># Adjust the last slice in case of rounding issues</span>
-    <span class="n">slice_lengths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_length</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">slice_lengths</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+	<span class="c1"># Adjust the last slice in case of rounding issues</span>
+	<span class="n">slice_lengths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_length</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">slice_lengths</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="n">slices</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">slice_lengths</span><span class="p">:</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span>
-        <span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_list</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">])</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+	<span class="n">slices</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">slice_lengths</span><span class="p">:</span>
+		<span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span>
+		<span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_list</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">])</span>
+		<span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
 
-    <span class="k">return</span> <span class="n">slices</span></div>
+	<span class="k">return</span> <span class="n">slices</span></div>
 
 </pre></div>
         </article>

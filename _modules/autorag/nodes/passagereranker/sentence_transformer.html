@@ -391,59 +391,77 @@
 <div class="viewcode-block" id="sentence_transformer_reranker">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.sentence_transformer.sentence_transformer_reranker">[docs]</a>
 <span class="nd">@passage_reranker_node</span>
-<span class="k">def</span> <span class="nf">sentence_transformer_reranker</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-                                  <span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-                                  <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">sentence_transformer_max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
-                                  <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cross-encoder/ms-marco-MiniLM-L-2-v2&quot;</span><span class="p">,</span>
-                                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Rerank a list of contents based on their relevance to a query using Sentence Transformer model.</span>
+<span class="k">def</span> <span class="nf">sentence_transformer_reranker</span><span class="p">(</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+	<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+	<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+	<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+	<span class="n">sentence_transformer_max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+	<span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cross-encoder/ms-marco-MiniLM-L-2-v2&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Rerank a list of contents based on their relevance to a query using Sentence Transformer model.</span>
 
-<span class="sd">    :param queries: The list of queries to use for reranking</span>
-<span class="sd">    :param contents_list: The list of lists of contents to rerank</span>
-<span class="sd">    :param scores_list: The list of lists of scores retrieved from the initial ranking</span>
-<span class="sd">    :param ids_list: The list of lists of ids retrieved from the initial ranking</span>
-<span class="sd">    :param top_k: The number of passages to be retrieved</span>
-<span class="sd">    :param batch: The number of queries to be processed in a batch</span>
-<span class="sd">    :param sentence_transformer_max_length: The maximum length of the input text for the Sentence Transformer model</span>
-<span class="sd">    :param model_name: The name of the Sentence Transformer model to use for reranking</span>
-<span class="sd">        Default is &quot;cross-encoder/ms-marco-MiniLM-L-2-v2&quot;</span>
-<span class="sd">    :return: tuple of lists containing the reranked contents, ids, and scores</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">CrossEncoder</span><span class="p">(</span>
-        <span class="n">model_name</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">sentence_transformer_max_length</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span>
-    <span class="p">)</span>
+<span class="sd">	:param queries: The list of queries to use for reranking</span>
+<span class="sd">	:param contents_list: The list of lists of contents to rerank</span>
+<span class="sd">	:param scores_list: The list of lists of scores retrieved from the initial ranking</span>
+<span class="sd">	:param ids_list: The list of lists of ids retrieved from the initial ranking</span>
+<span class="sd">	:param top_k: The number of passages to be retrieved</span>
+<span class="sd">	:param batch: The number of queries to be processed in a batch</span>
+<span class="sd">	:param sentence_transformer_max_length: The maximum length of the input text for the Sentence Transformer model</span>
+<span class="sd">	:param model_name: The name of the Sentence Transformer model to use for reranking</span>
+<span class="sd">	    Default is &quot;cross-encoder/ms-marco-MiniLM-L-2-v2&quot;</span>
+<span class="sd">	:return: tuple of lists containing the reranked contents, ids, and scores</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+	<span class="n">model</span> <span class="o">=</span> <span class="n">CrossEncoder</span><span class="p">(</span>
+		<span class="n">model_name</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">sentence_transformer_max_length</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span>
+	<span class="p">)</span>
 
-    <span class="n">nested_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">query</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">content_list</span><span class="p">))</span> <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">content_list</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents_list</span><span class="p">)]</span>
-    <span class="n">rerank_scores</span> <span class="o">=</span> <span class="n">flatten_apply</span><span class="p">(</span><span class="n">sentence_transformer_run_model</span><span class="p">,</span> <span class="n">nested_list</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span><span class="p">)</span>
+	<span class="n">nested_list</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">query</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">content_list</span><span class="p">))</span>
+		<span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">content_list</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents_list</span><span class="p">)</span>
+	<span class="p">]</span>
+	<span class="n">rerank_scores</span> <span class="o">=</span> <span class="n">flatten_apply</span><span class="p">(</span>
+		<span class="n">sentence_transformer_run_model</span><span class="p">,</span> <span class="n">nested_list</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span>
+	<span class="p">)</span>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-        <span class="s1">&#39;contents&#39;</span><span class="p">:</span> <span class="n">contents_list</span><span class="p">,</span>
-        <span class="s1">&#39;ids&#39;</span><span class="p">:</span> <span class="n">ids_list</span><span class="p">,</span>
-        <span class="s1">&#39;scores&#39;</span><span class="p">:</span> <span class="n">rerank_scores</span><span class="p">,</span>
-    <span class="p">})</span>
-    <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;contents&#39;</span><span class="p">,</span> <span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="s1">&#39;scores&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sort_by_scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s1">&#39;expand&#39;</span><span class="p">)</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">select_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">,</span> <span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="s1">&#39;scores&#39;</span><span class="p">],</span> <span class="n">top_k</span><span class="p">)</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+		<span class="p">{</span>
+			<span class="s2">&quot;contents&quot;</span><span class="p">:</span> <span class="n">contents_list</span><span class="p">,</span>
+			<span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="n">ids_list</span><span class="p">,</span>
+			<span class="s2">&quot;scores&quot;</span><span class="p">:</span> <span class="n">rerank_scores</span><span class="p">,</span>
+		<span class="p">}</span>
+	<span class="p">)</span>
+	<span class="n">df</span><span class="p">[[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+		<span class="n">sort_by_scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span>
+	<span class="p">)</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="n">select_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">],</span> <span class="n">top_k</span><span class="p">)</span>
 
-    <span class="k">del</span> <span class="n">model</span>
-    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+	<span class="k">del</span> <span class="n">model</span>
+	<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+		<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;ids&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;scores&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+	<span class="k">return</span> <span class="p">(</span>
+		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+	<span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="sentence_transformer_run_model">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.sentence_transformer.sentence_transformer_run_model">[docs]</a>
 <span class="k">def</span> <span class="nf">sentence_transformer_run_model</span><span class="p">(</span><span class="n">input_texts</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="n">batch_input_texts</span> <span class="o">=</span> <span class="n">make_batch</span><span class="p">(</span><span class="n">input_texts</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">batch_texts</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">batch_input_texts</span><span class="p">):</span>
-        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-            <span class="n">pred_scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sentences</span><span class="o">=</span><span class="n">batch_texts</span><span class="p">,</span> <span class="n">apply_softmax</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pred_scores</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">results</span></div>
+	<span class="n">batch_input_texts</span> <span class="o">=</span> <span class="n">make_batch</span><span class="p">(</span><span class="n">input_texts</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">batch_texts</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">batch_input_texts</span><span class="p">):</span>
+		<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+			<span class="n">pred_scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sentences</span><span class="o">=</span><span class="n">batch_texts</span><span class="p">,</span> <span class="n">apply_softmax</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pred_scores</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+	<span class="k">return</span> <span class="n">results</span></div>
 
 </pre></div>
         </article>

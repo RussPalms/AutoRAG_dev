@@ -398,266 +398,310 @@
 <div class="viewcode-block" id="tokenize_ko_kiwi">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.tokenize_ko_kiwi">[docs]</a>
 <span class="k">def</span> <span class="nf">tokenize_ko_kiwi</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">kiwipiepy</span> <span class="kn">import</span> <span class="n">Kiwi</span><span class="p">,</span> <span class="n">Token</span>
-    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;You need to install kiwipiepy to use &#39;ko_kiwi&#39; tokenizer. &quot;</span>
-                          <span class="s2">&quot;Please install kiwipiepy by running &#39;pip install kiwipiepy&#39;. &quot;</span>
-                          <span class="s2">&quot;Or install Korean version of AutoRAG by running &#39;pip install AutoRAG[ko]&#39;.&quot;</span><span class="p">)</span>
-    <span class="n">texts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">texts</span><span class="p">))</span>
-    <span class="n">kiwi</span> <span class="o">=</span> <span class="n">Kiwi</span><span class="p">()</span>
-    <span class="n">tokenized_list</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Token</span><span class="p">]]</span> <span class="o">=</span> <span class="n">kiwi</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">form</span><span class="p">,</span> <span class="n">token_list</span><span class="p">))</span> <span class="k">for</span> <span class="n">token_list</span> <span class="ow">in</span> <span class="n">tokenized_list</span><span class="p">]</span></div>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="kn">from</span> <span class="nn">kiwipiepy</span> <span class="kn">import</span> <span class="n">Kiwi</span><span class="p">,</span> <span class="n">Token</span>
+	<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+			<span class="s2">&quot;You need to install kiwipiepy to use &#39;ko_kiwi&#39; tokenizer. &quot;</span>
+			<span class="s2">&quot;Please install kiwipiepy by running &#39;pip install kiwipiepy&#39;. &quot;</span>
+			<span class="s2">&quot;Or install Korean version of AutoRAG by running &#39;pip install AutoRAG[ko]&#39;.&quot;</span>
+		<span class="p">)</span>
+	<span class="n">texts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">texts</span><span class="p">))</span>
+	<span class="n">kiwi</span> <span class="o">=</span> <span class="n">Kiwi</span><span class="p">()</span>
+	<span class="n">tokenized_list</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Token</span><span class="p">]]</span> <span class="o">=</span> <span class="n">kiwi</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+	<span class="k">return</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">form</span><span class="p">,</span> <span class="n">token_list</span><span class="p">))</span> <span class="k">for</span> <span class="n">token_list</span> <span class="ow">in</span> <span class="n">tokenized_list</span><span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="tokenize_ko_kkma">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.tokenize_ko_kkma">[docs]</a>
 <span class="k">def</span> <span class="nf">tokenize_ko_kkma</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">konlpy.tag</span> <span class="kn">import</span> <span class="n">Kkma</span>
-    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;You need to install konlpy to use &#39;ko_kkma&#39; tokenizer. &quot;</span>
-                          <span class="s2">&quot;Please install konlpy by running &#39;pip install konlpy&#39;. &quot;</span>
-                          <span class="s2">&quot;Or install Korean version of AutoRAG by running &#39;pip install AutoRAG[ko]&#39;.&quot;</span><span class="p">)</span>
-    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Kkma</span><span class="p">()</span>
-    <span class="n">tokenized_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">morphs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">texts</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">tokenized_list</span></div>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="kn">from</span> <span class="nn">konlpy.tag</span> <span class="kn">import</span> <span class="n">Kkma</span>
+	<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+			<span class="s2">&quot;You need to install konlpy to use &#39;ko_kkma&#39; tokenizer. &quot;</span>
+			<span class="s2">&quot;Please install konlpy by running &#39;pip install konlpy&#39;. &quot;</span>
+			<span class="s2">&quot;Or install Korean version of AutoRAG by running &#39;pip install AutoRAG[ko]&#39;.&quot;</span>
+		<span class="p">)</span>
+	<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Kkma</span><span class="p">()</span>
+	<span class="n">tokenized_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">morphs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">texts</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">tokenized_list</span></div>
 
 
 
 <div class="viewcode-block" id="tokenize_ko_okt">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.tokenize_ko_okt">[docs]</a>
 <span class="k">def</span> <span class="nf">tokenize_ko_okt</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">konlpy.tag</span> <span class="kn">import</span> <span class="n">Okt</span>
-    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;You need to install konlpy to use &#39;ko_kkma&#39; tokenizer. &quot;</span>
-                          <span class="s2">&quot;Please install konlpy by running &#39;pip install konlpy&#39;. &quot;</span>
-                          <span class="s2">&quot;Or install Korean version of AutoRAG by running &#39;pip install AutoRAG[ko]&#39;.&quot;</span><span class="p">)</span>
-    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Okt</span><span class="p">()</span>
-    <span class="n">tokenized_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">morphs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">texts</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">tokenized_list</span></div>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="kn">from</span> <span class="nn">konlpy.tag</span> <span class="kn">import</span> <span class="n">Okt</span>
+	<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+			<span class="s2">&quot;You need to install konlpy to use &#39;ko_kkma&#39; tokenizer. &quot;</span>
+			<span class="s2">&quot;Please install konlpy by running &#39;pip install konlpy&#39;. &quot;</span>
+			<span class="s2">&quot;Or install Korean version of AutoRAG by running &#39;pip install AutoRAG[ko]&#39;.&quot;</span>
+		<span class="p">)</span>
+	<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Okt</span><span class="p">()</span>
+	<span class="n">tokenized_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">morphs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">texts</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">tokenized_list</span></div>
 
 
 
 <div class="viewcode-block" id="tokenize_porter_stemmer">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.tokenize_porter_stemmer">[docs]</a>
 <span class="k">def</span> <span class="nf">tokenize_porter_stemmer</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-    <span class="k">def</span> <span class="nf">tokenize_remove_stopword</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stemmer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">words</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">simple_extract_keywords</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>
+	<span class="k">def</span> <span class="nf">tokenize_remove_stopword</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stemmer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+		<span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+		<span class="n">words</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">simple_extract_keywords</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>
 
-    <span class="n">stemmer</span> <span class="o">=</span> <span class="n">PorterStemmer</span><span class="p">()</span>
-    <span class="n">tokenized_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tokenize_remove_stopword</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stemmer</span><span class="p">),</span> <span class="n">texts</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">tokenized_list</span></div>
+	<span class="n">stemmer</span> <span class="o">=</span> <span class="n">PorterStemmer</span><span class="p">()</span>
+	<span class="n">tokenized_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tokenize_remove_stopword</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stemmer</span><span class="p">),</span> <span class="n">texts</span><span class="p">)</span>
+	<span class="p">)</span>
+	<span class="k">return</span> <span class="n">tokenized_list</span></div>
 
 
 
 <div class="viewcode-block" id="tokenize_space">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.tokenize_space">[docs]</a>
 <span class="k">def</span> <span class="nf">tokenize_space</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-    <span class="k">def</span> <span class="nf">tokenize_space_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">normalize_string</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+	<span class="k">def</span> <span class="nf">tokenize_space_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+		<span class="n">text</span> <span class="o">=</span> <span class="n">normalize_string</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">tokenize_space_text</span><span class="p">,</span> <span class="n">texts</span><span class="p">))</span></div>
+	<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">tokenize_space_text</span><span class="p">,</span> <span class="n">texts</span><span class="p">))</span></div>
 
 
 
 <span class="n">BM25_TOKENIZER</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;porter_stemmer&#39;</span><span class="p">:</span> <span class="n">tokenize_porter_stemmer</span><span class="p">,</span>
-    <span class="s1">&#39;ko_kiwi&#39;</span><span class="p">:</span> <span class="n">tokenize_ko_kiwi</span><span class="p">,</span>
-    <span class="s1">&#39;space&#39;</span><span class="p">:</span> <span class="n">tokenize_space</span><span class="p">,</span>
-    <span class="s1">&#39;ko_kkma&#39;</span><span class="p">:</span> <span class="n">tokenize_ko_kkma</span><span class="p">,</span>
-    <span class="s1">&#39;ko_okt&#39;</span><span class="p">:</span> <span class="n">tokenize_ko_okt</span><span class="p">,</span>
+	<span class="s2">&quot;porter_stemmer&quot;</span><span class="p">:</span> <span class="n">tokenize_porter_stemmer</span><span class="p">,</span>
+	<span class="s2">&quot;ko_kiwi&quot;</span><span class="p">:</span> <span class="n">tokenize_ko_kiwi</span><span class="p">,</span>
+	<span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="n">tokenize_space</span><span class="p">,</span>
+	<span class="s2">&quot;ko_kkma&quot;</span><span class="p">:</span> <span class="n">tokenize_ko_kkma</span><span class="p">,</span>
+	<span class="s2">&quot;ko_okt&quot;</span><span class="p">:</span> <span class="n">tokenize_ko_okt</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <div class="viewcode-block" id="bm25">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.bm25">[docs]</a>
 <span class="nd">@retrieval_node</span>
-<span class="k">def</span> <span class="nf">bm25</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bm25_corpus</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">bm25_tokenizer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;porter_stemmer&#39;</span><span class="p">,</span>
-         <span class="n">ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> \
-        <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    BM25 retrieval function.</span>
-<span class="sd">    You have to load a pickle file that is already ingested.</span>
+<span class="k">def</span> <span class="nf">bm25</span><span class="p">(</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+	<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+	<span class="n">bm25_corpus</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+	<span class="n">bm25_tokenizer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;porter_stemmer&quot;</span><span class="p">,</span>
+	<span class="n">ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	BM25 retrieval function.</span>
+<span class="sd">	You have to load a pickle file that is already ingested.</span>
 
-<span class="sd">    :param queries: 2-d list of query strings.</span>
-<span class="sd">        Each element of the list is a query strings of each row.</span>
-<span class="sd">    :param top_k: The number of passages to be retrieved.</span>
-<span class="sd">    :param bm25_corpus: A dictionary containing the bm25 corpus, which is doc_id from corpus and tokenized corpus.</span>
-<span class="sd">        Its data structure looks like this:</span>
+<span class="sd">	:param queries: 2-d list of query strings.</span>
+<span class="sd">	    Each element of the list is a query strings of each row.</span>
+<span class="sd">	:param top_k: The number of passages to be retrieved.</span>
+<span class="sd">	:param bm25_corpus: A dictionary containing the bm25 corpus, which is doc_id from corpus and tokenized corpus.</span>
+<span class="sd">	    Its data structure looks like this:</span>
 
-<span class="sd">        .. Code:: python</span>
+<span class="sd">	    .. Code:: python</span>
 
-<span class="sd">            {</span>
-<span class="sd">                &quot;tokens&quot;: [], # 2d list of tokens</span>
-<span class="sd">                &quot;passage_id&quot;: [], # 2d list of passage_id.</span>
-<span class="sd">            }</span>
+<span class="sd">	        {</span>
+<span class="sd">	            &quot;tokens&quot;: [], # 2d list of tokens</span>
+<span class="sd">	            &quot;passage_id&quot;: [], # 2d list of passage_id.</span>
+<span class="sd">	        }</span>
 
-<span class="sd">    :param bm25_tokenizer: The tokenizer name that uses to the BM25.</span>
-<span class="sd">        It supports &#39;porter_stemmer&#39;, &#39;ko_kiwi&#39;, and huggingface `AutoTokenizer`.</span>
-<span class="sd">        You can pass huggingface tokenizer name.</span>
-<span class="sd">        Default is porter_stemmer.</span>
-<span class="sd">    :param ids: The optional list of ids that you want to retrieve.</span>
-<span class="sd">        You don&#39;t need to specify this in the general use cases.</span>
-<span class="sd">        Default is None.</span>
-<span class="sd">    :return: The 2-d list contains a list of passage ids that retrieved from bm25 and 2-d list of its scores.</span>
-<span class="sd">        It will be a length of queries. And each element has a length of top_k.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># check if bm25_corpus is valid</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="s2">&quot;tokens&quot;</span> <span class="ow">and</span> <span class="s2">&quot;passage_id&quot;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">bm25_corpus</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span> \
-        <span class="s2">&quot;bm25_corpus must contain tokens and passage_id. Please check you ingested bm25 corpus correctly.&quot;</span>
-    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">select_bm25_tokenizer</span><span class="p">(</span><span class="n">bm25_tokenizer</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">bm25_corpus</span><span class="p">[</span><span class="s1">&#39;tokenizer_name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">bm25_tokenizer</span><span class="p">,</span> \
-        <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The bm25 corpus tokenizer is </span><span class="si">{</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s1">&#39;tokenizer_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, but your input is </span><span class="si">{</span><span class="n">bm25_tokenizer</span><span class="si">}</span><span class="s2">. &quot;</span>
-         <span class="sa">f</span><span class="s2">&quot;You need to ingest again. Delete bm25 pkl file and re-ingest it.&quot;</span><span class="p">)</span>
-    <span class="n">bm25_instance</span> <span class="o">=</span> <span class="n">BM25Okapi</span><span class="p">(</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s2">&quot;tokens&quot;</span><span class="p">])</span>
+<span class="sd">	:param bm25_tokenizer: The tokenizer name that uses to the BM25.</span>
+<span class="sd">	    It supports &#39;porter_stemmer&#39;, &#39;ko_kiwi&#39;, and huggingface `AutoTokenizer`.</span>
+<span class="sd">	    You can pass huggingface tokenizer name.</span>
+<span class="sd">	    Default is porter_stemmer.</span>
+<span class="sd">	:param ids: The optional list of ids that you want to retrieve.</span>
+<span class="sd">	    You don&#39;t need to specify this in the general use cases.</span>
+<span class="sd">	    Default is None.</span>
+<span class="sd">	:return: The 2-d list contains a list of passage ids that retrieved from bm25 and 2-d list of its scores.</span>
+<span class="sd">	    It will be a length of queries. And each element has a length of top_k.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># check if bm25_corpus is valid</span>
+	<span class="k">assert</span> <span class="p">(</span>
+		<span class="s2">&quot;tokens&quot;</span> <span class="ow">and</span> <span class="s2">&quot;passage_id&quot;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">bm25_corpus</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+	<span class="p">),</span> <span class="s2">&quot;bm25_corpus must contain tokens and passage_id. Please check you ingested bm25 corpus correctly.&quot;</span>
+	<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">select_bm25_tokenizer</span><span class="p">(</span><span class="n">bm25_tokenizer</span><span class="p">)</span>
+	<span class="k">assert</span> <span class="n">bm25_corpus</span><span class="p">[</span><span class="s2">&quot;tokenizer_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">bm25_tokenizer</span><span class="p">,</span> <span class="p">(</span>
+		<span class="sa">f</span><span class="s2">&quot;The bm25 corpus tokenizer is </span><span class="si">{</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s1">&#39;tokenizer_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, but your input is </span><span class="si">{</span><span class="n">bm25_tokenizer</span><span class="si">}</span><span class="s2">. &quot;</span>
+		<span class="sa">f</span><span class="s2">&quot;You need to ingest again. Delete bm25 pkl file and re-ingest it.&quot;</span>
+	<span class="p">)</span>
+	<span class="n">bm25_instance</span> <span class="o">=</span> <span class="n">BM25Okapi</span><span class="p">(</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s2">&quot;tokens&quot;</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="n">ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">score_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">query_list</span><span class="p">,</span> <span class="n">id_list</span><span class="p">:</span> <span class="n">get_bm25_scores</span><span class="p">(</span>
-            <span class="n">query_list</span><span class="p">,</span> <span class="n">id_list</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">bm25_instance</span><span class="p">,</span> <span class="n">bm25_corpus</span><span class="p">),</span> <span class="n">queries</span><span class="p">,</span> <span class="n">ids</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">ids</span><span class="p">,</span> <span class="n">score_result</span>
+	<span class="k">if</span> <span class="n">ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">score_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span>
+				<span class="k">lambda</span> <span class="n">query_list</span><span class="p">,</span> <span class="n">id_list</span><span class="p">:</span> <span class="n">get_bm25_scores</span><span class="p">(</span>
+					<span class="n">query_list</span><span class="p">,</span> <span class="n">id_list</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">bm25_instance</span><span class="p">,</span> <span class="n">bm25_corpus</span>
+				<span class="p">),</span>
+				<span class="n">queries</span><span class="p">,</span>
+				<span class="n">ids</span><span class="p">,</span>
+			<span class="p">)</span>
+		<span class="p">)</span>
+		<span class="k">return</span> <span class="n">ids</span><span class="p">,</span> <span class="n">score_result</span>
 
-    <span class="c1"># run async bm25_pure function</span>
-    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">bm25_pure</span><span class="p">(</span><span class="n">input_queries</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">bm25_instance</span><span class="p">,</span> <span class="n">bm25_corpus</span><span class="p">)</span> <span class="k">for</span> <span class="n">input_queries</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">]</span>
-    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">))</span>
-    <span class="n">id_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">results</span><span class="p">))</span>
-    <span class="n">score_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">results</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span></div>
+	<span class="c1"># run async bm25_pure function</span>
+	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">bm25_pure</span><span class="p">(</span><span class="n">input_queries</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">bm25_instance</span><span class="p">,</span> <span class="n">bm25_corpus</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">input_queries</span> <span class="ow">in</span> <span class="n">queries</span>
+	<span class="p">]</span>
+	<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">))</span>
+	<span class="n">id_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">results</span><span class="p">))</span>
+	<span class="n">score_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">results</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span></div>
 
 
 
 <div class="viewcode-block" id="bm25_pure">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.bm25_pure">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">bm25_pure</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">bm25_api</span><span class="p">:</span> <span class="n">BM25Okapi</span><span class="p">,</span> <span class="n">bm25_corpus</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> \
-        <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Async BM25 retrieval function.</span>
-<span class="sd">    Its usage is for async retrieval of bm25 row by row.</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">bm25_pure</span><span class="p">(</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">bm25_api</span><span class="p">:</span> <span class="n">BM25Okapi</span><span class="p">,</span> <span class="n">bm25_corpus</span><span class="p">:</span> <span class="n">Dict</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Async BM25 retrieval function.</span>
+<span class="sd">	Its usage is for async retrieval of bm25 row by row.</span>
 
-<span class="sd">    :param queries: A list of query strings.</span>
-<span class="sd">    :param top_k: The number of passages to be retrieved.</span>
-<span class="sd">    :param tokenizer: A tokenizer that will be used to tokenize queries.</span>
-<span class="sd">    :param bm25_api: A bm25 api instance that will be used to retrieve passages.</span>
-<span class="sd">    :param bm25_corpus: A dictionary containing the bm25 corpus, which is doc_id from corpus and tokenized corpus.</span>
-<span class="sd">        Its data structure looks like this:</span>
+<span class="sd">	:param queries: A list of query strings.</span>
+<span class="sd">	:param top_k: The number of passages to be retrieved.</span>
+<span class="sd">	:param tokenizer: A tokenizer that will be used to tokenize queries.</span>
+<span class="sd">	:param bm25_api: A bm25 api instance that will be used to retrieve passages.</span>
+<span class="sd">	:param bm25_corpus: A dictionary containing the bm25 corpus, which is doc_id from corpus and tokenized corpus.</span>
+<span class="sd">	    Its data structure looks like this:</span>
 
-<span class="sd">        .. Code:: python</span>
+<span class="sd">	    .. Code:: python</span>
 
-<span class="sd">            {</span>
-<span class="sd">                &quot;tokens&quot;: [], # 2d list of tokens</span>
-<span class="sd">                &quot;passage_id&quot;: [], # 2d list of passage_id. Type must be str.</span>
-<span class="sd">            }</span>
-<span class="sd">    :return: The tuple contains a list of passage ids that retrieved from bm25 and its scores.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># I don&#39;t make queries operation to async, because queries length might be small, so it will occur overhead.</span>
-    <span class="n">tokenized_queries</span> <span class="o">=</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
-    <span class="n">id_result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">score_result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">tokenized_queries</span><span class="p">:</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">bm25_api</span><span class="o">.</span><span class="n">get_scores</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        <span class="n">sorted_scores</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">top_n_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">scores</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="n">top_k</span><span class="p">]</span>
-        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s1">&#39;passage_id&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_n_index</span><span class="p">]</span>
-        <span class="n">id_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
-        <span class="n">score_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sorted_scores</span><span class="p">[:</span><span class="n">top_k</span><span class="p">])</span>
+<span class="sd">	        {</span>
+<span class="sd">	            &quot;tokens&quot;: [], # 2d list of tokens</span>
+<span class="sd">	            &quot;passage_id&quot;: [], # 2d list of passage_id. Type must be str.</span>
+<span class="sd">	        }</span>
+<span class="sd">	:return: The tuple contains a list of passage ids that retrieved from bm25 and its scores.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># I don&#39;t make queries operation to async, because queries length might be small, so it will occur overhead.</span>
+	<span class="n">tokenized_queries</span> <span class="o">=</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
+	<span class="n">id_result</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">score_result</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">tokenized_queries</span><span class="p">:</span>
+		<span class="n">scores</span> <span class="o">=</span> <span class="n">bm25_api</span><span class="o">.</span><span class="n">get_scores</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+		<span class="n">sorted_scores</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="n">top_n_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">scores</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="n">top_k</span><span class="p">]</span>
+		<span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s2">&quot;passage_id&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_n_index</span><span class="p">]</span>
+		<span class="n">id_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+		<span class="n">score_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sorted_scores</span><span class="p">[:</span><span class="n">top_k</span><span class="p">])</span>
 
-    <span class="c1"># make a total result to top_k</span>
-    <span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span> <span class="o">=</span> <span class="n">evenly_distribute_passages</span><span class="p">(</span><span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)</span>
-    <span class="c1"># sort id_result and score_result by score</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[(</span><span class="n">_id</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span> <span class="k">for</span> <span class="n">score</span><span class="p">,</span> <span class="n">_id</span> <span class="ow">in</span>
-              <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">score_result</span><span class="p">,</span> <span class="n">id_result</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pair</span><span class="p">:</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
-    <span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">result</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">id_result</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">score_result</span><span class="p">)</span></div>
+	<span class="c1"># make a total result to top_k</span>
+	<span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span> <span class="o">=</span> <span class="n">evenly_distribute_passages</span><span class="p">(</span><span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)</span>
+	<span class="c1"># sort id_result and score_result by score</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="p">(</span><span class="n">_id</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">score</span><span class="p">,</span> <span class="n">_id</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+			<span class="nb">zip</span><span class="p">(</span><span class="n">score_result</span><span class="p">,</span> <span class="n">id_result</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pair</span><span class="p">:</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+		<span class="p">)</span>
+	<span class="p">]</span>
+	<span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">result</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">id_result</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">score_result</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="get_bm25_scores">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.get_bm25_scores">[docs]</a>
-<span class="k">def</span> <span class="nf">get_bm25_scores</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">tokenizer</span><span class="p">,</span>
-                    <span class="n">bm25_api</span><span class="p">:</span> <span class="n">BM25Okapi</span><span class="p">,</span> <span class="n">bm25_corpus</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">ids</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[]</span>
-    <span class="n">tokenized_queries</span> <span class="o">=</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
-    <span class="n">result_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">id_</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">}</span>
-    <span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">tokenized_queries</span><span class="p">:</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">bm25_api</span><span class="o">.</span><span class="n">get_scores</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">id_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ids</span><span class="p">):</span>
-            <span class="n">result_dict</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s1">&#39;passage_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">id_</span><span class="p">)])</span>
-    <span class="n">result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result_dict</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">result_df</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+<span class="k">def</span> <span class="nf">get_bm25_scores</span><span class="p">(</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">tokenizer</span><span class="p">,</span>
+	<span class="n">bm25_api</span><span class="p">:</span> <span class="n">BM25Okapi</span><span class="p">,</span>
+	<span class="n">bm25_corpus</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">ids</span><span class="p">):</span>
+		<span class="k">return</span> <span class="p">[]</span>
+	<span class="n">tokenized_queries</span> <span class="o">=</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
+	<span class="n">result_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">id_</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">}</span>
+	<span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">tokenized_queries</span><span class="p">:</span>
+		<span class="n">scores</span> <span class="o">=</span> <span class="n">bm25_api</span><span class="o">.</span><span class="n">get_scores</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">id_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ids</span><span class="p">):</span>
+			<span class="n">result_dict</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s2">&quot;passage_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">id_</span><span class="p">)])</span>
+	<span class="n">result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result_dict</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">result_df</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="tokenize">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.tokenize">[docs]</a>
 <span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">tokenizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">PreTrainedTokenizerBase</span><span class="p">):</span>
-        <span class="n">tokenized_queries</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span><span class="o">.</span><span class="n">input_ids</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">tokenized_queries</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">tokenized_queries</span></div>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">PreTrainedTokenizerBase</span><span class="p">):</span>
+		<span class="n">tokenized_queries</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span><span class="o">.</span><span class="n">input_ids</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">tokenized_queries</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">tokenized_queries</span></div>
 
 
 
 <div class="viewcode-block" id="bm25_ingest">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.bm25_ingest">[docs]</a>
-<span class="k">def</span> <span class="nf">bm25_ingest</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">bm25_tokenizer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;porter_stemmer&#39;</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">corpus_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.pkl&#39;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corpus path </span><span class="si">{</span><span class="n">corpus_path</span><span class="si">}</span><span class="s2"> is not a pickle file.&quot;</span><span class="p">)</span>
-    <span class="n">validate_corpus_dataset</span><span class="p">(</span><span class="n">corpus_data</span><span class="p">)</span>
-    <span class="n">ids</span> <span class="o">=</span> <span class="n">corpus_data</span><span class="p">[</span><span class="s1">&#39;doc_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">bm25_ingest</span><span class="p">(</span>
+	<span class="n">corpus_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">bm25_tokenizer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;porter_stemmer&quot;</span>
+<span class="p">):</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">corpus_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.pkl&quot;</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corpus path </span><span class="si">{</span><span class="n">corpus_path</span><span class="si">}</span><span class="s2"> is not a pickle file.&quot;</span><span class="p">)</span>
+	<span class="n">validate_corpus_dataset</span><span class="p">(</span><span class="n">corpus_data</span><span class="p">)</span>
+	<span class="n">ids</span> <span class="o">=</span> <span class="n">corpus_data</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-    <span class="c1"># Initialize bm25_corpus</span>
-    <span class="n">bm25_corpus</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+	<span class="c1"># Initialize bm25_corpus</span>
+	<span class="n">bm25_corpus</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
-    <span class="c1"># Load the BM25 corpus if it exists and get the passage ids</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
-            <span class="n">corpus</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-            <span class="n">bm25_corpus</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
-        <span class="n">duplicated_passage_rows</span> <span class="o">=</span> <span class="n">bm25_corpus</span><span class="p">[</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s1">&#39;passage_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ids</span><span class="p">)]</span>
-        <span class="n">new_passage</span> <span class="o">=</span> <span class="n">corpus_data</span><span class="p">[</span><span class="o">~</span><span class="n">corpus_data</span><span class="p">[</span><span class="s1">&#39;doc_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">duplicated_passage_rows</span><span class="p">[</span><span class="s1">&#39;passage_id&#39;</span><span class="p">])]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">new_passage</span> <span class="o">=</span> <span class="n">corpus_data</span>
+	<span class="c1"># Load the BM25 corpus if it exists and get the passage ids</span>
+	<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+			<span class="n">corpus</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+			<span class="n">bm25_corpus</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+		<span class="n">duplicated_passage_rows</span> <span class="o">=</span> <span class="n">bm25_corpus</span><span class="p">[</span><span class="n">bm25_corpus</span><span class="p">[</span><span class="s2">&quot;passage_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ids</span><span class="p">)]</span>
+		<span class="n">new_passage</span> <span class="o">=</span> <span class="n">corpus_data</span><span class="p">[</span>
+			<span class="o">~</span><span class="n">corpus_data</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">duplicated_passage_rows</span><span class="p">[</span><span class="s2">&quot;passage_id&quot;</span><span class="p">])</span>
+		<span class="p">]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">new_passage</span> <span class="o">=</span> <span class="n">corpus_data</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">new_passage</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">select_bm25_tokenizer</span><span class="p">(</span><span class="n">bm25_tokenizer</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">PreTrainedTokenizerBase</span><span class="p">):</span>
-            <span class="n">tokenized_corpus</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">new_passage</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">input_ids</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">tokenized_corpus</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">new_passage</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-        <span class="n">new_bm25_corpus</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;tokens&#39;</span><span class="p">:</span> <span class="n">tokenized_corpus</span><span class="p">,</span>
-            <span class="s1">&#39;passage_id&#39;</span><span class="p">:</span> <span class="n">new_passage</span><span class="p">[</span><span class="s1">&#39;doc_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-        <span class="p">})</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">new_passage</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+		<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">select_bm25_tokenizer</span><span class="p">(</span><span class="n">bm25_tokenizer</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">PreTrainedTokenizerBase</span><span class="p">):</span>
+			<span class="n">tokenized_corpus</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">new_passage</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">input_ids</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">tokenized_corpus</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">new_passage</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+		<span class="n">new_bm25_corpus</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+			<span class="p">{</span>
+				<span class="s2">&quot;tokens&quot;</span><span class="p">:</span> <span class="n">tokenized_corpus</span><span class="p">,</span>
+				<span class="s2">&quot;passage_id&quot;</span><span class="p">:</span> <span class="n">new_passage</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="p">}</span>
+		<span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">bm25_corpus</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="n">bm25_corpus_updated</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">bm25_corpus</span><span class="p">,</span> <span class="n">new_bm25_corpus</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">bm25_dict</span> <span class="o">=</span> <span class="n">bm25_corpus_updated</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;list&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">bm25_dict</span> <span class="o">=</span> <span class="n">new_bm25_corpus</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;list&#39;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">bm25_corpus</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+			<span class="n">bm25_corpus_updated</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+				<span class="p">[</span><span class="n">bm25_corpus</span><span class="p">,</span> <span class="n">new_bm25_corpus</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span>
+			<span class="p">)</span>
+			<span class="n">bm25_dict</span> <span class="o">=</span> <span class="n">bm25_corpus_updated</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;list&quot;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">bm25_dict</span> <span class="o">=</span> <span class="n">new_bm25_corpus</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;list&quot;</span><span class="p">)</span>
 
-        <span class="c1"># add tokenizer name to bm25_dict</span>
-        <span class="n">bm25_dict</span><span class="p">[</span><span class="s1">&#39;tokenizer_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bm25_tokenizer</span>
+		<span class="c1"># add tokenizer name to bm25_dict</span>
+		<span class="n">bm25_dict</span><span class="p">[</span><span class="s2">&quot;tokenizer_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bm25_tokenizer</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">bm25_dict</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span></div>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">corpus_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+			<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">bm25_dict</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="select_bm25_tokenizer">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.select_bm25_tokenizer">[docs]</a>
-<span class="k">def</span> <span class="nf">select_bm25_tokenizer</span><span class="p">(</span><span class="n">bm25_tokenizer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
-    <span class="k">if</span> <span class="n">bm25_tokenizer</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">BM25_TOKENIZER</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="k">return</span> <span class="n">BM25_TOKENIZER</span><span class="p">[</span><span class="n">bm25_tokenizer</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">select_bm25_tokenizer</span><span class="p">(</span>
+	<span class="n">bm25_tokenizer</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+	<span class="k">if</span> <span class="n">bm25_tokenizer</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">BM25_TOKENIZER</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+		<span class="k">return</span> <span class="n">BM25_TOKENIZER</span><span class="p">[</span><span class="n">bm25_tokenizer</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">bm25_tokenizer</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+	<span class="k">return</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">bm25_tokenizer</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 </pre></div>
         </article>

@@ -393,62 +393,66 @@
 
 <div class="viewcode-block" id="generate_qa_ragas">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.ragas.generate_qa_ragas">[docs]</a>
-<span class="k">def</span> <span class="nf">generate_qa_ragas</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-                      <span class="n">test_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                      <span class="n">distributions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                      <span class="n">generator_llm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseChatModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                      <span class="n">critic_llm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseChatModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                      <span class="n">embedding_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Embeddings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                      <span class="o">**</span><span class="n">kwargs</span>
-                      <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    QA dataset generation using RAGAS.</span>
-<span class="sd">    Returns qa dataset dataframe.</span>
+<span class="k">def</span> <span class="nf">generate_qa_ragas</span><span class="p">(</span>
+	<span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+	<span class="n">test_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+	<span class="n">distributions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">generator_llm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseChatModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">critic_llm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseChatModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">embedding_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Embeddings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	QA dataset generation using RAGAS.</span>
+<span class="sd">	Returns qa dataset dataframe.</span>
 
-<span class="sd">    :param corpus_df: Corpus dataframe.</span>
-<span class="sd">    :param test_size: Number of queries to generate.</span>
-<span class="sd">    :param distributions: Distributions of different types of questions.</span>
-<span class="sd">        Default is &quot;simple is 0.5, multi_context is 0.4, and reasoning is 0.1.&quot;</span>
-<span class="sd">        Each type of questions refers to Ragas evolution types.</span>
-<span class="sd">    :param generator_llm: Generator language model from Langchain.</span>
-<span class="sd">    :param critic_llm: Critic language model from Langchain.</span>
-<span class="sd">    :param embedding_model: Embedding model from Langchain.</span>
-<span class="sd">    :param kwargs: The additional option to pass to the &#39;generate_with_langchain_docs&#39; method.</span>
-<span class="sd">        You can input &#39;with_debugging_logs&#39;, &#39;is_async&#39;, &#39;raise_exceptions&#39;, and &#39;run_config&#39;.</span>
-<span class="sd">    :return: QA dataset dataframe.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">generator_llm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">generator_llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo-16k&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">critic_llm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">critic_llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4-turbo&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">embedding_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">embedding_model</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">distributions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">distributions</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">simple</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="n">multi_context</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
-            <span class="n">reasoning</span><span class="p">:</span> <span class="mf">0.1</span>
-        <span class="p">}</span>
+<span class="sd">	:param corpus_df: Corpus dataframe.</span>
+<span class="sd">	:param test_size: Number of queries to generate.</span>
+<span class="sd">	:param distributions: Distributions of different types of questions.</span>
+<span class="sd">	    Default is &quot;simple is 0.5, multi_context is 0.4, and reasoning is 0.1.&quot;</span>
+<span class="sd">	    Each type of questions refers to Ragas evolution types.</span>
+<span class="sd">	:param generator_llm: Generator language model from Langchain.</span>
+<span class="sd">	:param critic_llm: Critic language model from Langchain.</span>
+<span class="sd">	:param embedding_model: Embedding model from Langchain.</span>
+<span class="sd">	:param kwargs: The additional option to pass to the &#39;generate_with_langchain_docs&#39; method.</span>
+<span class="sd">	    You can input &#39;with_debugging_logs&#39;, &#39;is_async&#39;, &#39;raise_exceptions&#39;, and &#39;run_config&#39;.</span>
+<span class="sd">	:return: QA dataset dataframe.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">generator_llm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">generator_llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo-16k&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">critic_llm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">critic_llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4-turbo&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">embedding_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">embedding_model</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">distributions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">distributions</span> <span class="o">=</span> <span class="p">{</span><span class="n">simple</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">multi_context</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">reasoning</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}</span>
 
-    <span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">distributions</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;Sum of distributions must be 1.0&quot;</span>
+	<span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">distributions</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;Sum of distributions must be 1.0&quot;</span>
 
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">TestsetGenerator</span><span class="o">.</span><span class="n">from_langchain</span><span class="p">(</span><span class="n">generator_llm</span><span class="p">,</span> <span class="n">critic_llm</span><span class="p">,</span> <span class="n">embedding_model</span><span class="p">)</span>
+	<span class="n">generator</span> <span class="o">=</span> <span class="n">TestsetGenerator</span><span class="o">.</span><span class="n">from_langchain</span><span class="p">(</span>
+		<span class="n">generator_llm</span><span class="p">,</span> <span class="n">critic_llm</span><span class="p">,</span> <span class="n">embedding_model</span>
+	<span class="p">)</span>
 
-    <span class="n">langchain_docs</span> <span class="o">=</span> <span class="n">corpus_df_to_langchain_documents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span>
+	<span class="n">langchain_docs</span> <span class="o">=</span> <span class="n">corpus_df_to_langchain_documents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span>
 
-    <span class="n">test_df</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate_with_langchain_docs</span><span class="p">(</span><span class="n">langchain_docs</span><span class="p">,</span> <span class="n">test_size</span><span class="p">,</span> <span class="n">distributions</span><span class="o">=</span><span class="n">distributions</span><span class="p">,</span>
-                                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+	<span class="n">test_df</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate_with_langchain_docs</span><span class="p">(</span>
+		<span class="n">langchain_docs</span><span class="p">,</span> <span class="n">test_size</span><span class="p">,</span> <span class="n">distributions</span><span class="o">=</span><span class="n">distributions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
 
-    <span class="n">result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-        <span class="s1">&#39;qid&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_df</span><span class="p">))],</span>
-        <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;question&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-        <span class="s1">&#39;generation_gt&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;ground_truth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())),</span>
-    <span class="p">})</span>
+	<span class="n">result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+		<span class="p">{</span>
+			<span class="s2">&quot;qid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_df</span><span class="p">))],</span>
+			<span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="s2">&quot;generation_gt&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;ground_truth&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())),</span>
+		<span class="p">}</span>
+	<span class="p">)</span>
 
-    <span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;retrieval_gt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span> <span class="n">x</span><span class="p">)))</span>
-    <span class="n">result_df</span> <span class="o">=</span> <span class="n">cast_qa_dataset</span><span class="p">(</span><span class="n">result_df</span><span class="p">)</span>
+	<span class="n">result_df</span><span class="p">[</span><span class="s2">&quot;retrieval_gt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+		<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">],</span> <span class="n">x</span><span class="p">))</span>
+	<span class="p">)</span>
+	<span class="n">result_df</span> <span class="o">=</span> <span class="n">cast_qa_dataset</span><span class="p">(</span><span class="n">result_df</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">result_df</span></div>
+	<span class="k">return</span> <span class="n">result_df</span></div>
 
 </pre></div>
         </article>

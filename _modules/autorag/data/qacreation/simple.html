@@ -378,99 +378,108 @@
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.data.qacreation.simple</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
-
-<span class="kn">from</span> <span class="nn">guidance</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">gen</span>
-<span class="kn">import</span> <span class="nn">guidance</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
-
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="kn">import</span> <span class="nn">guidance</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">guidance</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">gen</span>
 
 
 <div class="viewcode-block" id="generate_qa_row">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.simple.generate_qa_row">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_qa_row</span><span class="p">(</span><span class="n">llm</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">corpus_data_row</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    this sample code to generate rag dataset using OpenAI chat model</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	this sample code to generate rag dataset using OpenAI chat model</span>
 
-<span class="sd">    :param llm: guidance model</span>
-<span class="sd">    :param corpus_data_row: need &quot;contents&quot; column</span>
-<span class="sd">    :return: should to be dict which has &quot;query&quot;, &quot;generation_gt&quot; columns at least.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">temp_llm</span> <span class="o">=</span> <span class="n">llm</span>
-    <span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">user</span><span class="p">():</span>
-        <span class="n">temp_llm</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    You have to found a passge to solve &quot;the problem&quot;. </span>
-<span class="s2">    You need to build a clean and clear set of (problem, passage, answer) in json format </span>
+<span class="sd">	:param llm: guidance model</span>
+<span class="sd">	:param corpus_data_row: need &quot;contents&quot; column</span>
+<span class="sd">	:return: should to be dict which has &quot;query&quot;, &quot;generation_gt&quot; columns at least.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">temp_llm</span> <span class="o">=</span> <span class="n">llm</span>
+	<span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">user</span><span class="p">():</span>
+		<span class="n">temp_llm</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    You have to found a passge to solve &quot;the problem&quot;.</span>
+<span class="s2">    You need to build a clean and clear set of (problem, passage, answer) in json format</span>
 <span class="s2">    so that you don&#39;t have to ask about &quot;the problem&quot; again.</span>
 <span class="s2">    problem need to end with question mark(&quot;?&quot;).</span>
-<span class="s2">    The process of approaching the answer based on the information of the given passage </span>
+<span class="s2">    The process of approaching the answer based on the information of the given passage</span>
 <span class="s2">    must be clearly and neatly displayed in the answer.</span><span class="se">\n</span>
 <span class="s2">    </span><span class="se">\n</span>
 <span class="s2">    Here is set of (problem, passage, answer) in JSON format:</span><span class="se">\n</span>
 <span class="s2">    </span><span class="se">{{\n</span>
 <span class="s2">        &quot;passage&quot;: </span><span class="si">{</span><span class="n">corpus_data_row</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span>
-<span class="s2">        &quot;problem&quot;: </span>
+<span class="s2">        &quot;problem&quot;:</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
-    <span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">assistant</span><span class="p">():</span>
-        <span class="n">temp_llm</span> <span class="o">+=</span> <span class="n">gen</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">user</span><span class="p">():</span>
-        <span class="n">temp_llm</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+	<span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">assistant</span><span class="p">():</span>
+		<span class="n">temp_llm</span> <span class="o">+=</span> <span class="n">gen</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">)</span>
+	<span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">user</span><span class="p">():</span>
+		<span class="n">temp_llm</span> <span class="o">+=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        &quot;answer&quot;:</span>
 <span class="s2">        &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">assistant</span><span class="p">():</span>
-        <span class="n">temp_llm</span> <span class="o">+=</span> <span class="n">gen</span><span class="p">(</span><span class="s1">&#39;generation_gt&#39;</span><span class="p">)</span>
+	<span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">assistant</span><span class="p">():</span>
+		<span class="n">temp_llm</span> <span class="o">+=</span> <span class="n">gen</span><span class="p">(</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">)</span>
 
-    <span class="n">corpus_data_row</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;qa_generation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;simple&quot;</span>
+	<span class="n">corpus_data_row</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;qa_generation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;simple&quot;</span>
 
-    <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">temp_llm</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;generation_gt&quot;</span><span class="p">:</span> <span class="n">temp_llm</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">response</span></div>
+	<span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">temp_llm</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">],</span> <span class="s2">&quot;generation_gt&quot;</span><span class="p">:</span> <span class="n">temp_llm</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]}</span>
+	<span class="k">return</span> <span class="n">response</span></div>
 
 
 
 <div class="viewcode-block" id="generate_simple_qa_dataset">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.simple.generate_simple_qa_dataset">[docs]</a>
-<span class="k">def</span> <span class="nf">generate_simple_qa_dataset</span><span class="p">(</span><span class="n">llm</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-                               <span class="n">output_filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">generate_row_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    corpus_data to qa_dataset</span>
-<span class="sd">    qa_dataset will be saved to filepath(file_dir/filename)</span>
+<span class="k">def</span> <span class="nf">generate_simple_qa_dataset</span><span class="p">(</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+	<span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+	<span class="n">output_filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">generate_row_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	corpus_data to qa_dataset</span>
+<span class="sd">	qa_dataset will be saved to filepath(file_dir/filename)</span>
 
-<span class="sd">    :param llm: guidance.models.Model</span>
-<span class="sd">    :param corpus_data: pd.DataFrame. refer to the basic structure</span>
-<span class="sd">    :param output_filepath: file_dir must exist, filepath must not exist. file extension must be .parquet</span>
-<span class="sd">    :param generate_row_function: input(llm, corpus_data_row, kwargs) output(dict[columns contain &quot;query&quot; and &quot;generation_gt&quot;])</span>
-<span class="sd">    :param kwargs: if generate_row_function requires more args, use kwargs</span>
-<span class="sd">    :return: qa_dataset as pd.DataFrame</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">output_file_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_file_dir</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;directory </span><span class="si">{</span><span class="n">output_file_dir</span><span class="si">}</span><span class="s2">  not found.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">output_filepath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;file path: </span><span class="si">{</span><span class="n">output_filepath</span><span class="si">}</span><span class="s1">  filename extension need to be &quot;.parquet&quot;&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_filepath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> already exists in </span><span class="si">{</span><span class="n">output_file_dir</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="sd">	:param llm: guidance.models.Model</span>
+<span class="sd">	:param corpus_data: pd.DataFrame. refer to the basic structure</span>
+<span class="sd">	:param output_filepath: file_dir must exist, filepath must not exist. file extension must be .parquet</span>
+<span class="sd">	:param generate_row_function: input(llm, corpus_data_row, kwargs) output(dict[columns contain &quot;query&quot; and &quot;generation_gt&quot;])</span>
+<span class="sd">	:param kwargs: if generate_row_function requires more args, use kwargs</span>
+<span class="sd">	:return: qa_dataset as pd.DataFrame</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">output_file_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_file_dir</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;directory </span><span class="si">{</span><span class="n">output_file_dir</span><span class="si">}</span><span class="s2">  not found.&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">output_filepath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s1">&#39;file path: </span><span class="si">{</span><span class="n">output_filepath</span><span class="si">}</span><span class="s1">  filename extension need to be &quot;.parquet&quot;&#39;</span>
+		<span class="p">)</span>
+	<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_filepath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> already exists in </span><span class="si">{</span><span class="n">output_file_dir</span><span class="si">}</span><span class="s2">.&quot;</span>
+		<span class="p">)</span>
 
-    <span class="n">qa_data_lst</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">corpus_data_row</span> <span class="ow">in</span> <span class="n">corpus_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">generate_row_function</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">corpus_data_row</span><span class="o">=</span><span class="n">corpus_data_row</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">qa_data_lst</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s1">&#39;qid&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>
-            <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">],</span>
-            <span class="s1">&#39;retrieval_gt&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">corpus_data_row</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]]],</span>
-            <span class="s1">&#39;generation_gt&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]],</span>
-            <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">corpus_data_row</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
-        <span class="p">})</span>
+	<span class="n">qa_data_lst</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">corpus_data_row</span> <span class="ow">in</span> <span class="n">corpus_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+		<span class="n">response</span> <span class="o">=</span> <span class="n">generate_row_function</span><span class="p">(</span>
+			<span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">corpus_data_row</span><span class="o">=</span><span class="n">corpus_data_row</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+		<span class="p">)</span>
+		<span class="n">qa_data_lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+			<span class="p">{</span>
+				<span class="s2">&quot;qid&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>
+				<span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">],</span>
+				<span class="s2">&quot;retrieval_gt&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="n">corpus_data_row</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]]],</span>
+				<span class="s2">&quot;generation_gt&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]],</span>
+				<span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">corpus_data_row</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">],</span>
+			<span class="p">}</span>
+		<span class="p">)</span>
 
-    <span class="n">qa_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">qa_data_lst</span><span class="p">)</span>
-    <span class="n">qa_dataset</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+	<span class="n">qa_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">qa_data_lst</span><span class="p">)</span>
+	<span class="n">qa_dataset</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">qa_dataset</span></div>
+	<span class="k">return</span> <span class="n">qa_dataset</span></div>
 
 </pre></div>
         </article>

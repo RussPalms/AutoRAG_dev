@@ -388,23 +388,23 @@
 <a class="viewcode-back" href="../../../api_spec/autorag.schema.html#autorag.schema.module.Module">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">Module</span><span class="p">:</span>
-    <span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">module_param</span><span class="p">:</span> <span class="n">Dict</span>
-    <span class="n">module</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+	<span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span>
+	<span class="n">module_param</span><span class="p">:</span> <span class="n">Dict</span>
+	<span class="n">module</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">get_support_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Module type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">get_support_modules</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Module type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Module.from_dict">
 <a class="viewcode-back" href="../../../api_spec/autorag.schema.html#autorag.schema.module.Module.from_dict">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">module_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
-        <span class="n">_module_dict</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">module_dict</span><span class="p">)</span>
-        <span class="n">module_type</span> <span class="o">=</span> <span class="n">_module_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;module_type&#39;</span><span class="p">)</span>
-        <span class="n">module_params</span> <span class="o">=</span> <span class="n">_module_dict</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">module_type</span><span class="p">,</span> <span class="n">module_params</span><span class="p">)</span></div>
+	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">module_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Module&quot;</span><span class="p">:</span>
+		<span class="n">_module_dict</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">module_dict</span><span class="p">)</span>
+		<span class="n">module_type</span> <span class="o">=</span> <span class="n">_module_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;module_type&quot;</span><span class="p">)</span>
+		<span class="n">module_params</span> <span class="o">=</span> <span class="n">_module_dict</span>
+		<span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">module_type</span><span class="p">,</span> <span class="n">module_params</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

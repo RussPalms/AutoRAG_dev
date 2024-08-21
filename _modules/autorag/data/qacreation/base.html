@@ -395,183 +395,219 @@
 
 <div class="viewcode-block" id="make_single_content_qa">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.base.make_single_content_qa">[docs]</a>
-<span class="k">def</span> <span class="nf">make_single_content_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-                           <span class="n">content_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                           <span class="n">qa_creation_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-                           <span class="n">output_filepath</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                           <span class="n">upsert</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                           <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
-                           <span class="n">cache_batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-                           <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Make single content (single-hop, single-document) QA dataset using given qa_creation_func.</span>
-<span class="sd">    It generates a single content QA dataset, which means its retrieval ground truth will be only one.</span>
-<span class="sd">    It is the most basic form of QA dataset.</span>
+<span class="k">def</span> <span class="nf">make_single_content_qa</span><span class="p">(</span>
+	<span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+	<span class="n">content_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+	<span class="n">qa_creation_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+	<span class="n">output_filepath</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">upsert</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+	<span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+	<span class="n">cache_batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Make single content (single-hop, single-document) QA dataset using given qa_creation_func.</span>
+<span class="sd">	It generates a single content QA dataset, which means its retrieval ground truth will be only one.</span>
+<span class="sd">	It is the most basic form of QA dataset.</span>
 
-<span class="sd">    :param corpus_df: The corpus dataframe to make QA dataset from.</span>
-<span class="sd">    :param content_size: This function will generate QA dataset for the given number of contents.</span>
-<span class="sd">    :param qa_creation_func: The function to create QA pairs.</span>
-<span class="sd">        You can use like `generate_qa_llama_index` or `generate_qa_llama_index_by_ratio`.</span>
-<span class="sd">        The input func must have `contents` parameter for the list of content string.</span>
-<span class="sd">    :param output_filepath: Optional filepath to save the parquet file.</span>
-<span class="sd">        If None, the function will return the processed_data as pd.DataFrame, but do not save as parquet.</span>
-<span class="sd">        File directory must exist. File extension must be .parquet</span>
-<span class="sd">    :param upsert: If true, the function will overwrite the existing file if it exists.</span>
-<span class="sd">        Default is False.</span>
-<span class="sd">    :param random_state: The random state for sampling corpus from the given corpus_df.</span>
-<span class="sd">    :param cache_batch: The number of batches to use for caching the generated QA dataset.</span>
-<span class="sd">        When the cache_batch size data is generated, the dataset will save to the designated output_filepath.</span>
-<span class="sd">        If the cache_batch size is too small, the process time will be longer.</span>
-<span class="sd">    :param kwargs: The keyword arguments for qa_creation_func.</span>
-<span class="sd">    :return: QA dataset dataframe.</span>
-<span class="sd">        You can save this as parquet file to use at AutoRAG.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">content_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;content_size must be greater than 0.&quot;</span>
-    <span class="k">if</span> <span class="n">content_size</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;content_size </span><span class="si">{</span><span class="n">content_size</span><span class="si">}</span><span class="s2"> is larger than the corpus size </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
-                       <span class="s2">&quot;Setting content_size to the corpus size.&quot;</span><span class="p">)</span>
-        <span class="n">content_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span>
-    <span class="n">sampled_corpus</span> <span class="o">=</span> <span class="n">corpus_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">content_size</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
-    <span class="n">sampled_corpus</span> <span class="o">=</span> <span class="n">sampled_corpus</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="sd">	:param corpus_df: The corpus dataframe to make QA dataset from.</span>
+<span class="sd">	:param content_size: This function will generate QA dataset for the given number of contents.</span>
+<span class="sd">	:param qa_creation_func: The function to create QA pairs.</span>
+<span class="sd">	    You can use like `generate_qa_llama_index` or `generate_qa_llama_index_by_ratio`.</span>
+<span class="sd">	    The input func must have `contents` parameter for the list of content string.</span>
+<span class="sd">	:param output_filepath: Optional filepath to save the parquet file.</span>
+<span class="sd">	    If None, the function will return the processed_data as pd.DataFrame, but do not save as parquet.</span>
+<span class="sd">	    File directory must exist. File extension must be .parquet</span>
+<span class="sd">	:param upsert: If true, the function will overwrite the existing file if it exists.</span>
+<span class="sd">	    Default is False.</span>
+<span class="sd">	:param random_state: The random state for sampling corpus from the given corpus_df.</span>
+<span class="sd">	:param cache_batch: The number of batches to use for caching the generated QA dataset.</span>
+<span class="sd">	    When the cache_batch size data is generated, the dataset will save to the designated output_filepath.</span>
+<span class="sd">	    If the cache_batch size is too small, the process time will be longer.</span>
+<span class="sd">	:param kwargs: The keyword arguments for qa_creation_func.</span>
+<span class="sd">	:return: QA dataset dataframe.</span>
+<span class="sd">	    You can save this as parquet file to use at AutoRAG.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">assert</span> <span class="n">content_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;content_size must be greater than 0.&quot;</span>
+	<span class="k">if</span> <span class="n">content_size</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;content_size </span><span class="si">{</span><span class="n">content_size</span><span class="si">}</span><span class="s2"> is larger than the corpus size </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
+			<span class="s2">&quot;Setting content_size to the corpus size.&quot;</span>
+		<span class="p">)</span>
+		<span class="n">content_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span>
+	<span class="n">sampled_corpus</span> <span class="o">=</span> <span class="n">corpus_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">content_size</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+	<span class="n">sampled_corpus</span> <span class="o">=</span> <span class="n">sampled_corpus</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">make_query_generation_gt</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;qa&#39;</span><span class="p">][</span><span class="s1">&#39;query&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;qa&#39;</span><span class="p">][</span><span class="s1">&#39;generation_gt&#39;</span><span class="p">]</span>
+	<span class="k">def</span> <span class="nf">make_query_generation_gt</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;qa&quot;</span><span class="p">][</span><span class="s2">&quot;query&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;qa&quot;</span><span class="p">][</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span>
 
-    <span class="n">qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sampled_corpus</span><span class="p">),</span> <span class="n">cache_batch</span><span class="p">))):</span>
-        <span class="n">qa</span> <span class="o">=</span> <span class="n">qa_creation_func</span><span class="p">(</span><span class="n">contents</span><span class="o">=</span><span class="n">sampled_corpus</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">cache_batch</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+	<span class="n">qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sampled_corpus</span><span class="p">),</span> <span class="n">cache_batch</span><span class="p">))):</span>
+		<span class="n">qa</span> <span class="o">=</span> <span class="n">qa_creation_func</span><span class="p">(</span>
+			<span class="n">contents</span><span class="o">=</span><span class="n">sampled_corpus</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">cache_batch</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
+		<span class="p">)</span>
 
-        <span class="n">temp_qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;qa&#39;</span><span class="p">:</span> <span class="n">qa</span><span class="p">,</span>
-            <span class="s1">&#39;retrieval_gt&#39;</span><span class="p">:</span> <span class="n">sampled_corpus</span><span class="p">[</span><span class="s1">&#39;doc_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">cache_batch</span><span class="p">],</span>
-        <span class="p">})</span>
-        <span class="n">temp_qa_data</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;qa&#39;</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">temp_qa_data</span><span class="p">[</span><span class="s1">&#39;qid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_qa_data</span><span class="p">))]</span>
-        <span class="n">temp_qa_data</span><span class="p">[[</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;generation_gt&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">make_query_generation_gt</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                                                      <span class="n">result_type</span><span class="o">=</span><span class="s1">&#39;expand&#39;</span><span class="p">)</span>
-        <span class="n">temp_qa_data</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;qa&#39;</span><span class="p">])</span>
+		<span class="n">temp_qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+			<span class="p">{</span>
+				<span class="s2">&quot;qa&quot;</span><span class="p">:</span> <span class="n">qa</span><span class="p">,</span>
+				<span class="s2">&quot;retrieval_gt&quot;</span><span class="p">:</span> <span class="n">sampled_corpus</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">cache_batch</span><span class="p">],</span>
+			<span class="p">}</span>
+		<span class="p">)</span>
+		<span class="n">temp_qa_data</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;qa&quot;</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="n">temp_qa_data</span><span class="p">[</span><span class="s2">&quot;qid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_qa_data</span><span class="p">))]</span>
+		<span class="n">temp_qa_data</span><span class="p">[[</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="s2">&quot;generation_gt&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+			<span class="n">make_query_generation_gt</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span>
+		<span class="p">)</span>
+		<span class="n">temp_qa_data</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;qa&quot;</span><span class="p">])</span>
 
-        <span class="n">temp_qa_data</span><span class="p">[</span><span class="s1">&#39;retrieval_gt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="p">[</span><span class="s1">&#39;retrieval_gt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[[</span><span class="n">x</span><span class="p">]])</span>
-        <span class="n">temp_qa_data</span><span class="p">[</span><span class="s1">&#39;generation_gt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="p">[</span><span class="s1">&#39;generation_gt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">])</span>
+		<span class="n">temp_qa_data</span><span class="p">[</span><span class="s2">&quot;retrieval_gt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="p">[</span><span class="s2">&quot;retrieval_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[[</span><span class="n">x</span><span class="p">]]</span>
+		<span class="p">)</span>
+		<span class="n">temp_qa_data</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_qa_data</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+		<span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">qa_data</span> <span class="o">=</span> <span class="n">temp_qa_data</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">qa_data</span><span class="p">,</span> <span class="n">temp_qa_data</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">output_filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">save_parquet_safe</span><span class="p">(</span><span class="n">qa_data</span><span class="p">,</span> <span class="n">output_filepath</span><span class="p">,</span> <span class="n">upsert</span><span class="o">=</span><span class="n">upsert</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="n">qa_data</span> <span class="o">=</span> <span class="n">temp_qa_data</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">qa_data</span><span class="p">,</span> <span class="n">temp_qa_data</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">output_filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">save_parquet_safe</span><span class="p">(</span><span class="n">qa_data</span><span class="p">,</span> <span class="n">output_filepath</span><span class="p">,</span> <span class="n">upsert</span><span class="o">=</span><span class="n">upsert</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">qa_data</span></div>
+	<span class="k">return</span> <span class="n">qa_data</span></div>
 
 
 
 <div class="viewcode-block" id="make_qa_with_existing_qa">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.qacreation.html#autorag.data.qacreation.base.make_qa_with_existing_qa">[docs]</a>
 <span class="k">def</span> <span class="nf">make_qa_with_existing_qa</span><span class="p">(</span>
-        <span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">existing_query_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">content_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">answer_creation_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">exist_gen_gt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">output_filepath</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">embedding_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;openai_embed_3_large&#39;</span><span class="p">,</span>
-        <span class="n">collection</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">chromadb</span><span class="o">.</span><span class="n">Collection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">upsert</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
-        <span class="n">cache_batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span>
+	<span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+	<span class="n">existing_query_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+	<span class="n">content_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+	<span class="n">answer_creation_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">exist_gen_gt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+	<span class="n">output_filepath</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">embedding_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;openai_embed_3_large&quot;</span><span class="p">,</span>
+	<span class="n">collection</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">chromadb</span><span class="o">.</span><span class="n">Collection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">upsert</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+	<span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+	<span class="n">cache_batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+	<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Make single-hop QA dataset using given qa_creation_func and existing queries.</span>
-<span class="sd">    </span>
-<span class="sd">    :param corpus_df: The corpus dataframe to make QA dataset from.</span>
-<span class="sd">    :param existing_query_df: Dataframe containing existing queries to use for QA pair creation.</span>
-<span class="sd">    :param content_size: This function will generate QA dataset for the given number of contents.</span>
-<span class="sd">    :param answer_creation_func: Optional function to create answer with input query.</span>
-<span class="sd">        If exist_gen_gt is False, this function must be given.</span>
-<span class="sd">    :param exist_gen_gt: Optional boolean to use existing generation_gt.</span>
-<span class="sd">        If True, the existing_query_df must have &#39;generation_gt&#39; column.</span>
-<span class="sd">        If False, the answer_creation_func must be given.</span>
-<span class="sd">    :param output_filepath: Optional filepath to save the parquet file.</span>
-<span class="sd">    :param embedding_model: The embedding model to use for vectorization.</span>
-<span class="sd">        You can add your own embedding model in the autorag.embedding_models.</span>
-<span class="sd">        Please refer to how to add an embedding model in this doc: https://docs.auto-rag.com/local_model.html</span>
-<span class="sd">        The default is &#39;openai_embed_3_large&#39;.</span>
-<span class="sd">    :param collection: The chromadb collection to use for vector DB.</span>
-<span class="sd">        You can make any chromadb collection and use it here.</span>
-<span class="sd">        If you already ingested the corpus_df to the collection, the embedding process will not be repeated.</span>
-<span class="sd">        The default is None. If None, it makes a temporary collection.</span>
-<span class="sd">    :param upsert: If true, the function will overwrite the existing file if it exists.</span>
-<span class="sd">    :param random_state: The random state for sampling corpus from the given corpus_df.</span>
-<span class="sd">    :param cache_batch: The number of batches to use for caching the generated QA dataset.</span>
-<span class="sd">    :param top_k: The number of sources to refer by model.</span>
-<span class="sd">        Default is 3.</span>
-<span class="sd">    :param kwargs: The keyword arguments for qa_creation_func.</span>
-<span class="sd">    :return: QA dataset dataframe.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="s1">&#39;query&#39;</span> <span class="ow">in</span> <span class="n">existing_query_df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;existing_query_df must have &#39;query&#39; column.&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Make single-hop QA dataset using given qa_creation_func and existing queries.</span>
 
-    <span class="k">if</span> <span class="n">exist_gen_gt</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="s1">&#39;generation_gt&#39;</span> <span class="ow">in</span> <span class="n">existing_query_df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;existing_query_df must have &#39;generation_gt&#39; column.&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="n">answer_creation_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;answer_creation_func must be given when exist_gen_gt is False.&quot;</span>
+<span class="sd">	:param corpus_df: The corpus dataframe to make QA dataset from.</span>
+<span class="sd">	:param existing_query_df: Dataframe containing existing queries to use for QA pair creation.</span>
+<span class="sd">	:param content_size: This function will generate QA dataset for the given number of contents.</span>
+<span class="sd">	:param answer_creation_func: Optional function to create answer with input query.</span>
+<span class="sd">	    If exist_gen_gt is False, this function must be given.</span>
+<span class="sd">	:param exist_gen_gt: Optional boolean to use existing generation_gt.</span>
+<span class="sd">	    If True, the existing_query_df must have &#39;generation_gt&#39; column.</span>
+<span class="sd">	    If False, the answer_creation_func must be given.</span>
+<span class="sd">	:param output_filepath: Optional filepath to save the parquet file.</span>
+<span class="sd">	:param embedding_model: The embedding model to use for vectorization.</span>
+<span class="sd">	    You can add your own embedding model in the autorag.embedding_models.</span>
+<span class="sd">	    Please refer to how to add an embedding model in this doc: https://docs.auto-rag.com/local_model.html</span>
+<span class="sd">	    The default is &#39;openai_embed_3_large&#39;.</span>
+<span class="sd">	:param collection: The chromadb collection to use for vector DB.</span>
+<span class="sd">	    You can make any chromadb collection and use it here.</span>
+<span class="sd">	    If you already ingested the corpus_df to the collection, the embedding process will not be repeated.</span>
+<span class="sd">	    The default is None. If None, it makes a temporary collection.</span>
+<span class="sd">	:param upsert: If true, the function will overwrite the existing file if it exists.</span>
+<span class="sd">	:param random_state: The random state for sampling corpus from the given corpus_df.</span>
+<span class="sd">	:param cache_batch: The number of batches to use for caching the generated QA dataset.</span>
+<span class="sd">	:param top_k: The number of sources to refer by model.</span>
+<span class="sd">	    Default is 3.</span>
+<span class="sd">	:param kwargs: The keyword arguments for qa_creation_func.</span>
+<span class="sd">	:return: QA dataset dataframe.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">assert</span> <span class="p">(</span>
+		<span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">existing_query_df</span><span class="o">.</span><span class="n">columns</span>
+	<span class="p">),</span> <span class="s2">&quot;existing_query_df must have &#39;query&#39; column.&quot;</span>
 
-    <span class="k">assert</span> <span class="n">content_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;content_size must be greater than 0.&quot;</span>
-    <span class="k">if</span> <span class="n">content_size</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;content_size </span><span class="si">{</span><span class="n">content_size</span><span class="si">}</span><span class="s2"> is larger than the corpus size </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
-                       <span class="s2">&quot;Setting content_size to the corpus size.&quot;</span><span class="p">)</span>
-        <span class="n">content_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">exist_gen_gt</span><span class="p">:</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="s2">&quot;generation_gt&quot;</span> <span class="ow">in</span> <span class="n">existing_query_df</span><span class="o">.</span><span class="n">columns</span>
+		<span class="p">),</span> <span class="s2">&quot;existing_query_df must have &#39;generation_gt&#39; column.&quot;</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="n">answer_creation_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+		<span class="p">),</span> <span class="s2">&quot;answer_creation_func must be given when exist_gen_gt is False.&quot;</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading local embedding model...&quot;</span><span class="p">)</span>
-    <span class="n">embeddings</span> <span class="o">=</span> <span class="n">autorag</span><span class="o">.</span><span class="n">embedding_models</span><span class="p">[</span><span class="n">embedding_model</span><span class="p">]</span>
+	<span class="k">assert</span> <span class="n">content_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;content_size must be greater than 0.&quot;</span>
+	<span class="k">if</span> <span class="n">content_size</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;content_size </span><span class="si">{</span><span class="n">content_size</span><span class="si">}</span><span class="s2"> is larger than the corpus size </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
+			<span class="s2">&quot;Setting content_size to the corpus size.&quot;</span>
+		<span class="p">)</span>
+		<span class="n">content_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">)</span>
 
-    <span class="c1"># Vector DB creation</span>
-    <span class="k">if</span> <span class="n">collection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">chroma_client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
-        <span class="n">collection_name</span> <span class="o">=</span> <span class="s2">&quot;auto-rag&quot;</span>
-        <span class="n">collection</span> <span class="o">=</span> <span class="n">chroma_client</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+	<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading local embedding model...&quot;</span><span class="p">)</span>
+	<span class="n">embeddings</span> <span class="o">=</span> <span class="n">autorag</span><span class="o">.</span><span class="n">embedding_models</span><span class="p">[</span><span class="n">embedding_model</span><span class="p">]</span>
 
-    <span class="c1"># embed corpus_df</span>
-    <span class="n">vectordb_ingest</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">corpus_df</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
-    <span class="n">vectordb_func</span> <span class="o">=</span> <span class="n">vectordb</span><span class="o">.</span><span class="n">__wrapped__</span>
-    <span class="n">retrieved_ids</span><span class="p">,</span> <span class="n">retrieve_scores</span> <span class="o">=</span> <span class="n">vectordb_func</span><span class="p">(</span><span class="n">existing_query_df</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
+	<span class="c1"># Vector DB creation</span>
+	<span class="k">if</span> <span class="n">collection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">chroma_client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+		<span class="n">collection_name</span> <span class="o">=</span> <span class="s2">&quot;auto-rag&quot;</span>
+		<span class="n">collection</span> <span class="o">=</span> <span class="n">chroma_client</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
 
-    <span class="n">retrieved_contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">retrieved_ids</span><span class="p">)</span>
-    <span class="n">input_passage_strs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Document </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">)]),</span>
-        <span class="n">retrieved_contents</span><span class="p">))</span>
+	<span class="c1"># embed corpus_df</span>
+	<span class="n">vectordb_ingest</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">corpus_df</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
+	<span class="n">vectordb_func</span> <span class="o">=</span> <span class="n">vectordb</span><span class="o">.</span><span class="n">__wrapped__</span>
+	<span class="n">retrieved_ids</span><span class="p">,</span> <span class="n">retrieve_scores</span> <span class="o">=</span> <span class="n">vectordb_func</span><span class="p">(</span>
+		<span class="n">existing_query_df</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">embeddings</span>
+	<span class="p">)</span>
 
-    <span class="n">retrieved_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-        <span class="s1">&#39;qid&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">existing_query_df</span><span class="p">))],</span>
-        <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">existing_query_df</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-        <span class="s1">&#39;retrieval_gt&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">retrieved_ids</span><span class="p">)),</span>
-        <span class="s1">&#39;input_passage_str&#39;</span><span class="p">:</span> <span class="n">input_passage_strs</span><span class="p">,</span>
-    <span class="p">})</span>
+	<span class="n">retrieved_contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">retrieved_ids</span><span class="p">)</span>
+	<span class="n">input_passage_strs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+		<span class="nb">map</span><span class="p">(</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+				<span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Document </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+			<span class="p">),</span>
+			<span class="n">retrieved_contents</span><span class="p">,</span>
+		<span class="p">)</span>
+	<span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">exist_gen_gt</span><span class="p">:</span>
-        <span class="n">generation_gt</span> <span class="o">=</span> <span class="n">existing_query_df</span><span class="p">[</span><span class="s1">&#39;generation_gt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">generation_gt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-            <span class="n">retrieved_qa_df</span><span class="p">[</span><span class="s1">&#39;generation_gt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generation_gt</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;In existing_query_df, generation_gt (per query) must be in the form of List[str].&quot;</span><span class="p">)</span>
+	<span class="n">retrieved_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+		<span class="p">{</span>
+			<span class="s2">&quot;qid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">existing_query_df</span><span class="p">))],</span>
+			<span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">existing_query_df</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="s2">&quot;retrieval_gt&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">retrieved_ids</span><span class="p">)),</span>
+			<span class="s2">&quot;input_passage_str&quot;</span><span class="p">:</span> <span class="n">input_passage_strs</span><span class="p">,</span>
+		<span class="p">}</span>
+	<span class="p">)</span>
 
-    <span class="n">sample_qa_df</span> <span class="o">=</span> <span class="n">retrieved_qa_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">content_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">retrieved_qa_df</span><span class="p">)),</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">exist_gen_gt</span><span class="p">:</span>
+		<span class="n">generation_gt</span> <span class="o">=</span> <span class="n">existing_query_df</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">generation_gt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+			<span class="n">retrieved_qa_df</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generation_gt</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+				<span class="s2">&quot;In existing_query_df, generation_gt (per query) must be in the form of List[str].&quot;</span>
+			<span class="p">)</span>
 
-    <span class="n">qa_df</span> <span class="o">=</span> <span class="n">sample_qa_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">qa_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_passage_str&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">sample_qa_df</span> <span class="o">=</span> <span class="n">retrieved_qa_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+		<span class="n">n</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">content_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">retrieved_qa_df</span><span class="p">)),</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+	<span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">exist_gen_gt</span><span class="p">:</span>
-        <span class="n">generation_gt</span> <span class="o">=</span> <span class="n">answer_creation_func</span><span class="p">(</span><span class="n">contents</span><span class="o">=</span><span class="n">sample_qa_df</span><span class="p">[</span><span class="s1">&#39;input_passage_str&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-                                             <span class="n">queries</span><span class="o">=</span><span class="n">sample_qa_df</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-                                             <span class="n">batch</span><span class="o">=</span><span class="n">cache_batch</span><span class="p">,</span>
-                                             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">qa_df</span><span class="p">[</span><span class="s1">&#39;generation_gt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generation_gt</span>
+	<span class="n">qa_df</span> <span class="o">=</span> <span class="n">sample_qa_df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">qa_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;input_passage_str&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">output_filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">save_parquet_safe</span><span class="p">(</span><span class="n">qa_df</span><span class="p">,</span> <span class="n">output_filepath</span><span class="p">,</span> <span class="n">upsert</span><span class="o">=</span><span class="n">upsert</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">exist_gen_gt</span><span class="p">:</span>
+		<span class="n">generation_gt</span> <span class="o">=</span> <span class="n">answer_creation_func</span><span class="p">(</span>
+			<span class="n">contents</span><span class="o">=</span><span class="n">sample_qa_df</span><span class="p">[</span><span class="s2">&quot;input_passage_str&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="n">queries</span><span class="o">=</span><span class="n">sample_qa_df</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="n">batch</span><span class="o">=</span><span class="n">cache_batch</span><span class="p">,</span>
+			<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+		<span class="p">)</span>
+		<span class="n">qa_df</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generation_gt</span>
 
-    <span class="k">return</span> <span class="n">qa_df</span></div>
+	<span class="k">if</span> <span class="n">output_filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">save_parquet_safe</span><span class="p">(</span><span class="n">qa_df</span><span class="p">,</span> <span class="n">output_filepath</span><span class="p">,</span> <span class="n">upsert</span><span class="o">=</span><span class="n">upsert</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">qa_df</span></div>
 
 </pre></div>
         </article>

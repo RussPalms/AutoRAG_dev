@@ -387,58 +387,67 @@
 <div class="viewcode-block" id="prev_next_augmenter">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passageaugmenter.html#autorag.nodes.passageaugmenter.prev_next_augmenter.prev_next_augmenter">[docs]</a>
 <span class="nd">@passage_augmenter_node</span>
-<span class="k">def</span> <span class="nf">prev_next_augmenter</span><span class="p">(</span><span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-                        <span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-                        <span class="n">num_passages</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-                        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;both&#39;</span>
-                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add passages before and/or after the retrieved passage.</span>
-<span class="sd">    For more information, visit https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/PrevNextPostprocessorDemo/.</span>
+<span class="k">def</span> <span class="nf">prev_next_augmenter</span><span class="p">(</span>
+	<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+	<span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+	<span class="n">num_passages</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Add passages before and/or after the retrieved passage.</span>
+<span class="sd">	For more information, visit https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/PrevNextPostprocessorDemo/.</span>
 
-<span class="sd">    :param ids_list: The list of lists of ids retrieved</span>
-<span class="sd">    :param corpus_df: The corpus dataframe</span>
-<span class="sd">    :param num_passages: The number of passages to add before and after the retrieved passage</span>
-<span class="sd">        Default is 1.</span>
-<span class="sd">    :param mode: The mode of augmentation</span>
-<span class="sd">        &#39;prev&#39;: add passages before the retrieved passage</span>
-<span class="sd">        &#39;next&#39;: add passages after the retrieved passage</span>
-<span class="sd">        &#39;both&#39;: add passages before and after the retrieved passage</span>
-<span class="sd">        Default is &#39;next&#39;.</span>
-<span class="sd">    :return: The list of lists of augmented ids</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;prev&#39;</span><span class="p">,</span> <span class="s1">&#39;next&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mode must be &#39;prev&#39;, &#39;next&#39;, or &#39;both&#39;, but got </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">	:param ids_list: The list of lists of ids retrieved</span>
+<span class="sd">	:param corpus_df: The corpus dataframe</span>
+<span class="sd">	:param num_passages: The number of passages to add before and after the retrieved passage</span>
+<span class="sd">	    Default is 1.</span>
+<span class="sd">	:param mode: The mode of augmentation</span>
+<span class="sd">	    &#39;prev&#39;: add passages before the retrieved passage</span>
+<span class="sd">	    &#39;next&#39;: add passages after the retrieved passage</span>
+<span class="sd">	    &#39;both&#39;: add passages before and after the retrieved passage</span>
+<span class="sd">	    Default is &#39;next&#39;.</span>
+<span class="sd">	:return: The list of lists of augmented ids</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;prev&quot;</span><span class="p">,</span> <span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">]:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mode must be &#39;prev&#39;, &#39;next&#39;, or &#39;both&#39;, but got </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">augmented_ids</span> <span class="o">=</span> <span class="p">[(</span><span class="k">lambda</span> <span class="n">ids</span><span class="p">:</span> <span class="n">prev_next_augmenter_pure</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">corpus_df</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">num_passages</span><span class="p">))(</span><span class="n">ids</span><span class="p">)</span> <span class="k">for</span> <span class="n">ids</span> <span class="ow">in</span>
-                     <span class="n">ids_list</span><span class="p">]</span>
+	<span class="n">augmented_ids</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="p">(</span><span class="k">lambda</span> <span class="n">ids</span><span class="p">:</span> <span class="n">prev_next_augmenter_pure</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">corpus_df</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">num_passages</span><span class="p">))(</span><span class="n">ids</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">ids_list</span>
+	<span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">augmented_ids</span></div>
+	<span class="k">return</span> <span class="n">augmented_ids</span></div>
 
 
 
 <div class="viewcode-block" id="prev_next_augmenter_pure">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passageaugmenter.html#autorag.nodes.passageaugmenter.prev_next_augmenter.prev_next_augmenter_pure">[docs]</a>
-<span class="k">def</span> <span class="nf">prev_next_augmenter_pure</span><span class="p">(</span><span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_passages</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">fetch_id_sequence</span><span class="p">(</span><span class="n">start_id</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="n">sequence</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">current_id</span> <span class="o">=</span> <span class="n">start_id</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_passages</span><span class="p">):</span>
-            <span class="n">current_id</span> <span class="o">=</span> <span class="n">corpus_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">corpus_df</span><span class="p">[</span><span class="s1">&#39;doc_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_id</span><span class="p">][</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">current_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">break</span>
-            <span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">sequence</span>
+<span class="k">def</span> <span class="nf">prev_next_augmenter_pure</span><span class="p">(</span>
+	<span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">corpus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_passages</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">):</span>
+	<span class="k">def</span> <span class="nf">fetch_id_sequence</span><span class="p">(</span><span class="n">start_id</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+		<span class="n">sequence</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">current_id</span> <span class="o">=</span> <span class="n">start_id</span>
+		<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_passages</span><span class="p">):</span>
+			<span class="n">current_id</span> <span class="o">=</span> <span class="p">(</span>
+				<span class="n">corpus_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">corpus_df</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_id</span><span class="p">][</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
+				<span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+				<span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+			<span class="p">)</span>
+			<span class="k">if</span> <span class="n">current_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="k">break</span>
+			<span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_id</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">sequence</span>
 
-    <span class="n">augmented_group</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
-        <span class="n">current_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">id_</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;prev&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">]:</span>
-            <span class="n">current_ids</span> <span class="o">=</span> <span class="n">fetch_id_sequence</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="s1">&#39;prev_id&#39;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">current_ids</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">]:</span>
-            <span class="n">current_ids</span> <span class="o">+=</span> <span class="n">fetch_id_sequence</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="s1">&#39;next_id&#39;</span><span class="p">)</span>
-        <span class="n">augmented_group</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">current_ids</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">augmented_group</span></div>
+	<span class="n">augmented_group</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+		<span class="n">current_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">id_</span><span class="p">]</span>
+		<span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;prev&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">]:</span>
+			<span class="n">current_ids</span> <span class="o">=</span> <span class="n">fetch_id_sequence</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="s2">&quot;prev_id&quot;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">current_ids</span>
+		<span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">]:</span>
+			<span class="n">current_ids</span> <span class="o">+=</span> <span class="n">fetch_id_sequence</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="s2">&quot;next_id&quot;</span><span class="p">)</span>
+		<span class="n">augmented_group</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">current_ids</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">augmented_group</span></div>
 
 </pre></div>
         </article>

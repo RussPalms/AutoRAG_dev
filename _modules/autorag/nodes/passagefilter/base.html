@@ -394,44 +394,68 @@
 <div class="viewcode-block" id="passage_filter_node">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagefilter.html#autorag.nodes.passagefilter.base.passage_filter_node">[docs]</a>
 <span class="k">def</span> <span class="nf">passage_filter_node</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s1">&#39;retrieved_contents&#39;</span><span class="p">,</span> <span class="s1">&#39;retrieved_ids&#39;</span><span class="p">,</span> <span class="s1">&#39;retrieve_scores&#39;</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-            <span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
-            <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running passage filter node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
-        <span class="n">validate_qa_dataset</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
+		<span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running passage filter node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
+		<span class="n">validate_qa_dataset</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
 
-        <span class="c1"># find queries columns</span>
-        <span class="k">assert</span> <span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must have query column.&quot;</span>
-        <span class="n">queries</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="c1"># find queries columns</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
+		<span class="p">),</span> <span class="s2">&quot;previous_result must have query column.&quot;</span>
+		<span class="n">queries</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-        <span class="c1"># find contents_list columns</span>
-        <span class="k">assert</span> <span class="s2">&quot;retrieved_contents&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must have retrieved_contents column.&quot;</span>
-        <span class="n">contents</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="c1"># find contents_list columns</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="s2">&quot;retrieved_contents&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
+		<span class="p">),</span> <span class="s2">&quot;previous_result must have retrieved_contents column.&quot;</span>
+		<span class="n">contents</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-        <span class="c1"># find scores columns</span>
-        <span class="k">assert</span> <span class="s2">&quot;retrieve_scores&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must have retrieve_scores column.&quot;</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="c1"># find scores columns</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="s2">&quot;retrieve_scores&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
+		<span class="p">),</span> <span class="s2">&quot;previous_result must have retrieve_scores column.&quot;</span>
+		<span class="n">scores</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-        <span class="c1"># find ids columns</span>
-        <span class="k">assert</span> <span class="s2">&quot;retrieved_ids&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must have retrieved_ids column.&quot;</span>
-        <span class="n">ids</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="c1"># find ids columns</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="s2">&quot;retrieved_ids&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
+		<span class="p">),</span> <span class="s2">&quot;previous_result must have retrieved_ids column.&quot;</span>
+		<span class="n">ids</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;recency_filter&#39;</span><span class="p">:</span>
-            <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;corpus.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;pyarrow&#39;</span><span class="p">)</span>
-            <span class="n">metadatas</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
-            <span class="n">times</span> <span class="o">=</span> <span class="p">[[</span><span class="n">time</span><span class="p">[</span><span class="s1">&#39;last_modified_datetime&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">time_list</span><span class="p">]</span> <span class="k">for</span> <span class="n">time_list</span> <span class="ow">in</span> <span class="n">metadatas</span><span class="p">]</span>
-            <span class="n">filtered_contents</span><span class="p">,</span> <span class="n">filtered_ids</span><span class="p">,</span> <span class="n">filtered_scores</span> \
-                <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">contents_list</span><span class="o">=</span><span class="n">contents</span><span class="p">,</span> <span class="n">scores_list</span><span class="o">=</span><span class="n">scores</span><span class="p">,</span> <span class="n">ids_list</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">time_list</span><span class="o">=</span><span class="n">times</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">filtered_contents</span><span class="p">,</span> <span class="n">filtered_ids</span><span class="p">,</span> <span class="n">filtered_scores</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents_list</span><span class="o">=</span><span class="n">contents</span><span class="p">,</span>
-                                                                    <span class="n">scores_list</span><span class="o">=</span><span class="n">scores</span><span class="p">,</span> <span class="n">ids_list</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;recency_filter&quot;</span><span class="p">:</span>
+			<span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
+				<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;corpus.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
+			<span class="p">)</span>
+			<span class="n">metadatas</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span>
+			<span class="n">times</span> <span class="o">=</span> <span class="p">[</span>
+				<span class="p">[</span><span class="n">time</span><span class="p">[</span><span class="s2">&quot;last_modified_datetime&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">time_list</span><span class="p">]</span>
+				<span class="k">for</span> <span class="n">time_list</span> <span class="ow">in</span> <span class="n">metadatas</span>
+			<span class="p">]</span>
+			<span class="n">filtered_contents</span><span class="p">,</span> <span class="n">filtered_ids</span><span class="p">,</span> <span class="n">filtered_scores</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span>
+				<span class="n">contents_list</span><span class="o">=</span><span class="n">contents</span><span class="p">,</span>
+				<span class="n">scores_list</span><span class="o">=</span><span class="n">scores</span><span class="p">,</span>
+				<span class="n">ids_list</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span>
+				<span class="n">time_list</span><span class="o">=</span><span class="n">times</span><span class="p">,</span>
+				<span class="o">*</span><span class="n">args</span><span class="p">,</span>
+				<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+			<span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">filtered_contents</span><span class="p">,</span> <span class="n">filtered_ids</span><span class="p">,</span> <span class="n">filtered_scores</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span>
+				<span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
+				<span class="n">contents_list</span><span class="o">=</span><span class="n">contents</span><span class="p">,</span>
+				<span class="n">scores_list</span><span class="o">=</span><span class="n">scores</span><span class="p">,</span>
+				<span class="n">ids_list</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span>
+				<span class="o">*</span><span class="n">args</span><span class="p">,</span>
+				<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+			<span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">filtered_contents</span><span class="p">,</span> <span class="n">filtered_ids</span><span class="p">,</span> <span class="n">filtered_scores</span>
+		<span class="k">return</span> <span class="n">filtered_contents</span><span class="p">,</span> <span class="n">filtered_ids</span><span class="p">,</span> <span class="n">filtered_scores</span>
 
-    <span class="k">return</span> <span class="n">wrapper</span></div>
+	<span class="k">return</span> <span class="n">wrapper</span></div>
 
 </pre></div>
         </article>

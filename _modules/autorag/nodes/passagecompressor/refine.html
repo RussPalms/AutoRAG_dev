@@ -393,53 +393,55 @@
 <div class="viewcode-block" id="refine">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.refine.refine">[docs]</a>
 <span class="nd">@passage_compressor_node</span>
-<span class="k">def</span> <span class="nf">refine</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-           <span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-           <span class="n">scores</span><span class="p">,</span>
-           <span class="n">ids</span><span class="p">,</span>
-           <span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
-           <span class="n">prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-           <span class="n">chat_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-           <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-           <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Refine a response to a query across text chunks.</span>
-<span class="sd">    This function is a wrapper for llama_index.response_synthesizers.Refine.</span>
-<span class="sd">    For more information, visit https://docs.llamaindex.ai/en/stable/examples/response_synthesizers/refine/.</span>
+<span class="k">def</span> <span class="nf">refine</span><span class="p">(</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+	<span class="n">scores</span><span class="p">,</span>
+	<span class="n">ids</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">LLMPredictorType</span><span class="p">,</span>
+	<span class="n">prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">chat_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Refine a response to a query across text chunks.</span>
+<span class="sd">	This function is a wrapper for llama_index.response_synthesizers.Refine.</span>
+<span class="sd">	For more information, visit https://docs.llamaindex.ai/en/stable/examples/response_synthesizers/refine/.</span>
 
-<span class="sd">    :param queries: The queries for retrieved passages.</span>
-<span class="sd">    :param contents: The contents of retrieved passages.</span>
-<span class="sd">    :param scores: The scores of retrieved passages.</span>
-<span class="sd">        Do not use in this function, so you can pass an empty list.</span>
-<span class="sd">    :param ids: The ids of retrieved passages.</span>
-<span class="sd">        Do not use in this function, so you can pass an empty list.</span>
-<span class="sd">    :param llm: The llm instance that will be used to summarize.</span>
-<span class="sd">    :param prompt: The prompt template for refine.</span>
-<span class="sd">        If you want to use chat prompt, you should pass chat_prompt instead.</span>
-<span class="sd">        At prompt, you must specify where to put &#39;context_msg&#39; and &#39;query_str&#39;.</span>
-<span class="sd">        Default is None. When it is None, it will use llama index default prompt.</span>
-<span class="sd">    :param chat_prompt: The chat prompt template for refine.</span>
-<span class="sd">        If you want to use normal prompt, you should pass prompt instead.</span>
-<span class="sd">        At prompt, you must specify where to put &#39;context_msg&#39; and &#39;query_str&#39;.</span>
-<span class="sd">        Default is None. When it is None, it will use llama index default chat prompt.</span>
-<span class="sd">    :param batch: The batch size for llm.</span>
-<span class="sd">        Set low if you face some errors.</span>
-<span class="sd">        Default is 16.</span>
-<span class="sd">    :return: The list of compressed texts.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_chat_model</span><span class="p">(</span><span class="n">llm</span><span class="p">):</span>
-        <span class="n">refine_template</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="n">PromptType</span><span class="o">.</span><span class="n">REFINE</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">chat_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">is_chat_model</span><span class="p">(</span><span class="n">llm</span><span class="p">):</span>
-        <span class="n">refine_template</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">chat_prompt</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="n">PromptType</span><span class="o">.</span><span class="n">REFINE</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">refine_template</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">summarizer</span> <span class="o">=</span> <span class="n">Refine</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span>
-                        <span class="n">refine_template</span><span class="o">=</span><span class="n">refine_template</span><span class="p">,</span>
-                        <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">summarizer</span><span class="o">.</span><span class="n">aget_response</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span> <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">)]</span>
-    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">results</span></div>
+<span class="sd">	:param queries: The queries for retrieved passages.</span>
+<span class="sd">	:param contents: The contents of retrieved passages.</span>
+<span class="sd">	:param scores: The scores of retrieved passages.</span>
+<span class="sd">	    Do not use in this function, so you can pass an empty list.</span>
+<span class="sd">	:param ids: The ids of retrieved passages.</span>
+<span class="sd">	    Do not use in this function, so you can pass an empty list.</span>
+<span class="sd">	:param llm: The llm instance that will be used to summarize.</span>
+<span class="sd">	:param prompt: The prompt template for refine.</span>
+<span class="sd">	    If you want to use chat prompt, you should pass chat_prompt instead.</span>
+<span class="sd">	    At prompt, you must specify where to put &#39;context_msg&#39; and &#39;query_str&#39;.</span>
+<span class="sd">	    Default is None. When it is None, it will use llama index default prompt.</span>
+<span class="sd">	:param chat_prompt: The chat prompt template for refine.</span>
+<span class="sd">	    If you want to use normal prompt, you should pass prompt instead.</span>
+<span class="sd">	    At prompt, you must specify where to put &#39;context_msg&#39; and &#39;query_str&#39;.</span>
+<span class="sd">	    Default is None. When it is None, it will use llama index default chat prompt.</span>
+<span class="sd">	:param batch: The batch size for llm.</span>
+<span class="sd">	    Set low if you face some errors.</span>
+<span class="sd">	    Default is 16.</span>
+<span class="sd">	:return: The list of compressed texts.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_chat_model</span><span class="p">(</span><span class="n">llm</span><span class="p">):</span>
+		<span class="n">refine_template</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="n">PromptType</span><span class="o">.</span><span class="n">REFINE</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">chat_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">is_chat_model</span><span class="p">(</span><span class="n">llm</span><span class="p">):</span>
+		<span class="n">refine_template</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">chat_prompt</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="n">PromptType</span><span class="o">.</span><span class="n">REFINE</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">refine_template</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">summarizer</span> <span class="o">=</span> <span class="n">Refine</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">refine_template</span><span class="o">=</span><span class="n">refine_template</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">summarizer</span><span class="o">.</span><span class="n">aget_response</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+	<span class="p">]</span>
+	<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">results</span></div>
 
 </pre></div>
         </article>

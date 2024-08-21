@@ -393,38 +393,49 @@
 <div class="viewcode-block" id="prompt_maker_node">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.base.prompt_maker_node">[docs]</a>
 <span class="k">def</span> <span class="nf">prompt_maker_node</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;prompts&quot;</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-            <span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
-            <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running prompt maker node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
-        <span class="c1"># get query and retrieved contents from previous_result</span>
-        <span class="k">assert</span> <span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must have query column.&quot;</span>
-        <span class="k">assert</span> <span class="s2">&quot;retrieved_contents&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must have retrieved_contents column.&quot;</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">retrieved_contents</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">prompt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;prompt&quot;</span><span class="p">)</span>
+	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;prompts&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
+		<span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running prompt maker node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
+		<span class="c1"># get query and retrieved contents from previous_result</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
+		<span class="p">),</span> <span class="s2">&quot;previous_result must have query column.&quot;</span>
+		<span class="k">assert</span> <span class="p">(</span>
+			<span class="s2">&quot;retrieved_contents&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
+		<span class="p">),</span> <span class="s2">&quot;previous_result must have retrieved_contents column.&quot;</span>
+		<span class="n">query</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="n">retrieved_contents</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="n">prompt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;prompt&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;fstring&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;long_context_reorder&#39;</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="s2">&quot;retrieve_scores&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s2">&quot;previous_result must have retrieve_scores column.&quot;</span>
-            <span class="n">retrieve_scores</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="n">retrieve_scores</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;window_replacement&#39;</span><span class="p">:</span>
-            <span class="n">retrieved_ids</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="c1"># load corpus</span>
-            <span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
-            <span class="n">corpus_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;corpus.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;pyarrow&#39;</span><span class="p">)</span>
-            <span class="c1"># get metadata from corpus</span>
-            <span class="n">retrieved_metadata</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="n">corpus_data</span><span class="p">,</span> <span class="n">retrieved_ids</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="n">retrieved_metadata</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Module </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not implemented or not supported.&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;fstring&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;long_context_reorder&quot;</span><span class="p">:</span>
+			<span class="k">assert</span> <span class="p">(</span>
+				<span class="s2">&quot;retrieve_scores&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
+			<span class="p">),</span> <span class="s2">&quot;previous_result must have retrieve_scores column.&quot;</span>
+			<span class="n">retrieve_scores</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="n">retrieve_scores</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;window_replacement&quot;</span><span class="p">:</span>
+			<span class="n">retrieved_ids</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+			<span class="c1"># load corpus</span>
+			<span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+			<span class="n">corpus_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
+				<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;corpus.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
+			<span class="p">)</span>
+			<span class="c1"># get metadata from corpus</span>
+			<span class="n">retrieved_metadata</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span>
+				<span class="n">corpus_data</span><span class="p">,</span> <span class="n">retrieved_ids</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;metadata&quot;</span>
+			<span class="p">)</span>
+			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="n">retrieved_metadata</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+				<span class="sa">f</span><span class="s2">&quot;Module </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not implemented or not supported.&quot;</span>
+			<span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">wrapper</span></div>
+	<span class="k">return</span> <span class="n">wrapper</span></div>
 
 </pre></div>
         </article>

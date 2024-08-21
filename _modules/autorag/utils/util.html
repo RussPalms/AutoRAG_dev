@@ -403,571 +403,628 @@
 
 <div class="viewcode-block" id="fetch_contents">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.fetch_contents">[docs]</a>
-<span class="k">def</span> <span class="nf">fetch_contents</span><span class="p">(</span><span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-                   <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;contents&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-    <span class="k">def</span> <span class="nf">fetch_contents_pure</span><span class="p">(</span><span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fetch_one_content</span><span class="p">(</span><span class="n">corpus_data</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">column_name</span><span class="p">),</span> <span class="n">ids</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">fetch_contents</span><span class="p">(</span>
+	<span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;contents&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+	<span class="k">def</span> <span class="nf">fetch_contents_pure</span><span class="p">(</span>
+		<span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span>
+	<span class="p">):</span>
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fetch_one_content</span><span class="p">(</span><span class="n">corpus_data</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">column_name</span><span class="p">),</span> <span class="n">ids</span><span class="p">))</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="n">flatten_apply</span><span class="p">(</span><span class="n">fetch_contents_pure</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">corpus_data</span><span class="o">=</span><span class="n">corpus_data</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="n">column_name</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+	<span class="n">result</span> <span class="o">=</span> <span class="n">flatten_apply</span><span class="p">(</span>
+		<span class="n">fetch_contents_pure</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">corpus_data</span><span class="o">=</span><span class="n">corpus_data</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="n">column_name</span>
+	<span class="p">)</span>
+	<span class="k">return</span> <span class="n">result</span></div>
 
 
 
 <div class="viewcode-block" id="fetch_one_content">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.fetch_one_content">[docs]</a>
-<span class="k">def</span> <span class="nf">fetch_one_content</span><span class="p">(</span><span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                      <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;contents&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">id_</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">fetch_result</span> <span class="o">=</span> <span class="n">corpus_data</span><span class="p">[</span><span class="n">corpus_data</span><span class="p">[</span><span class="s1">&#39;doc_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">id_</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">fetch_result</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;doc_id: </span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2"> not found in corpus_data.&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">fetch_result</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+<span class="k">def</span> <span class="nf">fetch_one_content</span><span class="p">(</span>
+	<span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;contents&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">id_</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]:</span>
+			<span class="k">return</span> <span class="kc">None</span>
+		<span class="n">fetch_result</span> <span class="o">=</span> <span class="n">corpus_data</span><span class="p">[</span><span class="n">corpus_data</span><span class="p">[</span><span class="s2">&quot;doc_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">id_</span><span class="p">]</span>
+		<span class="k">if</span> <span class="n">fetch_result</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;doc_id: </span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s2"> not found in corpus_data.&quot;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">fetch_result</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">None</span></div>
 
 
 
 <div class="viewcode-block" id="result_to_dataframe">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.result_to_dataframe">[docs]</a>
 <span class="k">def</span> <span class="nf">result_to_dataframe</span><span class="p">(</span><span class="n">column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Decorator for converting results to pd.DataFrame.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Decorator for converting results to pd.DataFrame.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">decorator_result_to_dataframe</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
-        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">df_input</span> <span class="o">=</span> <span class="p">{</span><span class="n">column_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">results</span><span class="p">}</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">df_input</span> <span class="o">=</span> <span class="p">{</span><span class="n">column_name</span><span class="p">:</span> <span class="n">result</span> <span class="k">for</span> <span class="n">result</span><span class="p">,</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)}</span>
-            <span class="n">result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_input</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">result_df</span>
+	<span class="k">def</span> <span class="nf">decorator_result_to_dataframe</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+		<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+		<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+			<span class="n">results</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="n">df_input</span> <span class="o">=</span> <span class="p">{</span><span class="n">column_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">results</span><span class="p">}</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">df_input</span> <span class="o">=</span> <span class="p">{</span>
+					<span class="n">column_name</span><span class="p">:</span> <span class="n">result</span>
+					<span class="k">for</span> <span class="n">result</span><span class="p">,</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span>
+				<span class="p">}</span>
+			<span class="n">result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_input</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">result_df</span>
 
-        <span class="k">return</span> <span class="n">wrapper</span>
+		<span class="k">return</span> <span class="n">wrapper</span>
 
-    <span class="k">return</span> <span class="n">decorator_result_to_dataframe</span></div>
+	<span class="k">return</span> <span class="n">decorator_result_to_dataframe</span></div>
 
 
 
 <div class="viewcode-block" id="load_summary_file">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.load_summary_file">[docs]</a>
-<span class="k">def</span> <span class="nf">load_summary_file</span><span class="p">(</span><span class="n">summary_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                      <span class="n">dict_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Load summary file from summary_path.</span>
+<span class="k">def</span> <span class="nf">load_summary_file</span><span class="p">(</span>
+	<span class="n">summary_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dict_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Load summary file from summary_path.</span>
 
-<span class="sd">    :param summary_path: The path of the summary file.</span>
-<span class="sd">    :param dict_columns: The columns that are dictionary type.</span>
-<span class="sd">        You must fill this parameter if you want to load summary file properly.</span>
-<span class="sd">        Default is [&#39;module_params&#39;].</span>
-<span class="sd">    :return: The summary dataframe.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">summary_path</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;summary.csv does not exist in </span><span class="si">{</span><span class="n">summary_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-    <span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">summary_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dict_columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dict_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;module_params&#39;</span><span class="p">]</span>
+<span class="sd">	:param summary_path: The path of the summary file.</span>
+<span class="sd">	:param dict_columns: The columns that are dictionary type.</span>
+<span class="sd">	    You must fill this parameter if you want to load summary file properly.</span>
+<span class="sd">	    Default is [&#39;module_params&#39;].</span>
+<span class="sd">	:return: The summary dataframe.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">summary_path</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;summary.csv does not exist in </span><span class="si">{</span><span class="n">summary_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+	<span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">summary_path</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">dict_columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">dict_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;module_params&quot;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dict_columns</span><span class="p">]):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dict_columns</span><span class="si">}</span><span class="s2"> must be in summary_df.columns.&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dict_columns</span><span class="p">]):</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dict_columns</span><span class="si">}</span><span class="s2"> must be in summary_df.columns.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">convert_dict</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="c1"># convert datetime or date to its object (recency filter)</span>
-            <span class="n">date_object</span> <span class="o">=</span> <span class="n">convert_datetime_string</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">date_object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Malformed dict received : </span><span class="si">{</span><span class="n">elem</span><span class="si">}</span><span class="se">\n</span><span class="s2">Can&#39;t convert to dict properly&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="n">date_object</span><span class="p">}</span>
+	<span class="k">def</span> <span class="nf">convert_dict</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="c1"># convert datetime or date to its object (recency filter)</span>
+			<span class="n">date_object</span> <span class="o">=</span> <span class="n">convert_datetime_string</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">date_object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+					<span class="sa">f</span><span class="s2">&quot;Malformed dict received : </span><span class="si">{</span><span class="n">elem</span><span class="si">}</span><span class="se">\n</span><span class="s2">Can&#39;t convert to dict properly&quot;</span>
+				<span class="p">)</span>
+			<span class="k">return</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">date_object</span><span class="p">}</span>
 
-    <span class="n">summary_df</span><span class="p">[</span><span class="n">dict_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">dict_columns</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">convert_dict</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">summary_df</span></div>
+	<span class="n">summary_df</span><span class="p">[</span><span class="n">dict_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">dict_columns</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">convert_dict</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">summary_df</span></div>
 
 
 
 <div class="viewcode-block" id="convert_datetime_string">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.convert_datetime_string">[docs]</a>
 <span class="k">def</span> <span class="nf">convert_datetime_string</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="c1"># Regex to extract datetime arguments from the string</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(datetime|date)(\((\d+)(,\s*\d+)*\))&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;datetime&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;date&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kc">None</span></div>
+	<span class="c1"># Regex to extract datetime arguments from the string</span>
+	<span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(datetime|date)(\((\d+)(,\s*\d+)*\))&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+		<span class="n">args</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+		<span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;datetime&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+	<span class="k">return</span> <span class="kc">None</span></div>
 
 
 
 <div class="viewcode-block" id="make_combinations">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.make_combinations">[docs]</a>
 <span class="k">def</span> <span class="nf">make_combinations</span><span class="p">(</span><span class="n">target_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Make combinations from target_dict.</span>
-<span class="sd">    The target_dict key value must be a string,</span>
-<span class="sd">    and the value can be list of values or single value.</span>
-<span class="sd">    If generates all combinations of values from target_dict,</span>
-<span class="sd">    which means generated dictionaries that contain only one value for each key,</span>
-<span class="sd">    and all dictionaries will be different from each other.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Make combinations from target_dict.</span>
+<span class="sd">	The target_dict key value must be a string,</span>
+<span class="sd">	and the value can be list of values or single value.</span>
+<span class="sd">	If generates all combinations of values from target_dict,</span>
+<span class="sd">	which means generated dictionaries that contain only one value for each key,</span>
+<span class="sd">	and all dictionaries will be different from each other.</span>
 
-<span class="sd">    :param target_dict: The target dictionary.</span>
-<span class="sd">    :return: The list of generated dictionaries.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dict_with_lists</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
-                               <span class="n">target_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+<span class="sd">	:param target_dict: The target dictionary.</span>
+<span class="sd">	:return: The list of generated dictionaries.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">dict_with_lists</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+		<span class="nb">map</span><span class="p">(</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+			<span class="n">target_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+		<span class="p">)</span>
+	<span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">delete_duplicate</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">is_hashable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="nb">hash</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">True</span>
-            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span>
+	<span class="k">def</span> <span class="nf">delete_duplicate</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+		<span class="k">def</span> <span class="nf">is_hashable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="nb">hash</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+				<span class="k">return</span> <span class="kc">True</span>
+			<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+				<span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="ow">not</span> <span class="n">is_hashable</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]):</span>
-            <span class="c1"># TODO: add duplication check for unhashable objects</span>
-            <span class="k">return</span> <span class="n">x</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="ow">not</span> <span class="n">is_hashable</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]):</span>
+			<span class="c1"># TODO: add duplication check for unhashable objects</span>
+			<span class="k">return</span> <span class="n">x</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
-    <span class="n">dict_with_lists</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">delete_duplicate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">dict_with_lists</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
-    <span class="n">combination</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">dict_with_lists</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-    <span class="n">combination_dicts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dict_with_lists</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">combo</span><span class="p">))</span> <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combination</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">combination_dicts</span></div>
+	<span class="n">dict_with_lists</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">delete_duplicate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">dict_with_lists</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+	<span class="p">)</span>
+	<span class="n">combination</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">dict_with_lists</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+	<span class="n">combination_dicts</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dict_with_lists</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">combo</span><span class="p">))</span> <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combination</span>
+	<span class="p">]</span>
+	<span class="k">return</span> <span class="n">combination_dicts</span></div>
 
 
 
 <div class="viewcode-block" id="explode">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.explode">[docs]</a>
 <span class="k">def</span> <span class="nf">explode</span><span class="p">(</span><span class="n">index_values</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">explode_values</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="n">Any</span><span class="p">]]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Explode index_values and explode_values.</span>
-<span class="sd">    The index_values and explode_values must have the same length.</span>
-<span class="sd">    It will flatten explode_values and keep index_values as a pair.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Explode index_values and explode_values.</span>
+<span class="sd">	The index_values and explode_values must have the same length.</span>
+<span class="sd">	It will flatten explode_values and keep index_values as a pair.</span>
 
-<span class="sd">    :param index_values: The index values.</span>
-<span class="sd">    :param explode_values: The exploded values.</span>
-<span class="sd">    :return: Tuple of exploded index_values and exploded explode_values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">explode_values</span><span class="p">),</span> <span class="s2">&quot;Index values and explode values must have same length&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-        <span class="s1">&#39;index_values&#39;</span><span class="p">:</span> <span class="n">index_values</span><span class="p">,</span>
-        <span class="s1">&#39;explode_values&#39;</span><span class="p">:</span> <span class="n">explode_values</span>
-    <span class="p">})</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;explode_values&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;index_values&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;explode_values&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+<span class="sd">	:param index_values: The index values.</span>
+<span class="sd">	:param explode_values: The exploded values.</span>
+<span class="sd">	:return: Tuple of exploded index_values and exploded explode_values.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+		<span class="n">explode_values</span>
+	<span class="p">),</span> <span class="s2">&quot;Index values and explode values must have same length&quot;</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;index_values&quot;</span><span class="p">:</span> <span class="n">index_values</span><span class="p">,</span> <span class="s2">&quot;explode_values&quot;</span><span class="p">:</span> <span class="n">explode_values</span><span class="p">})</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;explode_values&quot;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;index_values&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;explode_values&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="replace_value_in_dict">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.replace_value_in_dict">[docs]</a>
-<span class="k">def</span> <span class="nf">replace_value_in_dict</span><span class="p">(</span><span class="n">target_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                          <span class="n">replace_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Replace the value of the certain key in target_dict.</span>
-<span class="sd">    If there is not targeted key in target_dict, it will return target_dict.</span>
+<span class="k">def</span> <span class="nf">replace_value_in_dict</span><span class="p">(</span><span class="n">target_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replace_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Replace the value of the certain key in target_dict.</span>
+<span class="sd">	If there is not targeted key in target_dict, it will return target_dict.</span>
 
-<span class="sd">    :param target_dict: The target dictionary.</span>
-<span class="sd">    :param key: The key to replace.</span>
-<span class="sd">    :param replace_value: The value to replace.</span>
-<span class="sd">    :return: The replaced dictionary.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">replaced_dict</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">target_dict</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">replaced_dict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">replaced_dict</span>
-    <span class="n">replaced_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">replace_value</span>
-    <span class="k">return</span> <span class="n">replaced_dict</span></div>
+<span class="sd">	:param target_dict: The target dictionary.</span>
+<span class="sd">	:param key: The key to replace.</span>
+<span class="sd">	:param replace_value: The value to replace.</span>
+<span class="sd">	:return: The replaced dictionary.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">replaced_dict</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">target_dict</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">replaced_dict</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">replaced_dict</span>
+	<span class="n">replaced_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">replace_value</span>
+	<span class="k">return</span> <span class="n">replaced_dict</span></div>
 
 
 
 <div class="viewcode-block" id="normalize_string">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.normalize_string">[docs]</a>
 <span class="k">def</span> <span class="nf">normalize_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Taken from the official evaluation script for v1.1 of the SQuAD dataset.</span>
-<span class="sd">    Lower text and remove punctuation, articles and extra whitespace.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Taken from the official evaluation script for v1.1 of the SQuAD dataset.</span>
+<span class="sd">	Lower text and remove punctuation, articles and extra whitespace.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">remove_articles</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(a|an|the)\b&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">remove_articles</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(a|an|the)\b&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">white_space_fix</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+	<span class="k">def</span> <span class="nf">white_space_fix</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">remove_punc</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="n">exclude</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ch</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">remove_punc</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+		<span class="n">exclude</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ch</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">lower</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">def</span> <span class="nf">lower</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">white_space_fix</span><span class="p">(</span><span class="n">remove_articles</span><span class="p">(</span><span class="n">remove_punc</span><span class="p">(</span><span class="n">lower</span><span class="p">(</span><span class="n">s</span><span class="p">))))</span></div>
+	<span class="k">return</span> <span class="n">white_space_fix</span><span class="p">(</span><span class="n">remove_articles</span><span class="p">(</span><span class="n">remove_punc</span><span class="p">(</span><span class="n">lower</span><span class="p">(</span><span class="n">s</span><span class="p">))))</span></div>
 
 
 
 <div class="viewcode-block" id="convert_string_to_tuple_in_dict">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.convert_string_to_tuple_in_dict">[docs]</a>
 <span class="k">def</span> <span class="nf">convert_string_to_tuple_in_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursively converts strings that start with &#39;(&#39; and end with &#39;)&#39; to tuples in a dictionary.&quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="c1"># If the value is a dictionary, recurse</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">convert_string_to_tuple_in_dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="c1"># If the value is a list, iterate through its elements</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-                <span class="c1"># If an item in the list is a dictionary, recurse</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                    <span class="n">convert_string_to_tuple_in_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-                <span class="c1"># If an item in the list is a string matching the criteria, convert it to a tuple</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">):</span>
-                    <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="c1"># If the value is a string matching the criteria, convert it to a tuple</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">):</span>
-            <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Recursively converts strings that start with &#39;(&#39; and end with &#39;)&#39; to tuples in a dictionary.&quot;&quot;&quot;</span>
+	<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+		<span class="c1"># If the value is a dictionary, recurse</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+			<span class="n">convert_string_to_tuple_in_dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+		<span class="c1"># If the value is a list, iterate through its elements</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+				<span class="c1"># If an item in the list is a dictionary, recurse</span>
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+					<span class="n">convert_string_to_tuple_in_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+				<span class="c1"># If an item in the list is a string matching the criteria, convert it to a tuple</span>
+				<span class="k">elif</span> <span class="p">(</span>
+					<span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+					<span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span>
+					<span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">)</span>
+				<span class="p">):</span>
+					<span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+		<span class="c1"># If the value is a string matching the criteria, convert it to a tuple</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">):</span>
+			<span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">d</span></div>
+	<span class="k">return</span> <span class="n">d</span></div>
 
 
 
 <div class="viewcode-block" id="convert_env_in_dict">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.convert_env_in_dict">[docs]</a>
 <span class="k">def</span> <span class="nf">convert_env_in_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Recursively converts environment variable string in a dictionary to actual environment variable.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Recursively converts environment variable string in a dictionary to actual environment variable.</span>
 
-<span class="sd">    :param d: The dictionary to convert.</span>
-<span class="sd">    :return: The converted dictionary.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">env_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;.*?\${(.*?)}.*?&quot;</span><span class="p">)</span>
+<span class="sd">	:param d: The dictionary to convert.</span>
+<span class="sd">	:return: The converted dictionary.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">env_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;.*?\${(.*?)}.*?&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">convert_env</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="n">env_pattern</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="se">{{</span><span class="si">{</span><span class="n">match</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">val</span>
+	<span class="k">def</span> <span class="nf">convert_env</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+		<span class="n">matches</span> <span class="o">=</span> <span class="n">env_pattern</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="se">{{</span><span class="si">{</span><span class="n">match</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">val</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">convert_env_in_dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                    <span class="n">convert_env_in_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                    <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_env</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_env</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">d</span></div>
+	<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+			<span class="n">convert_env_in_dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+					<span class="n">convert_env_in_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+				<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+					<span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_env</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+			<span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_env</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">d</span></div>
 
 
 
 <div class="viewcode-block" id="process_batch">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.process_batch">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Processes tasks in batches asynchronously.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Processes tasks in batches asynchronously.</span>
 
-<span class="sd">    :param tasks: A list of no-argument functions or coroutines to be executed.</span>
-<span class="sd">    :param batch_size: The number of tasks to process in a single batch.</span>
-<span class="sd">        Default is 64.</span>
-<span class="sd">    :return: A list of results from the processed tasks.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="sd">	:param tasks: A list of no-argument functions or coroutines to be executed.</span>
+<span class="sd">	:param batch_size: The number of tasks to process in a single batch.</span>
+<span class="sd">	    Default is 64.</span>
+<span class="sd">	:return: A list of results from the processed tasks.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
-        <span class="n">batch</span> <span class="o">=</span> <span class="n">tasks</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
-        <span class="n">batch_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">batch</span><span class="p">)</span>
-        <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">batch_results</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+		<span class="n">batch</span> <span class="o">=</span> <span class="n">tasks</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
+		<span class="n">batch_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">batch</span><span class="p">)</span>
+		<span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">batch_results</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">results</span></div>
+	<span class="k">return</span> <span class="n">results</span></div>
 
 
 
 <div class="viewcode-block" id="make_batch">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.make_batch">[docs]</a>
 <span class="k">def</span> <span class="nf">make_batch</span><span class="p">(</span><span class="n">elems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Make a batch of elems with batch_size.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">elems</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">elems</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">)]</span></div>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Make a batch of elems with batch_size.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">elems</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">elems</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">)]</span></div>
 
 
 
 <div class="viewcode-block" id="save_parquet_safe">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.save_parquet_safe">[docs]</a>
-<span class="k">def</span> <span class="nf">save_parquet_safe</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                      <span class="n">upsert</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="n">output_file_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_file_dir</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;directory </span><span class="si">{</span><span class="n">output_file_dir</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">filepath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;file path: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s1">  filename extension need to be &quot;.parquet&quot;&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">upsert</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2"> already exists.&quot;</span>
-                              <span class="s2">&quot;Set upsert True if you want to overwrite the file.&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">save_parquet_safe</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upsert</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+	<span class="n">output_file_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_file_dir</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;directory </span><span class="si">{</span><span class="n">output_file_dir</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">filepath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s1">&#39;file path: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s1">  filename extension need to be &quot;.parquet&quot;&#39;</span>
+		<span class="p">)</span>
+	<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">upsert</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;file </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2"> already exists.&quot;</span>
+			<span class="s2">&quot;Set upsert True if you want to overwrite the file.&quot;</span>
+		<span class="p">)</span>
 
-    <span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+	<span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="openai_truncate_by_token">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.openai_truncate_by_token">[docs]</a>
-<span class="k">def</span> <span class="nf">openai_truncate_by_token</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">token_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                             <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">encoding_for_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">openai_truncate_by_token</span><span class="p">(</span>
+	<span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">token_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+	<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">encoding_for_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">truncate_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
-        <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">text</span>
-        <span class="n">truncated_text</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">tokens</span><span class="p">[:</span><span class="n">limit</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">truncated_text</span>
+	<span class="k">def</span> <span class="nf">truncate_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
+		<span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">text</span>
+		<span class="n">truncated_text</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">tokens</span><span class="p">[:</span><span class="n">limit</span><span class="p">])</span>
+		<span class="k">return</span> <span class="n">truncated_text</span>
 
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">truncate_text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">token_limit</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">),</span> <span class="n">texts</span><span class="p">))</span></div>
+	<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">truncate_text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">token_limit</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">),</span> <span class="n">texts</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="reconstruct_list">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.reconstruct_list">[docs]</a>
 <span class="k">def</span> <span class="nf">reconstruct_list</span><span class="p">(</span><span class="n">flat_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">lengths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">lengths</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flat_list</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">length</span><span class="p">])</span>
-        <span class="n">start</span> <span class="o">+=</span> <span class="n">length</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+	<span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">lengths</span><span class="p">:</span>
+		<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flat_list</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span><span class="p">])</span>
+		<span class="n">start</span> <span class="o">+=</span> <span class="n">length</span>
+	<span class="k">return</span> <span class="n">result</span></div>
 
 
 
 <div class="viewcode-block" id="flatten_apply">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.flatten_apply">[docs]</a>
-<span class="k">def</span> <span class="nf">flatten_apply</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">nested_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function flattens the input list and applies the function to the elements.</span>
-<span class="sd">    After that, it reconstructs the list to the original shape.</span>
-<span class="sd">    Its speciality is that the first dimension length of the list can be different from each other.</span>
+<span class="k">def</span> <span class="nf">flatten_apply</span><span class="p">(</span>
+	<span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">nested_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function flattens the input list and applies the function to the elements.</span>
+<span class="sd">	After that, it reconstructs the list to the original shape.</span>
+<span class="sd">	Its speciality is that the first dimension length of the list can be different from each other.</span>
 
-<span class="sd">    :param func: The function that applies to the flattened list.</span>
-<span class="sd">    :param nested_list: The nested list to be flattened.</span>
-<span class="sd">    :return: The list that is reconstructed after applying the function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;col1&#39;</span><span class="p">:</span> <span class="n">nested_list</span><span class="p">})</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;col1&#39;</span><span class="p">)</span>
-    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;col1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+<span class="sd">	:param func: The function that applies to the flattened list.</span>
+<span class="sd">	:param nested_list: The nested list to be flattened.</span>
+<span class="sd">	:return: The list that is reconstructed after applying the function.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;col1&quot;</span><span class="p">:</span> <span class="n">nested_list</span><span class="p">})</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;col1&quot;</span><span class="p">)</span>
+	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;col1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="sort_by_scores">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.sort_by_scores">[docs]</a>
 <span class="k">def</span> <span class="nf">sort_by_scores</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sorts each row by &#39;scores&#39; column.</span>
-<span class="sd">    The input column names must be &#39;contents&#39;, &#39;ids&#39;, and &#39;scores&#39;.</span>
-<span class="sd">    And its elements must be list type.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;ids&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;scores&#39;</span><span class="p">]),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">)</span>
-    <span class="n">reranked_contents</span><span class="p">,</span> <span class="n">reranked_ids</span><span class="p">,</span> <span class="n">reranked_scores</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">reranked_contents</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">reranked_ids</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">reranked_scores</span><span class="p">)</span></div>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Sorts each row by &#39;scores&#39; column.</span>
+<span class="sd">	The input column names must be &#39;contents&#39;, &#39;ids&#39;, and &#39;scores&#39;.</span>
+<span class="sd">	And its elements must be list type.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+		<span class="nb">zip</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]),</span>
+		<span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+		<span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span>
+	<span class="p">)</span>
+	<span class="n">reranked_contents</span><span class="p">,</span> <span class="n">reranked_ids</span><span class="p">,</span> <span class="n">reranked_scores</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">reranked_contents</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">reranked_ids</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">reranked_scores</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="select_top_k">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.select_top_k">[docs]</a>
 <span class="k">def</span> <span class="nf">select_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">column_names</span><span class="p">:</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[:</span><span class="n">top_k</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">df</span></div>
+	<span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">column_names</span><span class="p">:</span>
+		<span class="n">df</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[:</span><span class="n">top_k</span><span class="p">])</span>
+	<span class="k">return</span> <span class="n">df</span></div>
 
 
 
 <div class="viewcode-block" id="filter_dict_keys">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.filter_dict_keys">[docs]</a>
 <span class="k">def</span> <span class="nf">filter_dict_keys</span><span class="p">(</span><span class="n">dict_</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dict_</span><span class="p">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; not found in dictionary.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+	<span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dict_</span><span class="p">:</span>
+			<span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; not found in dictionary.&quot;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">result</span></div>
 
 
 
 <div class="viewcode-block" id="split_dataframe">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.split_dataframe">[docs]</a>
 <span class="k">def</span> <span class="nf">split_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
-    <span class="n">num_chunks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">//</span> <span class="n">chunk_size</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">%</span> <span class="n">chunk_size</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">//</span> <span class="n">chunk_size</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">chunk_size</span><span class="p">:(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">chunk_size</span><span class="p">],</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_chunks</span><span class="p">)))</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">result</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+	<span class="n">num_chunks</span> <span class="o">=</span> <span class="p">(</span>
+		<span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">//</span> <span class="n">chunk_size</span> <span class="o">+</span> <span class="mi">1</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">%</span> <span class="n">chunk_size</span> <span class="o">!=</span> <span class="mi">0</span>
+		<span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">//</span> <span class="n">chunk_size</span>
+	<span class="p">)</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">chunk_size</span> <span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">chunk_size</span><span class="p">],</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_chunks</span><span class="p">))</span>
+	<span class="p">)</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">result</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">result</span></div>
 
 
 
 <div class="viewcode-block" id="find_trial_dir">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.find_trial_dir">[docs]</a>
 <span class="k">def</span> <span class="nf">find_trial_dir</span><span class="p">(</span><span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="c1"># Pattern to match directories named with numbers</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s1">&#39;[0-9]*&#39;</span><span class="p">)</span>
-    <span class="n">all_entries</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+	<span class="c1"># Pattern to match directories named with numbers</span>
+	<span class="n">pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;[0-9]*&quot;</span><span class="p">)</span>
+	<span class="n">all_entries</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
 
-    <span class="c1"># Filter out only directories</span>
-    <span class="n">trial_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">all_entries</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="ow">and</span> <span class="n">entry</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+	<span class="c1"># Filter out only directories</span>
+	<span class="n">trial_dirs</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">entry</span>
+		<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">all_entries</span>
+		<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="ow">and</span> <span class="n">entry</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+	<span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">trial_dirs</span></div>
+	<span class="k">return</span> <span class="n">trial_dirs</span></div>
 
 
 
 <div class="viewcode-block" id="find_node_summary_files">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.find_node_summary_files">[docs]</a>
 <span class="k">def</span> <span class="nf">find_node_summary_files</span><span class="p">(</span><span class="n">trial_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="c1"># Find all summary.csv files recursively</span>
-    <span class="n">all_summary_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">trial_dir</span><span class="p">,</span> <span class="s1">&#39;**&#39;</span><span class="p">,</span> <span class="s1">&#39;summary.csv&#39;</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="c1"># Find all summary.csv files recursively</span>
+	<span class="n">all_summary_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">trial_dir</span><span class="p">,</span> <span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;summary.csv&quot;</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span>
+	<span class="p">)</span>
 
-    <span class="c1"># Filter out files that are at a lower directory level</span>
-    <span class="n">filtered_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_summary_files</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">trial_dir</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+	<span class="c1"># Filter out files that are at a lower directory level</span>
+	<span class="n">filtered_files</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_summary_files</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">trial_dir</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
+	<span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">filtered_files</span></div>
+	<span class="k">return</span> <span class="n">filtered_files</span></div>
 
 
 
 <div class="viewcode-block" id="normalize_unicode">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.normalize_unicode">[docs]</a>
 <span class="k">def</span> <span class="nf">normalize_unicode</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s1">&#39;NFC&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+	<span class="k">return</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;NFC&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="dict_to_markdown">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.dict_to_markdown">[docs]</a>
 <span class="k">def</span> <span class="nf">dict_to_markdown</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert a dictionary to a Markdown formatted string.</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Convert a dictionary to a Markdown formatted string.</span>
 
-<span class="sd">    :param d: Dictionary to convert</span>
-<span class="sd">    :param level: Current level of heading (used for nested dictionaries)</span>
-<span class="sd">    :return: Markdown formatted string</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">markdown</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">markdown</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">markdown</span> <span class="o">+=</span> <span class="n">dict_to_markdown</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">markdown</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                    <span class="n">markdown</span> <span class="o">+=</span> <span class="n">dict_to_markdown</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">markdown</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">markdown</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="k">return</span> <span class="n">markdown</span></div>
+<span class="sd">	:param d: Dictionary to convert</span>
+<span class="sd">	:param level: Current level of heading (used for nested dictionaries)</span>
+<span class="sd">	:return: Markdown formatted string</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">markdown</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+			<span class="n">markdown</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+			<span class="n">markdown</span> <span class="o">+=</span> <span class="n">dict_to_markdown</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="n">markdown</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+			<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+					<span class="n">markdown</span> <span class="o">+=</span> <span class="n">dict_to_markdown</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">markdown</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">markdown</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="k">return</span> <span class="n">markdown</span></div>
 
 
 
 <div class="viewcode-block" id="dict_to_markdown_table">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.dict_to_markdown_table">[docs]</a>
 <span class="k">def</span> <span class="nf">dict_to_markdown_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="c1"># Check if the input is a dictionary</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input must be a dictionary&quot;</span><span class="p">)</span>
+	<span class="c1"># Check if the input is a dictionary</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input must be a dictionary&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Create the header of the table</span>
-    <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">key_column_name</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">value_column_name</span><span class="si">}</span><span class="s2"> |</span><span class="se">\n</span><span class="s2">| :---: | :-----: |</span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="c1"># Create the header of the table</span>
+	<span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">key_column_name</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">value_column_name</span><span class="si">}</span><span class="s2"> |</span><span class="se">\n</span><span class="s2">| :---: | :-----: |</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-    <span class="c1"># Create the rows of the table</span>
-    <span class="n">rows</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">rows</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> |</span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="c1"># Create the rows of the table</span>
+	<span class="n">rows</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+		<span class="n">rows</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> |</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-    <span class="c1"># Combine header and rows</span>
-    <span class="n">markdown_table</span> <span class="o">=</span> <span class="n">header</span> <span class="o">+</span> <span class="n">rows</span>
-    <span class="k">return</span> <span class="n">markdown_table</span></div>
+	<span class="c1"># Combine header and rows</span>
+	<span class="n">markdown_table</span> <span class="o">=</span> <span class="n">header</span> <span class="o">+</span> <span class="n">rows</span>
+	<span class="k">return</span> <span class="n">markdown_table</span></div>
 
 
 
 <div class="viewcode-block" id="embedding_query_content">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.embedding_query_content">[docs]</a>
-<span class="k">def</span> <span class="nf">embedding_query_content</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-                            <span class="n">embedding_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">):</span>
-    <span class="n">flatten_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">contents_list</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">embedding_query_content</span><span class="p">(</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+	<span class="n">embedding_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
+<span class="p">):</span>
+	<span class="n">flatten_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">contents_list</span><span class="p">))</span>
 
-    <span class="n">openai_embedding_limit</span> <span class="o">=</span> <span class="mi">8191</span>  <span class="c1"># all openai embedding model has 8191 max token input</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">embedding_model</span><span class="p">,</span> <span class="n">OpenAIEmbedding</span><span class="p">):</span>
-        <span class="n">queries</span> <span class="o">=</span> <span class="n">openai_truncate_by_token</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">openai_embedding_limit</span><span class="p">,</span>
-                                           <span class="n">embedding_model</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
-        <span class="n">flatten_contents</span> <span class="o">=</span> <span class="n">openai_truncate_by_token</span><span class="p">(</span><span class="n">flatten_contents</span><span class="p">,</span> <span class="n">openai_embedding_limit</span><span class="p">,</span>
-                                                    <span class="n">embedding_model</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+	<span class="n">openai_embedding_limit</span> <span class="o">=</span> <span class="mi">8191</span>  <span class="c1"># all openai embedding model has 8191 max token input</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">embedding_model</span><span class="p">,</span> <span class="n">OpenAIEmbedding</span><span class="p">):</span>
+		<span class="n">queries</span> <span class="o">=</span> <span class="n">openai_truncate_by_token</span><span class="p">(</span>
+			<span class="n">queries</span><span class="p">,</span> <span class="n">openai_embedding_limit</span><span class="p">,</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">model_name</span>
+		<span class="p">)</span>
+		<span class="n">flatten_contents</span> <span class="o">=</span> <span class="n">openai_truncate_by_token</span><span class="p">(</span>
+			<span class="n">flatten_contents</span><span class="p">,</span> <span class="n">openai_embedding_limit</span><span class="p">,</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">model_name</span>
+		<span class="p">)</span>
 
-    <span class="c1"># Embedding using batch</span>
-    <span class="n">embedding_model</span><span class="o">.</span><span class="n">embed_batch_size</span> <span class="o">=</span> <span class="n">batch</span>
-    <span class="n">query_embeddings</span> <span class="o">=</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">get_text_embedding_batch</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
+	<span class="c1"># Embedding using batch</span>
+	<span class="n">embedding_model</span><span class="o">.</span><span class="n">embed_batch_size</span> <span class="o">=</span> <span class="n">batch</span>
+	<span class="n">query_embeddings</span> <span class="o">=</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">get_text_embedding_batch</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
 
-    <span class="n">content_lengths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">contents_list</span><span class="p">))</span>
-    <span class="n">content_embeddings_flatten</span> <span class="o">=</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">get_text_embedding_batch</span><span class="p">(</span><span class="n">flatten_contents</span><span class="p">)</span>
-    <span class="n">content_embeddings</span> <span class="o">=</span> <span class="n">reconstruct_list</span><span class="p">(</span><span class="n">content_embeddings_flatten</span><span class="p">,</span> <span class="n">content_lengths</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">query_embeddings</span><span class="p">,</span> <span class="n">content_embeddings</span></div>
+	<span class="n">content_lengths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">contents_list</span><span class="p">))</span>
+	<span class="n">content_embeddings_flatten</span> <span class="o">=</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">get_text_embedding_batch</span><span class="p">(</span>
+		<span class="n">flatten_contents</span>
+	<span class="p">)</span>
+	<span class="n">content_embeddings</span> <span class="o">=</span> <span class="n">reconstruct_list</span><span class="p">(</span><span class="n">content_embeddings_flatten</span><span class="p">,</span> <span class="n">content_lengths</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">query_embeddings</span><span class="p">,</span> <span class="n">content_embeddings</span></div>
 
 
 
 <div class="viewcode-block" id="to_list">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.to_list">[docs]</a>
 <span class="k">def</span> <span class="nf">to_list</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursively convert collections to Python lists.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="c1"># Convert numpy array to list and recursively process each element</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">to_list</span><span class="p">(</span><span class="n">sub_item</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_item</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
-        <span class="c1"># Convert pandas Series to list and recursively process each element</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">to_list</span><span class="p">(</span><span class="n">sub_item</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_item</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">BM</span><span class="p">)):</span>
-        <span class="c1"># Recursively process each element in other iterables</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">to_list</span><span class="p">(</span><span class="n">sub_item</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_item</span> <span class="ow">in</span> <span class="n">item</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">item</span></div>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Recursively convert collections to Python lists.&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+		<span class="c1"># Convert numpy array to list and recursively process each element</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">to_list</span><span class="p">(</span><span class="n">sub_item</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_item</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+	<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+		<span class="c1"># Convert pandas Series to list and recursively process each element</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">to_list</span><span class="p">(</span><span class="n">sub_item</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_item</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+	<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+		<span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">BM</span><span class="p">)</span>
+	<span class="p">):</span>
+		<span class="c1"># Recursively process each element in other iterables</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">to_list</span><span class="p">(</span><span class="n">sub_item</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_item</span> <span class="ow">in</span> <span class="n">item</span><span class="p">]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">item</span></div>
 
 
 
 <div class="viewcode-block" id="convert_inputs_to_list">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.convert_inputs_to_list">[docs]</a>
 <span class="k">def</span> <span class="nf">convert_inputs_to_list</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator to convert all function inputs to Python lists.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Decorator to convert all function inputs to Python lists.&quot;&quot;&quot;</span>
 
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">new_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">to_list</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
-        <span class="n">new_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">to_list</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">new_args</span><span class="p">,</span> <span class="o">**</span><span class="n">new_kwargs</span><span class="p">)</span>
+	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">new_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">to_list</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+		<span class="n">new_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">to_list</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+		<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">new_args</span><span class="p">,</span> <span class="o">**</span><span class="n">new_kwargs</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">wrapper</span></div>
+	<span class="k">return</span> <span class="n">wrapper</span></div>
 
 
 
 <div class="viewcode-block" id="get_best_row">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.get_best_row">[docs]</a>
-<span class="k">def</span> <span class="nf">get_best_row</span><span class="p">(</span><span class="n">summary_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-                 <span class="n">best_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;is_best&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    From summary dataframe, find the best result row by &#39;is_best&#39; column and return it.</span>
+<span class="k">def</span> <span class="nf">get_best_row</span><span class="p">(</span>
+	<span class="n">summary_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">best_column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;is_best&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	From summary dataframe, find the best result row by &#39;is_best&#39; column and return it.</span>
 
-<span class="sd">    :param summary_df: Summary dataframe created by AutoRAG.</span>
-<span class="sd">    :param best_column_name: The column name that indicates the best result.</span>
-<span class="sd">        Default is &#39;is_best&#39;.</span>
-<span class="sd">        You don&#39;t have to change this unless the column name is different.</span>
-<span class="sd">    :return: Best row pandas Series instance.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">bests</span> <span class="o">=</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">summary_df</span><span class="p">[</span><span class="n">best_column_name</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bests</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;There must be only one best result.&quot;</span>
-    <span class="k">return</span> <span class="n">bests</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+<span class="sd">	:param summary_df: Summary dataframe created by AutoRAG.</span>
+<span class="sd">	:param best_column_name: The column name that indicates the best result.</span>
+<span class="sd">	    Default is &#39;is_best&#39;.</span>
+<span class="sd">	    You don&#39;t have to change this unless the column name is different.</span>
+<span class="sd">	:return: Best row pandas Series instance.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">bests</span> <span class="o">=</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">summary_df</span><span class="p">[</span><span class="n">best_column_name</span><span class="p">]]</span>
+	<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bests</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;There must be only one best result.&quot;</span>
+	<span class="k">return</span> <span class="n">bests</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 </pre></div>
         </article>

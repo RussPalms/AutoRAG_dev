@@ -385,13 +385,17 @@
 <div class="viewcode-block" id="pass_passage_filter">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagefilter.html#autorag.nodes.passagefilter.pass_passage_filter.pass_passage_filter">[docs]</a>
 <span class="nd">@passage_filter_node</span>
-<span class="k">def</span> <span class="nf">pass_passage_filter</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-                        <span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Do not perform filtering.</span>
-<span class="sd">    Return given passages, scores, and ids as is.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">contents_list</span><span class="p">,</span> <span class="n">ids_list</span><span class="p">,</span> <span class="n">scores_list</span></div>
+<span class="k">def</span> <span class="nf">pass_passage_filter</span><span class="p">(</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+	<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+	<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+<span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Do not perform filtering.</span>
+<span class="sd">	Return given passages, scores, and ids as is.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">contents_list</span><span class="p">,</span> <span class="n">ids_list</span><span class="p">,</span> <span class="n">scores_list</span></div>
 
 </pre></div>
         </article>
