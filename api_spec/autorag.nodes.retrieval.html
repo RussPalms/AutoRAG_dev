@@ -788,7 +788,21 @@ It will be a length of queries. And each element has a length of top_k.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.nodes.retrieval.vectordb.vectordb_ingest">
 <span class="sig-prename descclassname"><span class="pre">autorag.nodes.retrieval.vectordb.</span></span><span class="sig-name descname"><span class="pre">vectordb_ingest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Collection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpus_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEmbedding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/retrieval/vectordb.html#vectordb_ingest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.retrieval.vectordb.vectordb_ingest" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ingest given corpus data to the chromadb collection.
+It truncates corpus content when the embedding model is OpenAIEmbedding to the 8191 tokens.
+Plus, when the corpus content is empty (whitespace), it will be ignored.
+And if there is a document id that already exists in the collection, it will be ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collection</strong> – Chromadb collection instance to ingest.</p></li>
+<li><p><strong>corpus_data</strong> – The corpus data that contains doc_id and contents columns.</p></li>
+<li><p><strong>embedding_model</strong> – An embedding model instance that will be used to embed queries.</p></li>
+<li><p><strong>embedding_batch</strong> – The number of chunks that will be processed in parallel.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.nodes.retrieval.vectordb.vectordb_pure">
