@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -414,7 +414,8 @@ The goal is to improve the relevance of the search results by including variatio
 </section>
 <section id="strategy">
 <h3><strong>Strategy</strong><a class="headerlink" href="#strategy" title="Link to this heading">¶</a></h3>
-<p><strong>Performance Evaluation</strong>: The performance of the query_expansion node cannot be measured by the result alone. Therefore, it executes retrieval using queries, the result of Node, and evaluates it with the retrieval result.
+<p><strong>Performance Evaluation</strong>: The result alone cannot measure the performance of the query_expansion node.
+Therefore, it executes retrieval using queries, the result of Node, and evaluates it with the retrieval result.
 Therefore, in strategy, we set the parameters necessary for retrieval and evaluation.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -424,9 +425,9 @@ Therefore, in strategy, we set the parameters necessary for retrieval and evalua
 <h4><strong>Strategy Parameters</strong>:<a class="headerlink" href="#strategy-parameters" title="Link to this heading">¶</a></h4>
 <ol class="arabic simple">
 <li><p><strong>Metrics</strong>: Metrics such as <code class="docutils literal notranslate"><span class="pre">retrieval_f1</span></code>,<code class="docutils literal notranslate"><span class="pre">retrieval_recall</span></code>, and <code class="docutils literal notranslate"><span class="pre">retrieval_precision</span></code> are used to evaluate the performance of the query expansion process through its impact on retrieval outcomes.</p></li>
-<li><p><strong>Speed Threshold</strong>: <code class="docutils literal notranslate"><span class="pre">speed_threshold</span></code> is applied across all nodes, ensuring that any method exceeding the average processing time for a query is not utilized.</p></li>
+<li><p><strong>Speed Threshold</strong>: <code class="docutils literal notranslate"><span class="pre">speed_threshold</span></code> is applied across all nodes, ensuring that any method exceeding the average processing time for a query is not used.</p></li>
 <li><p><strong>Top_k</strong>: This parameter specifies the number of top results to consider during the retrieval evaluation phase.</p></li>
-<li><p><strong>Retrieval Modules</strong>: The query expansion node can utilize all modules and module parameters from the retrieval node, including:</p>
+<li><p><strong>Retrieval Modules</strong>: The query expansion node can use all modules and module parameters from the retrieval node, including:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../retrieval/bm25.html"><span class="std std-doc">bm25</span></a></p></li>
 <li><p><a class="reference internal" href="../retrieval/vectordb.html"><span class="std std-doc">vectordb</span></a>: with <code class="docutils literal notranslate"><span class="pre">embedding_model</span></code> parameter</p></li>

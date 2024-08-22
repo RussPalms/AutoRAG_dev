@@ -15,7 +15,7 @@
         gtag('js', new Date());
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
-    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Make custom config yaml file" href="custom_config.html" /><link rel="prev" title="How optimization works" href="optimization.html" />
+    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Make a custom config YAML file" href="custom_config.html" /><link rel="prev" title="How optimization works" href="optimization.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/optimization/folder_structure.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
@@ -232,7 +232,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="optimization.html">How optimization works</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -397,10 +397,10 @@
 <ul>
 <li><p><a class="reference internal" href="#configyaml"><span class="xref myst">config.yaml</span></a></p></li>
 <li><p><a class="reference internal" href="#trial-summarycsv"><span class="xref myst">summary.csv</span></a></p></li>
-<li><p><a class="reference internal" href="#pre-retrieve-node-line"><span class="xref myst">Node_line_name</span></a></p>
+<li><p><a class="reference internal" href="#pre_retrieve_node_line"><span class="xref myst">Node_line_name</span></a></p>
 <ul>
 <li><p><a class="reference internal" href="#node-line-summarycsv"><span class="xref myst">summary.csv</span></a></p></li>
-<li><p><a class="reference internal" href="#query-expansion"><span class="xref myst">Node name</span></a></p>
+<li><p><a class="reference internal" href="#query_expansion"><span class="xref myst">Node name</span></a></p>
 <ul>
 <li><p>0.parquet</p></li>
 <li><p>…</p></li>
@@ -410,7 +410,7 @@
 </li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#retrieve-node-line"><span class="xref myst">Node_line_name</span></a></p>
+<li><p><a class="reference internal" href="#retrieve_node_line"><span class="xref myst">Node_line_name</span></a></p>
 <ul>
 <li><p>Node name</p>
 <ul>
@@ -435,13 +435,13 @@
 </section>
 <section id="project">
 <h2>Project<a class="headerlink" href="#project" title="Link to this heading">¶</a></h2>
-<p>In a project, you have to do experiment with only one dataset.
+<p>In a project, you have to do an experiment with only one dataset.
 The project folder is where the user runs from.</p>
 <p><img alt="project_folders" src="../_images/project_folders.png" /></p>
 <section id="trial">
 <h3>trial<a class="headerlink" href="#trial" title="Link to this heading">¶</a></h3>
 <p>Trial means a single run of the experiment.
-Each trial can be run with different settings using different config yaml files.
+Each trial can be run with different settings using different config YAML files.
 If there are multiple trail folders, it means you ran experiments more than once.
 We recommend running multiple trials on the same data with different settings to find the best RAG pipeline.</p>
 <p>The folder names are determined by the number of trials run.
@@ -450,7 +450,7 @@ You can check this out at the <a class="reference internal" href="#trialjson"><s
 <p><img alt="trial_folder" src="../_images/trial_folder.png" /></p>
 <section id="config-yaml">
 <h4>config.yaml<a class="headerlink" href="#config-yaml" title="Link to this heading">¶</a></h4>
-<p>The yaml file you used for this trial.</p>
+<p>The YAML file you used for this trial.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>You can see a sample full <a class="reference internal" href="#sample_full_config.yaml"><span class="xref myst">config.yaml</span></a>.</p>
@@ -553,7 +553,7 @@ Check out <a class="reference internal" href="../data_creation/tutorial.html"><s
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Make custom config yaml file</div>
+                <div class="title">Make a custom config YAML file</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>

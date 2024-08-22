@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -392,7 +392,7 @@
 <h2>0. Retrieval token metric in AutoRAG<a class="headerlink" href="#retrieval-token-metric-in-autorag" title="Link to this heading">¶</a></h2>
 <p>Currently, in AutoRAG, the <em><strong>Retrieval token metric</strong></em> is only used by the <code class="docutils literal notranslate"><span class="pre">Passage</span> <span class="pre">Compressor</span> <span class="pre">Node</span></code>. It measures
 performance by comparing the compressed passage to Answer_gt.</p>
-<p>When comparing Passage and Answer gt, the comparison is made on a per token basis, which you can see by looking at the
+<p>When comparing Passage and Answer gt, the comparison is made on a per-token basis, which you can see by looking at the
 example</p>
 <section id="basic-example">
 <h3>✅Basic Example<a class="headerlink" href="#basic-example" title="Link to this heading">¶</a></h3>
@@ -407,9 +407,9 @@ example</p>
 </ul>
 <p>Next, let’s look at the number of overlapping tokens in gt and result</p>
 <ul class="simple">
-<li><p>The first is that all 6 tokens overlap with GT, so the number of overlapping tokens is 6.</p></li>
-<li><p>The second has 4 tokens overlapping except for the ‘I’.</p></li>
-<li><p>The third has 4 tokens overlapping except for ‘I’ and ‘water’.</p></li>
+<li><p>The first is that all six tokens overlap with GT, so the number of overlapping tokens is 6.</p></li>
+<li><p>The second has four tokens overlapping except for the ‘I.’</p></li>
+<li><p>The third has four tokens overlapping except for ‘I’ and ‘water.’</p></li>
 </ul>
 </section>
 </section>

@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -393,18 +393,20 @@
 <h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><strong>bm25_tokenizer</strong>: You can select which tokenize method you use for bm25.
-The default method is ‘porter_stemmer’.
-And you can choose between ‘space’, and huggingface AutoTokenizer name.
-Plus, you can choose Korean tokenizer such as ‘ko_kiwi’, ‘ko_kkma’, and ‘ko_okt’.</p></li>
+The default method is ‘porter_stemmer.’
+And you can choose between ‘space,’ and huggingface AutoTokenizer name.
+Plus, you can choose Korean tokenizer such as ‘ko_kiwi,’ ‘ko_kkma,’ and ‘ko_okt.’</p></li>
 </ul>
 <section id="porter-stemmer">
 <h3>porter_stemmer<a class="headerlink" href="#porter-stemmer" title="Link to this heading">¶</a></h3>
-<p>The default method to tokenize. It is optimized for English. It divides sentences to word, and extract stem.</p>
-<p>It means, stemmer can change ‘studying’, ‘studies’ to ‘study’.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">porter_stemmer</span></code> is the default tokenizer.
+It is optimized for English.
+It divides sentences into words and extracts stem.
+It means, stemmer can change ‘studying,’ ‘studies’ to ‘study.’</p>
 </section>
 <section id="space">
 <h3>space<a class="headerlink" href="#space" title="Link to this heading">¶</a></h3>
-<p>It is simple method to divide words into just space.
+<p>It is a simple method to divide words into just space.
 It is simple, but it can be a great choice for multilingual documents.</p>
 </section>
 <section id="huggingface-autotokenizer">
@@ -414,8 +416,8 @@ Just type huggingface repo path, and you can use the tokenizer.</p>
 </section>
 <section id="ko-kiwi-for-korean">
 <h3>ko_kiwi (For Korean 🇰🇷)<a class="headerlink" href="#ko-kiwi-for-korean" title="Link to this heading">¶</a></h3>
-<p>It uses kiwi tokenizer for Korean language.
-We highly recommend to use it for Korean documents.
+<p>It uses kiwi tokenizer for the Korean language.
+We highly recommend using it for Korean documents.
 You can check more information about kiwi at <a class="reference external" href="https://github.com/bab2min/Kiwi">here</a>.</p>
 </section>
 <section id="ko-kkma-for-korean">

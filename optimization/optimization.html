@@ -232,7 +232,7 @@
 <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -394,7 +394,7 @@ In this documentation, you can learn about how AutoRAG works under the hood.</p>
 <h2>Swapping modules in Node<a class="headerlink" href="#swapping-modules-in-node" title="Link to this heading">¶</a></h2>
 <p><img alt="Advanced RAG" src="https://github.com/Marker-Inc-Korea/AutoRAG/assets/96727832/79dda7ba-e9d8-4552-9e7b-6a5f9edc4c1a" /></p>
 <p>Here is the diagram of the overall AutoRAG pipeline.
-Each node represents a node, and each node’s result passed to the next node.</p>
+Each node represents a node, and each node’s result is passed to the next node.</p>
 <div class="admonition-do-i-need-to-use-all-nodes admonition">
 <p class="admonition-title">Do I need to use all nodes?</p>
 <p>No. The essential node for the ‘working’ RAG pipeline is <code class="docutils literal notranslate"><span class="pre">retrieval</span></code>, <code class="docutils literal notranslate"><span class="pre">prompt</span> <span class="pre">maker</span></code> and <code class="docutils literal notranslate"><span class="pre">generator</span></code>.</p>
@@ -402,7 +402,7 @@ Each node represents a node, and each node’s result passed to the next node.</
 </div>
 <p>But remember, you can set multiple modules and multiple parameters in each node.
 And you get the best result among them.</p>
-<p>For achieving this, AutoRAG first makes all possible combinations of modules and parameters in each node.
+<p>To achieve this, AutoRAG first makes all possible combinations of modules and parameters in each node.
 Then, it runs the pipeline with each combination and gets the result.
 Finally, it selects the best result among them with the given strategies.</p>
 <p>Let me show you an example.</p>
@@ -459,10 +459,10 @@ You can see the results in the <code class="docutils literal notranslate"><span 
 <p>The best result from the previous node is passed to the next node.
 It means that the next node uses the best result from the previous node as input.</p>
 <p>In this way, each node does not have to know how the input result is generated.
-Think it as one of Markov Chain, which only needs the previous state to generate the next state.
+Think of it as one of Markov Chain, which only needs the previous state to generate the next state.
 The node itself does not need to know the whole pipeline or the previous states.</p>
-<p>Why we choose this method?
-We know that the previous node result affects the next node result, and it is not always guarantee the best result.
+<p>Why do we choose this method?
+We know that the previous node result affects the next node result, and it does not always guarantee the best result.
 For example, if the node choice was B and the next was A. But it can be possible that the best is A - A combination.</p>
 <p>However, testing all combinations with all nodes can cause too many combinations and retries.
 Our goal is to find the optimal pipeline, not ‘the best pipeline’ for the given time and resources.</p>
@@ -480,13 +480,13 @@ In evaluation process, we retrieve the documents using the modules you specified
 and evaluate the <code class="docutils literal notranslate"><span class="pre">query_expansion</span></code> node with the retrieved documents.</p>
 <p>Similar with <code class="docutils literal notranslate"><span class="pre">prompt_maker</span></code> and <code class="docutils literal notranslate"><span class="pre">generation</span></code> node.
 We evaluate <code class="docutils literal notranslate"><span class="pre">prompt_maker</span></code> node with the <code class="docutils literal notranslate"><span class="pre">generation</span></code> node’s result.</p>
-<p>You might be wonder that this method is valid.
+<p>You might be wondering that this method is valid.
 Think of this way.
 In the node, we already find the best result among the combinations.
 And its combination contain <code class="docutils literal notranslate"><span class="pre">the</span> <span class="pre">next</span> <span class="pre">node</span></code> setups.
 In the next node, we will test all combinations of the next node.
 So, its result will be at least the same as the best result from the previous node.
-And probably, the most case you can get a better result than the best result from the previous node.</p>
+And probably, in most cases you can get a better result than the best result from the previous node.</p>
 </section>
 <section id="more-optimization-strategies">
 <h2>More optimization strategies<a class="headerlink" href="#more-optimization-strategies" title="Link to this heading">¶</a></h2>

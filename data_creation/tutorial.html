@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -396,7 +396,7 @@
 <li><p><a class="reference internal" href="#make-qa-data-from-corpus-data"><span class="xref myst">Corpus data to QA data</span></a></p></li>
 <li><p><a class="reference internal" href="#use-custom-prompt"><span class="xref myst">Use custom prompt</span></a></p></li>
 <li><p><a class="reference internal" href="#use-multiple-prompts"><span class="xref myst">Use multiple prompts</span></a></p></li>
-<li><p><a class="reference internal" href="#when-you-have-existing-queries"><span class="xref myst">If there are existing queries</span></a></p></li>
+<li><p><a class="reference internal" href="#when-you-have-existing-qa-data"><span class="xref myst">If there are existing queries</span></a></p></li>
 </ol>
 </section>
 <section id="overview">
@@ -520,7 +520,7 @@ The prompt must contains two placeholders:</p>
 <h2>Use multiple prompts<a class="headerlink" href="#use-multiple-prompts" title="Link to this heading">¶</a></h2>
 <p>If you want to generate different types of question and answer pairs, you can use multiple prompts.
 From now, we support distributing multiple prompts by randomly based on the ratio of each prompt.
-It means that the prompt will be selected by ratio per passage.</p>
+It means that the prompt will be selected by a ratio per passage.</p>
 <p>For this, you must provide a dictionary.
 The dictionary must have the key, which is the prompt text file path, and the value which is the ratio of the prompt.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -549,14 +549,14 @@ The dictionary must have the key, which is the prompt text file path, and the va
 <p>When you have existing qa data, you can use it for AutoRAG.
 The real user’s qa data is valuable data, so it is always great to use it prior to generating synthetic data.</p>
 <p>But you have to make retrieval_gt for existing queries from your corpus data.
-The process to find the retrieval_gt at the corpus is hard, but must be accurate.
-For making it less hard, we use an embedding model and vectordb for finding relevant passages.
+The process to find the retrieval_gt at the corpus is hard but must be accurate.
+To make it less hard, we use an embedding model and vectordb for finding relevant passages.
 After that, you have to clarify the retrieval_gt is right.
-If retrieval_gt is not relevant, you have to remove it on the dataset.</p>
+If retrieval_gt is not relevant, you have to remove it from the dataset.</p>
 <p>This feature is available if you have only query ready, and if you have both query and generation_gt ready.</p>
 <section id="if-you-only-have-query-data">
 <h3>If you only have query data:<a class="headerlink" href="#if-you-only-have-query-data" title="Link to this heading">¶</a></h3>
-<p>First get retrieval_gt with the existing query, then put query and retrieval_gt into LLM and generate generation_gt.</p>
+<p>First get retrieval_gt with the existing query, then put a query and retrieval_gt into LLM and generate generation_gt.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">answer_creation_func</span></code>, <code class="docutils literal notranslate"><span class="pre">llm</span></code> parameters are necessary.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">existing_qa_df</span></code> must have ‘query’ column.</p></li>
@@ -566,7 +566,7 @@ If retrieval_gt is not relevant, you have to remove it on the dataset.</p>
 <span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span><span class="p">,</span> <span class="n">generate_answers</span>
 
 <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
-<span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It have to contain &#39;query&#39; column</span>
+<span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; column</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
                                       <span class="n">answer_creation_func</span><span class="o">=</span><span class="n">generate_answers</span><span class="p">,</span>
@@ -584,7 +584,7 @@ If retrieval_gt is not relevant, you have to remove it on the dataset.</p>
 <span class="n">collection</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span><span class="s1">&#39;auto-rag&#39;</span><span class="p">)</span>
 
 <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
-<span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It have to contain &#39;query&#39; column</span>
+<span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; column</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
                                       <span class="n">answer_creation_func</span><span class="o">=</span><span class="n">generate_answers</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>
@@ -595,7 +595,7 @@ If retrieval_gt is not relevant, you have to remove it on the dataset.</p>
 </section>
 <section id="if-you-have-both-query-and-generation-gt">
 <h3>If you have both query and generation_gt:<a class="headerlink" href="#if-you-have-both-query-and-generation-gt" title="Link to this heading">¶</a></h3>
-<p>Use query and generation_gt as they are, and just find and add retrieval_gt.</p>
+<p>Use a query and generation_gt as they are, and just find and add retrieval_gt.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">answer_creation_func</span></code>, <code class="docutils literal notranslate"><span class="pre">llm</span></code> parameters are not necessary.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">exist_gen_gt=True</span></code> parameter is necessary.</p></li>
@@ -607,11 +607,11 @@ If retrieval_gt is not relevant, you have to remove it on the dataset.</p>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span><span class="p">,</span> <span class="n">generate_answers</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span>
 
 <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
 <span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
-   <span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It have to contain &#39;query&#39; and &#39;generation_gt&#39; columns.</span>
+   <span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; and &#39;generation_gt&#39; columns.</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">exist_gen_gt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                  <span class="n">output_filepath</span><span class="o">=</span><span class="s1">&#39;path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">cache_batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
@@ -622,14 +622,14 @@ If retrieval_gt is not relevant, you have to remove it on the dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">chromadb</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span><span class="p">,</span> <span class="n">generate_answers</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="s1">&#39;path/to/chromadb&#39;</span><span class="p">)</span>
 <span class="n">collection</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span><span class="s1">&#39;auto-rag&#39;</span><span class="p">)</span>
 
 <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
 <span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
-   <span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It have to contain &#39;query&#39; and &#39;generation_gt&#39; columns.</span>
+   <span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; and &#39;generation_gt&#39; columns.</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
                                  <span class="n">exist_gen_gt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>

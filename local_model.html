@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -488,7 +488,7 @@ You can find the package at <a class="reference external" href="https://pretty-s
 <span class="n">autorag</span><span class="o">.</span><span class="n">generator_models</span><span class="p">[</span><span class="s1">&#39;mockllm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MockLLM</span>
 </pre></div>
 </div>
-<p>Then you can use <code class="docutils literal notranslate"><span class="pre">mockllm</span></code> at config yaml file.</p>
+<p>Then you can use <code class="docutils literal notranslate"><span class="pre">mockllm</span></code> at config YAML file.</p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>When you add new LLM model, you should add class itself, not the instance.</p>
@@ -500,7 +500,7 @@ You can find the package at <a class="reference external" href="https://pretty-s
 <h2>Configure the Embedding model<a class="headerlink" href="#configure-the-embedding-model" title="Link to this heading">¶</a></h2>
 <section id="modules-that-use-embedding-model">
 <h3>Modules that use Embedding model<a class="headerlink" href="#modules-that-use-embedding-model" title="Link to this heading">¶</a></h3>
-<p>Modules that using embedding model can take <code class="docutils literal notranslate"><span class="pre">embedding_model</span></code> parameter to specify the LLM model.</p>
+<p>Modules that using an embedding model can take <code class="docutils literal notranslate"><span class="pre">embedding_model</span></code> parameter to specify the LLM model.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="nodes/retrieval/vectordb.html"><span class="std std-doc">vectordb</span></a></p></li>
 </ul>
@@ -567,7 +567,7 @@ execute the following code.</p>
 <span class="n">autorag</span><span class="o">.</span><span class="n">embedding_models</span><span class="p">[</span><span class="s1">&#39;kosimcse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">HuggingFaceEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;BM-K/KoSimCSE-roberta-multitask&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then you can use <code class="docutils literal notranslate"><span class="pre">kosimcse</span></code> at config yaml file.</p>
+<p>Then you can use <code class="docutils literal notranslate"><span class="pre">kosimcse</span></code> at config YAML file.</p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>When you add new embedding model, you should use <code class="docutils literal notranslate"><span class="pre">LazyInit</span></code> class from autorag. The additional parameters have to be keyword parameter in the <code class="docutils literal notranslate"><span class="pre">LazyInit</span></code> initialization.</p>

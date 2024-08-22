@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -391,8 +391,8 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">hybrid-cc</span></code> module is designed to retrieve passages from multiple retrievals. Similar to the <code class="docutils literal notranslate"><span class="pre">hybrid-rrf</span></code> module, the <code class="docutils literal notranslate"><span class="pre">hybrid-cc</span></code> module is also aimed at retrieving information from multiple sources.</p>
 <p>However, it distinguishes itself by using the Convex Combination (CC) algorithm.
 This algorithm allows for the calculation of scores with varying weights between each retrieval, offering a flexible approach to combining retrieval scores.</p>
-<section id="hybird-additional-explanation">
-<h2>❗️Hybird additional explanation<a class="headerlink" href="#hybird-additional-explanation" title="Link to this heading">¶</a></h2>
+<section id="hybrid-additional-explanation">
+<h2>❗️Hybrid additional explanation<a class="headerlink" href="#hybrid-additional-explanation" title="Link to this heading">¶</a></h2>
 <p>By default, <code class="docutils literal notranslate"><span class="pre">hybrid</span></code> is designed to be used without writing target_module_params. Other modules listed in target_modules
 must be included in the config file, and hybrid is calculated based on the best of the results from those modules.</p>
 <p>Once evaluated to find the optimal pipeline, extracting the pipeline creates a parameter called target_module_params. This helps the hybrid work even if you don’t include other modules, which is useful in test dataset evaluation and deployment situations.</p>
@@ -410,7 +410,7 @@ must be included in the config file, and hybrid is calculated based on the best 
 <h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>(Required) <strong>normalize_method</strong>: The normalization method to use.
-There are some normalization method that you can use at the hybrid cc method.
+There is some normalization method that you can use at the hybrid cc method.
 AutoRAG support following.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">mm</span></code>: Min-max scaling</p></li>
@@ -422,8 +422,8 @@ AutoRAG support following.</p>
 <li><p>(Optional) <strong>weight_range</strong>: The range of the weight that you want to explore. If the weight is 1.0, it means the
 weight to the semantic module will be 1.0 and weight to the lexical module will be 0.0.
 You have to input this value as tuple. It looks like this. <code class="docutils literal notranslate"><span class="pre">(0.2,</span> <span class="pre">0.8)</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">(0.0,</span> <span class="pre">1.0)</span></code>.</p></li>
-<li><p>(Optional) <strong>test_weight_size</strong>: The size of the weight that tested for optimization. If the weight range
-is <code class="docutils literal notranslate"><span class="pre">(0.2,</span> <span class="pre">0.8)</span></code> and the size is 7, it will evaluate the following weights.
+<li><p>(Optional) <strong>test_weight_size</strong>: The size of the weight that is tested for optimization.
+If the weight range is <code class="docutils literal notranslate"><span class="pre">(0.2,</span> <span class="pre">0.8)</span></code> and the size is 7, it will evaluate the following weights.
 <code class="docutils literal notranslate"><span class="pre">0.2,</span> <span class="pre">0.3,</span> <span class="pre">0.4,</span> <span class="pre">0.5,</span> <span class="pre">0.6,</span> <span class="pre">0.7,</span> <span class="pre">0.8</span></code>. Default is 101.</p></li>
 <li><p>(Optional) <strong>semantic_theoretical_min_value</strong>: This value used by <code class="docutils literal notranslate"><span class="pre">tmm</span></code> normalization method. You can set the
 theoretical minimum value by yourself. Default is -1.</p></li>
@@ -501,7 +501,7 @@ theoretical minimum value by yourself. Default is 0.</p></li>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Hybrid - cc</a><ul>
-<li><a class="reference internal" href="#hybird-additional-explanation">❗️Hybird additional explanation</a></li>
+<li><a class="reference internal" href="#hybrid-additional-explanation">❗️Hybrid additional explanation</a></li>
 <li><a class="reference internal" href="#module-parameters"><strong>Module Parameters</strong></a></li>
 <li><a class="reference internal" href="#example-config-yaml"><strong>Example config.yaml</strong></a></li>
 </ul>

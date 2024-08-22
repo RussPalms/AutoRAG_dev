@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -427,9 +427,9 @@ If you don’t know about specific columns and data types, check out the <a clas
 <section id="find-optimal-rag-pipeline">
 <h2>Find Optimal RAG Pipeline<a class="headerlink" href="#find-optimal-rag-pipeline" title="Link to this heading">¶</a></h2>
 <p>Let’s find an optimal RAG pipeline with AutoRAG!
-After you prepare your evaluation dataset, you need to have a config yaml file.
-There are few pre-made config yaml files at our GitHub repo <code class="docutils literal notranslate"><span class="pre">sample_config</span></code> folder.
-We highly recommend using pre-made config yaml files for starter.
+After you prepare your evaluation dataset, you need to have a config YAML file.
+There are few pre-made config YAML files at our GitHub repo <code class="docutils literal notranslate"><span class="pre">sample_config</span></code> folder.
+We highly recommend using pre-made config YAML files for starter.
 Download <code class="docutils literal notranslate"><span class="pre">starter.yaml</span></code> file to your local environment, and you are ready to go.</p>
 <div class="admonition-write-custom-config-yaml-file admonition">
 <p class="admonition-title">Write custom config yaml file</p>
@@ -441,8 +441,8 @@ check out the <a class="reference internal" href="optimization/optimization.html
 <p>Before you start the optimization, you might need to validate your system.
 When you run AutoRAG, there might be an error in your YAML file, python dependencies, GPU error, or unexpected errors.
 So it is recommended to run the validation.
-It runs whole optimization, but only to find a system error with minimum cost.</p>
-<p>You can run validation with cli command.</p>
+It runs the whole optimization but only to find a system error with minimum cost.</p>
+<p>You can run validation with a cli command.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>validate<span class="w"> </span>--config<span class="w"> </span>your/path/to/default_config.yaml<span class="w"> </span>--qa_data_path<span class="w"> </span>your/path/to/qa.parquet<span class="w"> </span>--corpus_data_path<span class="w"> </span>your/path/to/corpus.parquet
 </pre></div>
 </div>
@@ -468,12 +468,12 @@ It runs whole optimization, but only to find a system error with minimum cost.</
 <span class="n">evaluator</span><span class="o">.</span><span class="n">start_trial</span><span class="p">(</span><span class="s1">&#39;your/path/to/config.yaml&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Once it is done, you can see several files and folders created in your current directory.<br />
+<p>Once it is done, you can see several files and folders created in your current directory.
 These files and folders contain all information about the evaluation results and the best RAG pipeline for your data.</p>
 <p align="center">
 	<img src="./_static/project_folder_example.png" alt="Example of project folder structure">
 </p>
-<p>The First thing you can see might be a folder named after number, which is 3 in the above image.
+<p>The First thing you can see might be a folder named after a number, which is 3 in the above image.
 This is the trial folder that contains all results that you run above.
 The number is the trial number, and you can check when you run the evaluation at <code class="docutils literal notranslate"><span class="pre">trial.json</span></code> file.</p>
 <p>And the most important file is <code class="docutils literal notranslate"><span class="pre">summary.csv</span></code> files.
@@ -496,7 +496,7 @@ Please refer <a class="reference external" href="https://docs.auto-rag.com/local
 <p>If an error occurs during the trial, you can restart the trial.</p>
 <p>If you had issues with the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> file, you can modify the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> file in the trail folder and run the
 code below.</p>
-<p>Run below code at CLI, then AutoRAG automatically restart evaluate.</p>
+<p>Run below code at CLI, then AutoRAG automatically restarts the evaluation.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>restart_evaluate<span class="w"> </span>--trial_path<span class="w"> </span>your/path/to/trial_folder
 </pre></div>
 </div>
@@ -504,7 +504,7 @@ code below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.evaluator</span> <span class="kn">import</span> <span class="n">Evaluator</span>
 
 <span class="n">evaluator</span> <span class="o">=</span> <span class="n">Evaluator</span><span class="p">(</span><span class="n">qa_data_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">corpus_data_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/corpus.parquet&#39;</span><span class="p">)</span>
-<span class="n">evaluator</span><span class="o">.</span><span class="n">restart_trial</span><span class="p">(</span><span class="n">tiral_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/trial_path&#39;</span><span class="p">)</span>
+<span class="n">evaluator</span><span class="o">.</span><span class="n">restart_trial</span><span class="p">(</span><span class="n">trial_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/trial_path&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition-what-if-trial-path-didn-t-also-create-a-first-node-line admonition">
@@ -517,8 +517,8 @@ start_trial function will be executed instead of restart_trial.</p>
 </section>
 <section id="run-dashboard-to-see-your-trial-result">
 <h2>Run Dashboard to see your trial result!<a class="headerlink" href="#run-dashboard-to-see-your-trial-result" title="Link to this heading">¶</a></h2>
-<p>Up to AutoRAG version 0.2.0, you can use dashboard feature for easily see the results of AutoRAG.
-You can run dashboard just running below command.</p>
+<p>Up to AutoRAG version 0.2.0, you can use the dashboard feature to easily see the results of AutoRAG.
+You can run the dashboard just running below command.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>dashboard<span class="w"> </span>--trial_dir<span class="w"> </span>/your/path/to/trial_dir
 </pre></div>
 </div>
@@ -526,11 +526,11 @@ You can run dashboard just running below command.</p>
 <section id="extract-pipeline-and-evaluate-test-dataset">
 <h2>Extract pipeline and evaluate test dataset<a class="headerlink" href="#extract-pipeline-and-evaluate-test-dataset" title="Link to this heading">¶</a></h2>
 <p>Now, it’s time to evaluate test dataset with a found RAG pipeline. For this, you can extract the optimal pipeline and
-save it to new config yaml file.</p>
+save it to a new config YAML file.</p>
 <p>You can use the below code.</p>
 <p>Remind that your trial folder is in the directory you run the <code class="docutils literal notranslate"><span class="pre">Evaluator</span></code>.
 And the trial folder name is number, like 0, 1, 2, 3, and so on.</p>
-<p>Run below code at CLI, then AutoRAG automatically extract the optimal pipeline and save it to a new yaml file.</p>
+<p>Run below code at CLI, then AutoRAG automatically extracts the optimal pipeline and saves it to a new YAML file.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>extract_best_config<span class="w"> </span>--trial_path<span class="w"> </span>your/path/to/trial_folder<span class="w"> </span>--output_path<span class="w"> </span>your/path/to/pipeline.yaml
 </pre></div>
 </div>
@@ -540,7 +540,7 @@ And the trial folder name is number, like 0, 1, 2, 3, and so on.</p>
 <span class="n">pipeline_dict</span> <span class="o">=</span> <span class="n">extract_best_config</span><span class="p">(</span><span class="n">trial_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/trial_folder&#39;</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can check out your pipeline yaml file at <code class="docutils literal notranslate"><span class="pre">your/path/to/pipeline.yaml</span></code>.
+<p>You can check out your pipeline YAML file at <code class="docutils literal notranslate"><span class="pre">your/path/to/pipeline.yaml</span></code>.
 And then, run evaluation with test dataset again.</p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
@@ -556,7 +556,7 @@ Running evaluation with another dataset in same folder can cause serious malfunc
 <h2>Deploy your optimal RAG pipeline<a class="headerlink" href="#deploy-your-optimal-rag-pipeline" title="Link to this heading">¶</a></h2>
 <section id="run-as-a-cli">
 <h3>1. Run as a CLI<a class="headerlink" href="#run-as-a-cli" title="Link to this heading">¶</a></h3>
-<p>You can use a found optimal RAG pipeline right away with extracted yaml file.</p>
+<p>You can use a found optimal RAG pipeline right away with an extracted YAML file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
 
 <span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">)</span>
@@ -567,7 +567,7 @@ Running evaluation with another dataset in same folder can cause serious malfunc
 <section id="run-as-an-api-server">
 <h3>2. Run as an API server<a class="headerlink" href="#run-as-an-api-server" title="Link to this heading">¶</a></h3>
 <p>You can run this pipeline as an API server.</p>
-<p>Check out API endpoint at <a class="reference internal" href="deploy/api_endpoint.html"><span class="std std-doc">here</span></a>.</p>
+<p>Check out the API endpoint at <a class="reference internal" href="deploy/api_endpoint.html"><span class="std std-doc">here</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
 
 <span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">)</span>
@@ -585,7 +585,7 @@ Running evaluation with another dataset in same folder can cause serious malfunc
 <section id="run-as-a-web-interface">
 <h3>3. Run as a Web Interface<a class="headerlink" href="#run-as-a-web-interface" title="Link to this heading">¶</a></h3>
 <p>you can run this pipeline as a web interface.</p>
-<p>Check out web interface at <a class="reference internal" href="deploy/web.html"><span class="std std-doc">here</span></a>.</p>
+<p>Check out the web interface at <a class="reference internal" href="deploy/web.html"><span class="std std-doc">here</span></a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>run_web<span class="w"> </span>--yaml_path<span class="w"> </span>your/path/to/pipeline.yaml
 </pre></div>
 </div>
@@ -602,8 +602,8 @@ With that, you can share whole RAG pipeline and evaluation results to others.</p
 </div>
 <p>And that’s it!
 You successfully found the optimal RAG pipeline for your dataset and deployed it.
-Now, you can make your custom config file, write better config yaml file,
-and evaluate it again and again for better result.</p>
+Now, you can make your custom config file, write a better config YAML file,
+and evaluate it again and again for the better result.</p>
 <p>Or just launch a new RAG product with your saved time with AutoRAG!</p>
 <div class="admonition-next-step admonition">
 <p class="admonition-title">Next Step</p>

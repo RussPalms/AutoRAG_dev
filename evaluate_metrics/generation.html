@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -404,7 +404,7 @@
 <section id="id1">
 <h3>📌Definition<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">n-gram</span></code> base</p>
-<p>The extent to which words from the reference setence are included in the generated sentence
+<p>The extent to which words from the reference sentences are included in the generated sentence
 → By AutoRAG, the extent to which words in <code class="docutils literal notranslate"><span class="pre">Answer</span> <span class="pre">gt</span></code> are included in the <code class="docutils literal notranslate"><span class="pre">LLM</span> <span class="pre">generated</span> <span class="pre">result</span></code></p>
 </section>
 </section>
@@ -416,10 +416,10 @@
 <p>Here is the paper <a class="reference external" href="https://www.cs.cmu.edu/~alavie/papers/BanerjeeLavie2005-final.pdf">link</a> that introduced <em><strong>METEOR</strong></em></p>
 <p>The metric is based on the<strong>harmonic mean</strong>of unigram<strong>precision and recall</strong>, with recall weighted higher than
 precision.</p>
-<p>It also has several features that are not found in other metrics, such asstemmingandsynonymymatching, along with the
+<p>It also has several features that are not found in other metrics, such as stemming and synonym matching, along with the
 standard exact word matching.</p>
 <p>The metric was designed to fix some of the problems found in the more popular<code class="docutils literal notranslate"><span class="pre">BLEU</span></code>metric, and also produce good
-correlation with human judgement at the sentence or segment level.</p>
+correlation with human judgment at the sentence or segment level.</p>
 <p>This differs from the <code class="docutils literal notranslate"><span class="pre">BLEU</span></code> metric in that <code class="docutils literal notranslate"><span class="pre">BLEU</span></code> seeks correlation at the corpus level.</p>
 </section>
 </section>
@@ -427,7 +427,7 @@ correlation with human judgement at the sentence or segment level.</p>
 <h2>4. Sem Score<a class="headerlink" href="#sem-score" title="Link to this heading">¶</a></h2>
 <section id="id3">
 <h3>📌Definition<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
-<p>Here is the paper<a class="reference external" href="https://arxiv.org/pdf/2401.17072.pdf">link</a>that introduced <em><strong>Sem Score</strong></em>.</p>
+<p>Here is the paper <a class="reference external" href="https://arxiv.org/pdf/2401.17072.pdf">link</a> that introduced <em><strong>Sem Score</strong></em>.</p>
 <p>The concept of SemScore is quite simple.</p>
 <p>It measures semantic similarity between ground truth and the model’s generation using an embedding model.</p>
 <p>You can find more detailed information
@@ -442,7 +442,7 @@ at <a class="reference external" href="https://medium.com/&#64;autorag/sem-score
 <p><em><strong>G-Eval</strong></em>, a framework of using large language models with <strong>chain-of-thoughts</strong> (CoT) and a form-filling paradigm,
 to assess the quality of NLG outputs.</p>
 <p>Paper said that <strong>G-Eval with GPT-4</strong> as the backbone model achieves a Spearman correlation of 0.514 with human on
-summarization task, outperforming all previous methods by a large margin.</p>
+a summarization task, outperforming all previous methods by a large margin.</p>
 <p>So, in AutoRAG, we use <strong>G-Eval with GPT-4</strong></p>
 </section>
 <hr class="docutils" />
@@ -459,7 +459,7 @@ summarization task, outperforming all previous methods by a large margin.</p>
 <ul class="simple">
 <li><p>Evaluate whether the answer is consistent with and does not contradict the question asked or the information
 presented.</p></li>
-<li><p>A answer should provide information that does not conflict with the requirements of the question or the data
+<li><p>An answer should provide information that does not conflict with the requirements of the question or the data
 presented.</p></li>
 </ul>
 </section>
@@ -481,7 +481,7 @@ presented.</p></li>
 <section id="how-to-use-specific-g-eval-metrics">
 <h3>❗How to use specific G-Eval metrics<a class="headerlink" href="#how-to-use-specific-g-eval-metrics" title="Link to this heading">¶</a></h3>
 <p>You can use specific G-Eval metrics to use <code class="docutils literal notranslate"><span class="pre">metrics</span></code> parameter.</p>
-<p>Here is an example yaml file that uses <strong>G-Eval consistency</strong> metric.</p>
+<p>Here is an example YAML file that uses <strong>G-Eval consistency</strong> metric.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">metric_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">g_eval</span>
 <span class="w">  </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">consistency</span><span class="w"> </span><span class="p p-Indicator">]</span>
 </pre></div>

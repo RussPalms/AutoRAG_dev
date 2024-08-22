@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -396,7 +396,7 @@ You must follow a specified format for data input.</p>
 <p class="admonition-title">Long story short</p>
 <p>You must have <code class="docutils literal notranslate"><span class="pre">qid</span></code>, <code class="docutils literal notranslate"><span class="pre">query</span></code>, <code class="docutils literal notranslate"><span class="pre">retrieval_gt</span></code>, and <code class="docutils literal notranslate"><span class="pre">generation_gt</span></code> columns at <code class="docutils literal notranslate"><span class="pre">qa.parquet</span></code> file.</p>
 </div>
-<p>QA dataset contains user’s expected question and its ground truth answers.
+<p>QA dataset contains the user’s expected question and its ground truth answers.
 Also, there will be relevant document ids as ground truth retrieval.
 As you know, there can be lots of variations of <em>good answers</em> for a single question.</p>
 <p>You must include the following columns at your <code class="docutils literal notranslate"><span class="pre">qa.parquet</span></code> file:</p>
@@ -413,7 +413,7 @@ As you know, there can be lots of variations of <em>good answers</em> for a sing
 <p>The user’s question.
 Its type is <code class="docutils literal notranslate"><span class="pre">string</span></code>.
 In this data, you can imagine or collect user’s input questions to your RAG system.
-What kinds of questions users ask your data?</p>
+What kinds of questions do users ask your data?</p>
 </section>
 <section id="retrieval-gt">
 <h3>retrieval_gt<a class="headerlink" href="#retrieval-gt" title="Link to this heading">¶</a></h3>
@@ -422,13 +422,15 @@ What kinds of questions users ask your data?</p>
 <p>Save retrieval ground truth as 2d list. It can be 1d list or just string.</p>
 </div>
 <p>2D list of document ids. You can save retrieval ground truth ids as a list of lists.</p>
-<p>Why do we need 2D list? Some metrics support ‘and’/’or’ conditions for retrieval.
+<p>Why do we need a 2D list?
+Some metrics support ‘and’/’or’ conditions for retrieval.
 Think about real-life questions.
 To answer a single question, there can be more than one knowledge source.</p>
 <p>For example, if I ask about <code class="docutils literal notranslate"><span class="pre">Which</span> <span class="pre">K-pop</span> <span class="pre">girl</span> <span class="pre">group</span> <span class="pre">has</span> <span class="pre">more</span> <span class="pre">members,</span> <span class="pre">New</span> <span class="pre">Jeans</span> <span class="pre">or</span> <span class="pre">Aespa?</span></code>,
 you must look up documents about <a class="reference external" href="https://en.wikipedia.org/wiki/NewJeans">New Jeans</a>
 and <a class="reference external" href="https://en.wikipedia.org/wiki/Aespa">Aespa</a> to answer the question.
-This can be ‘and’ operation. You must look up two different documents to answer the question.</p>
+This can be an ‘and’ operation.
+You must look up two different documents to answer the question.</p>
 <p>On the other hand, there will be lots of documents that contain ‘New Jeans has five members’ knowledge in the corpus.
 Then, these documents can be ‘or’ operation.
 You can answer the question with any of these documents.</p>
@@ -453,8 +455,8 @@ If you save it as 1-d list, it treats as ‘and’ operation.</p>
 <p>When AutoRAG starts to evaluate, it checks the existence of the retrieval ids in the corpus dataset.</p>
 <p>You MUST match the retrieval_gt ids with the corpus dataset.</p>
 </div>
-<p>This column is crucial because AutoRAG evaluate retrieval performance with this column.
-It can affect hugely to optimization performance or nodes like retrieval, query expansion or passage reranker.</p>
+<p>This column is crucial because AutoRAG evaluates retrieval performance with this column.
+It can affect the optimization performance or nodes like retrieval, query expansion, or passage reranker.</p>
 </section>
 <section id="generation-gt">
 <h3>generation_gt<a class="headerlink" href="#generation-gt" title="Link to this heading">¶</a></h3>
@@ -478,7 +480,7 @@ So you can put all of them in a list.</p>
 <p>You must have <code class="docutils literal notranslate"><span class="pre">doc_id</span></code>, <code class="docutils literal notranslate"><span class="pre">contents</span></code>, and <code class="docutils literal notranslate"><span class="pre">metadata</span></code> columns at <code class="docutils literal notranslate"><span class="pre">corpus.parquet</span></code> file.</p>
 </div>
 <p>You can make corpus dataset using your own documents.
-In general, you have to load your documents to text, and chunk it to passages.
+In general, you have to load your documents to text and chunk it to passages.
 Once it is chunked, the single passage can be a row in the corpus dataset.
 Your RAG system will retrieve passages in this corpus dataset, so chunking strategy is really important.</p>
 <section id="doc-id">

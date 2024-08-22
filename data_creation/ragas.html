@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -388,7 +388,7 @@
         <article role="main" id="furo-main-content">
           <section id="ragas-evaluation-data-generation">
 <h1>RAGAS evaluation data generation<a class="headerlink" href="#ragas-evaluation-data-generation" title="Link to this heading">¶</a></h1>
-<p>RAGAS, the RAG evaluation framework also supports their advanced evaluation data generation.
+<p>RAGAS, the RAG evaluation framework, also support their advanced evaluation data generation.
 You can learn more about their evaluation data generation method
 at <a class="reference external" href="https://docs.ragas.io/en/stable/concepts/testset_generation.html">here</a>.</p>
 <section id="generate-qa-set-from-corpus-data-using-ragas">
@@ -403,7 +403,7 @@ at <a class="reference external" href="https://docs.ragas.io/en/stable/concepts/
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">generate_qa_ragas</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This will make QA set with 50 questions using RAGAS evaluation data generation method.</p>
+<p>This will make QA set with 50 questions using the RAGAS evaluation data generation method.</p>
 <p>You can use output <code class="docutils literal notranslate"><span class="pre">qa_df</span></code> directly for AutoRAG optimization.</p>
 </section>
 <section id="ragas-question-types">
@@ -414,8 +414,8 @@ at <a class="reference external" href="https://docs.ragas.io/en/stable/concepts/
 <li><p>multi_context</p></li>
 <li><p>conditional</p></li>
 </ul>
-<p>You can set distribution of question types by making distribution list.
-You can access each question type from importing ragas evolution types.</p>
+<p>You can set the distribution of question types by making a distribution list.
+You can access each question type by importing RAGAS evolution types.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ragas.testset.evolutions</span> <span class="kn">import</span> <span class="n">simple</span><span class="p">,</span> <span class="n">reasoning</span><span class="p">,</span> <span class="n">multi_context</span><span class="p">,</span> <span class="n">conditional</span>
 <span class="kn">from</span> <span class="nn">autorag.data.qacreation.ragas</span> <span class="kn">import</span> <span class="n">generate_qa_ragas</span>
 
@@ -433,7 +433,7 @@ You can access each question type from importing ragas evolution types.</p>
 </section>
 <section id="use-custom-models">
 <h2>Use custom models<a class="headerlink" href="#use-custom-models" title="Link to this heading">¶</a></h2>
-<p>RAGAS support custom models using Langchain.
+<p>RAGAS supports custom models using Langchain.
 You can get a support list of models from Langchain at <a class="reference external" href="https://python.langchain.com/docs/integrations/llms/">here</a>.</p>
 <p>Plus, you might need to use <code class="docutils literal notranslate"><span class="pre">ChatModel</span></code> class from Langchain.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.qacreation.ragas</span> <span class="kn">import</span> <span class="n">generate_qa_ragas</span>

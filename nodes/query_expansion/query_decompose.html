@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -401,7 +401,7 @@ arguments (<code class="docutils literal notranslate"><span class="pre">kwargs</
 <p><strong>Additional Parameters</strong>:</p>
 <ul class="simple">
 <li><p><strong>prompt</strong>: You can use your own custom prompt for the LLM model.
-default prompt comes from Visconde’s StrategyQA few-shot prompt.</p></li>
+Default prompt comes from StrategyQA few-shot prompt of Visconde.</p></li>
 </ul>
 </section>
 <section id="example-config-yaml">
@@ -416,14 +416,14 @@ default prompt comes from Visconde’s StrategyQA few-shot prompt.</p></li>
 </section>
 <section id="default-prompt">
 <h2>Default Prompt<a class="headerlink" href="#default-prompt" title="Link to this heading">¶</a></h2>
-<p>When the question doesn’t need decomposition, it must return “The question needs no decomposition”.
+<p>When the question doesn’t need decomposition, it must return “The question needs no decomposition.”
 Plus, each question will be allocated in <code class="docutils literal notranslate"><span class="pre">{question}</span></code>, so you have to write it in the prompt.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Decompose a question in self-contained sub-questions. Use \&quot;The question needs no decomposition\&quot; when no decomposition is needed.
 
 Example 1:
 
 Question: Is Hamlet more common on IMDB than Comedy of Errors?
-Decompositions: 
+Decompositions:
 1: How many listings of Hamlet are there on IMDB?
 2: How many listing of Comedy of Errors is there on IMDB?
 

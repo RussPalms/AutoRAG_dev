@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -418,12 +418,12 @@ We support <a class="reference external" href="https://docs.ragas.io/en/latest/c
 <ul class="simple">
 <li><p>Also known as <strong>PPV</strong> (Positive Predictive Value).</p></li>
 </ul>
-<p>❗So in AutoRAG, Precision is <strong>(number of correct answers in result) / (length of result)</strong>.</p>
+<p>❗So in AutoRAG, Precision is <strong>(number of correct answers in a result) / (length of a result)</strong>.</p>
 </section>
 <section id="apply-basic-example">
 <h3>✅Apply Basic Example<a class="headerlink" href="#apply-basic-example" title="Link to this heading">¶</a></h3>
 <p>Retrieval resulted in the correct answer <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0]</span></code>.</p>
-<p>Precision = (number of correct answers in result) / (length of result).</p>
+<p>Precision = (number of correct answers in a result) / (length of a result).</p>
 <p>So in this case, precision is 2/4 = 0.5.</p>
 <p>⌛Summary</p>
 <ul class="simple">
@@ -452,11 +452,11 @@ The result contains both <code class="docutils literal notranslate"><span class=
 <p>Therefore, this list is correct.</p>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">['test-3']</span></code></p>
-<p>The result does not include <code class="docutils literal notranslate"><span class="pre">test-3</span></code>.</p>
+<p>The result doesn’t include <code class="docutils literal notranslate"><span class="pre">test-3</span></code>.</p>
 <p>Therefore, this list is incorrect.</p>
 </li>
 </ol>
-<p>The ‘number of list containing the correct answer’ was 1, and the ‘length of gt’ is 2.</p>
+<p>The ‘number of lists containing the correct answer’ was 1, and the ‘length of gt’ is 2.</p>
 <p>Therefore, Recall is 1/2 = 0.5.</p>
 <p>⌛Summary</p>
 <ul class="simple">
@@ -497,7 +497,7 @@ The result contains both <code class="docutils literal notranslate"><span class=
 <p>Since test-1 is the first in result, the RR of this list is 1</p>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">['test-3']</span></code></p>
-<p>The result does not include <code class="docutils literal notranslate"><span class="pre">test-3</span></code>.</p>
+<p>The result doesn’t include <code class="docutils literal notranslate"><span class="pre">test-3</span></code>.</p>
 <p>Therefore, the RR of this list is 0.</p>
 </li>
 </ol>
@@ -528,7 +528,7 @@ average of the averages.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">test-1</span></code> is in the first part of result. Therefore, Precision = 1</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">test-2</span></code> is in the third of the result. Therefore, Precision = 2/3</p></li>
 </ol>
-<p>⇒ AP(Average Precision) = (1 + 2/3) / 2 = 5/6</p>
+<p>⇒ AP (Average Precision) = (1 + 2/3) / 2 = 5/6</p>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">['test-3']</span></code></p>
 <ol class="arabic simple">
@@ -555,7 +555,7 @@ average of the averages.</p>
 <p>Cumulated Gain (CG) literally means the cumulative sum of relevance.
 However, in the case of CG, if the types of passages in TopN are the same, a model with more relevant passages ranked
 higher may perform equally well as a model with less relevant passages.</p>
-<p>Therefore, we don’t use this value directly, but use the DCG with a discount.</p>
+<p>Therefore, we don’t use this value directly but use the DCG with a discount.</p>
 <p>2️⃣<strong>DCG</strong> (Discounted Cumulated Gain)</p>
 <p>Discounted Cumulated Gain (DCG) is the sum of the relevance divided by the logarithmic rank.</p>
 <p>Logarithmicizing the ranking results in a modest increase in value, and dividing relevance by this value indicates that
@@ -563,7 +563,7 @@ the impact of relevance is smaller the further down the ranking you go.</p>
 <p>In DCG, discounted means to reduce the influence of these later rankings, so that the value of the DCG is more
 influenced by the relevance of higher-ranked items and less influenced by the relevance of lower-ranked items.</p>
 <p><img alt="dcg" src="../_images/dcg.png" /></p>
-<p>3️⃣<strong>IDCG</strong> (Ideal Discounted Cumulated Gain)</p>
+<p>3️⃣<strong>IDCG</strong> (Ideal-Discounted Cumulated Gain)</p>
 <p>The Ideal Discounted Cumulated Gain (IDCG) is the most ideal value of the DCG result. It is absolute and not directly
 related to the model.</p>
 <p>4️⃣<strong>NDCG</strong></p>

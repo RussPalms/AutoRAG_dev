@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -390,7 +390,7 @@
 <h1>7. Prompt Maker<a class="headerlink" href="#prompt-maker" title="Link to this heading">¶</a></h1>
 <section id="definition">
 <h2>🔎 <strong>Definition</strong><a class="headerlink" href="#definition" title="Link to this heading">¶</a></h2>
-<p><strong>Prompt Maker</strong> is a module that makes a prompt from user query and retrieved contents.</p>
+<p><strong>Prompt Maker</strong> is a module that makes a prompt from a user query and retrieved contents.</p>
 </section>
 <section id="parameters">
 <h2>🔢 <strong>Parameters</strong><a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
@@ -419,7 +419,7 @@ Therefore, the strategy sets the parameters needed to evaluate the answer of the
 <li><p><strong>Metrics</strong>: (Essential) Metrics such as <code class="docutils literal notranslate"><span class="pre">bleu</span></code>,<code class="docutils literal notranslate"><span class="pre">meteor</span></code>, and <code class="docutils literal notranslate"><span class="pre">rouge</span></code> are used to evaluate the performance of the
 prompt maker process through its impact on generator (llm) outcomes.</p></li>
 <li><p><strong>Speed Threshold</strong>: (Optional) <code class="docutils literal notranslate"><span class="pre">speed_threshold</span></code> is applied across all nodes, ensuring that any method exceeding the
-average processing time for a query is not utilized.</p></li>
+average processing time for a query is not used.</p></li>
 <li><p><strong>Token Threshold</strong>: (Optional) <code class="docutils literal notranslate"><span class="pre">token_threshold</span></code> ensuring that output prompt average token length does not exceed
 the
 threshold.</p></li>
@@ -428,7 +428,7 @@ tokenizer name
 to use in <code class="docutils literal notranslate"><span class="pre">token_threshold</span></code> strategy.
 You can use OpenAI model names or Huggingface model names that support <code class="docutils literal notranslate"><span class="pre">AutoTokenizer</span></code>.
 It will automatically find the tokenizer for the model name you specify.
-Default is ‘gpt2’.</p></li>
+Default is ‘gpt2.’</p></li>
 <li><p><strong>Generator Modules</strong>: (Optional, but recommended to set) The prompt maker node can use all modules and module
 parameters from the generator node,
 including:</p>
@@ -438,7 +438,7 @@ including:</p>
 <li><p><a class="reference internal" href="../generator/vllm.html"><span class="std std-doc">vllm</span></a>: with <code class="docutils literal notranslate"><span class="pre">llm</span></code> and additional vllm parameters</p></li>
 </ul>
 <p>And the default model of generator module for evaluating prompt maker is openai gpt-3.5-turbo model.</p>
-<p>Plus, the evaluation of prompt maker will skip when there are only one combination of prompt maker modules and
+<p>Plus, the evaluation of the prompt maker will skip when there is only one combination of prompt maker modules and
 options.</p>
 </li>
 </ol>

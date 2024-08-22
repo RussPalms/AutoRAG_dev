@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -396,11 +396,10 @@ RankGPT uses GPT or other LLM model to reranking passages based on their relevan
 <li><p><code class="docutils literal notranslate"><span class="pre">llm</span></code>: Default LLM model is gpt-3.5-turbo-16k, but you can use another LLM model to use RankGPT.
 The usage on the config YAML file for setting custom LLM is the same
 as <a class="reference internal" href="../generator/llama_index_llm.html"><span class="std std-doc">llama_index_llm</span></a> module.
-More details can be found in the <a class="reference internal" href="../../local_model.html"><span class="std std-doc">Local Model</span></a> page.
+More details can be found on the <a class="reference internal" href="../../local_model.html"><span class="std std-doc">Local Model</span></a> page.
 Set <code class="docutils literal notranslate"><span class="pre">llm</span></code> as the name of LlamaIndex class name, and write the rest of parameters.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: The verbosity of the RankGPT module. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">batch</span></code>: Batch size. Since this module using LLM model, choose wisely to prevent OOM or token limit error. Default is
-16.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch</span></code>: Batch size. Since this module is using LLM model, choose wisely to prevent OOM or token limit error. Default is 16.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rankgpt_rerank_prompt</span></code>: The rerank prompt. Default is RankGPT default prompt.</p></li>
 </ul>
 </section>

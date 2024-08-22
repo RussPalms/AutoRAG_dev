@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -399,14 +399,14 @@ First, you can check out the <a class="reference internal" href="troubleshooting
 </div>
 <section id="installation-for-korean">
 <h2>Installation for Korean 🇰🇷<a class="headerlink" href="#installation-for-korean" title="Link to this heading">¶</a></h2>
-<p>You can install optional dependencies for Korean language.</p>
+<p>You can install optional dependencies for the Korean language.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>AutoRAG<span class="o">[</span>ko<span class="o">]</span>
 </pre></div>
 </div>
 <p>And after that, you have to install <strong>jdk 17</strong> for using <code class="docutils literal notranslate"><span class="pre">konlpy</span></code>.
-Plus, don’t forget to set environment PATH for jdk. (JAVA_HOME and PATH)</p>
-<p>The instruction for mac users
-is <a class="reference external" href="https://velog.io/&#64;yoonsy/M1%EC%B9%A9-Mac%EC%97%90-konlpy-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0">here</a>.</p>
+Plus, remember to set environment PATH for jdk.
+(JAVA_HOME and PATH)</p>
+<p>The instruction for Mac users is <a class="reference external" href="https://velog.io/&#64;yoonsy/M1%EC%B9%A9-Mac%EC%97%90-konlpy-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0">here</a>.</p>
 </section>
 <section id="setup-openai-api-key">
 <h2>Setup OPENAI API KEY<a class="headerlink" href="#setup-openai-api-key" title="Link to this heading">¶</a></h2>
@@ -417,15 +417,15 @@ You can get your API key at <a class="reference external" href="https://platform
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;sk-...your-api-key...&quot;</span>
 </pre></div>
 </div>
-<p>Or, as an alternative, you can set env variable using .env file.</p>
+<p>Or, as an alternative, you can set env variable using the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>python-dotenv
 </pre></div>
 </div>
-<p>Then, make .env file at your root folder like below.</p>
+<p>Then, make an.env file at your root folder like below.</p>
 <div class="highlight-dotenv notranslate"><div class="highlight"><pre><span></span>OPENAI_API_KEY=sk-...your-api-key...
 </pre></div>
 </div>
-<p>And when you try to run AutoRAG, you can use below code to load .env file.</p>
+<p>And when you try to run AutoRAG, you can use below code to load <code class="docutils literal notranslate"><span class="pre">.env</span></code> file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
 
 <span class="n">load_dotenv</span><span class="p">()</span>
@@ -435,7 +435,7 @@ You can get your API key at <a class="reference external" href="https://platform
 </section>
 <section id="build-from-source">
 <h2>Build from source<a class="headerlink" href="#build-from-source" title="Link to this heading">¶</a></h2>
-<p>If you want to build AutoRAG from source, the first step is to clone AutoRAG repository.</p>
+<p>If you want to build AutoRAG from source, the first step is to clone the AutoRAG repository.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Marker-Inc-Korea/AutoRAG.git
 </pre></div>
 </div>
@@ -449,8 +449,8 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>docs/requirements.txt
 </pre></div>
 </div>
-<p>For testing, you have to set env variable at pytest.ini.
-Make new pytest.ini file at the root of the project and write below.</p>
+<p>For testing, you have to set the environment variable at pytest.ini.
+Make a new <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> file at the root of the project and write below.</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
 <span class="na">env</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="na">OPENAI_API_KEY</span><span class="o">=</span><span class="s">sk-...your-api-key...</span>

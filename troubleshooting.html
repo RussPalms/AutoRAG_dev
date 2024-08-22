@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -393,19 +393,19 @@
 <section id="could-not-build-wheels">
 <h3>Could not build wheels<a class="headerlink" href="#could-not-build-wheels" title="Link to this heading">¶</a></h3>
 <p>If you face this kind of error during installation, try some methods below.</p>
-<ol class="arabic simple">
-<li><p>Upgrade pip version</p></li>
-</ol>
+<ol class="arabic">
+<li><p>Upgrade pip version</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
-<li><p>Install gcc or c++ packages</p></li>
-</ol>
+</li>
+<li><p>Install gcc or c++ packages</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span><span class="c1"># linux</span>
 brew<span class="w"> </span>install<span class="w"> </span>gcc<span class="w"> </span><span class="c1"># mac</span>
 </pre></div>
 </div>
+</li>
+</ol>
 <p>If you still have trouble, please open an issue on <a class="reference external" href="https://github.com/Marker-Inc-Korea/AutoRAG/issues">GitHub</a> or chat at our <a class="reference external" href="https://discord.gg/P4DYXfmSAs">Discord</a> channel.</p>
 </section>
 </section>
@@ -415,7 +415,7 @@ brew<span class="w"> </span>install<span class="w"> </span>gcc<span class="w"> <
 <h3>Facing OPENAI API error<a class="headerlink" href="#facing-openai-api-error" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Check your API key environment variable
-It is one of common mistakes to missing API key environment variable.
+It is one of the common mistakes to missing API key environment variable.
 Use <code class="docutils literal notranslate"><span class="pre">echo</span></code> command to check your environment variable.</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="nv">$OPENAI_API_KEY</span>
@@ -427,10 +427,10 @@ Use <code class="docutils literal notranslate"><span class="pre">echo</span></co
 </div>
 <p>Often, in case you use <code class="docutils literal notranslate"><span class="pre">python-dotenv</span></code>, llm module can’t recognize your environment variable.</p>
 <ol class="arabic simple" start="2">
-<li><p>Put your API key to config yaml file directly.
+<li><p>Put your API key to config YAML file directly.
 You can put your API key directly when you have difficulty adding environment variable.</p></li>
 </ol>
-<p>Here is a sample config yaml file that uses api_key directly to generator module.
+<p>Here is a sample config YAML file that uses api_key directly to the generator module.
 This can be work because we put additional parameters to llm initialization,
 which means you can put any parameters for LlamaIndex LLM model.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">node_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">generator</span>
@@ -461,7 +461,7 @@ In this way, you can use both OpenAI model and custom model.</p>
 In this case, we suggest you adjusting batch size.</p>
 <ol class="arabic simple">
 <li><p>Adjust batch size
-You can adjust batch size at our config yaml file.
+You can adjust batch size at our config YAML file.
 All modules that using LLM model can get <code class="docutils literal notranslate"><span class="pre">batch</span></code> as module parameter.</p></li>
 </ol>
 <p>For example, using <code class="docutils literal notranslate"><span class="pre">batch</span></code> at <code class="docutils literal notranslate"><span class="pre">llama_index_llm</span></code> module:</p>
@@ -483,7 +483,7 @@ In our experiment, it occurred rate limit error when the batch size was 4.
 </section>
 <section id="the-length-or-row-is-different-from-the-original-data">
 <h3>The length or row is different from the original data<a class="headerlink" href="#the-length-or-row-is-different-from-the-original-data" title="Link to this heading">¶</a></h3>
-<p>When the length of result is different from the original data, it is often caused by the index.</p>
+<p>When the length of a result is different from the original data, it is often caused by the index.</p>
 <p>You must reset the index of your dataset before running AutoRAG.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -494,20 +494,20 @@ In our experiment, it occurred rate limit error when the batch size was 4.
 <h2>3. LlamaIndex<a class="headerlink" href="#llamaindex" title="Link to this heading">¶</a></h2>
 <section id="facing-import-error">
 <h3>Facing Import Error<a class="headerlink" href="#facing-import-error" title="Link to this heading">¶</a></h3>
-<p>If you encountered the following llama_index ImportError, you need to check your LlamaIndex version.</p>
+<p>If you encounter the following llama_index ImportError, you need to check your LlamaIndex version.</p>
 <p>If it is lower than 0.10.0, you need to use a version at least 0.10.0!</p>
 </section>
 </section>
 <section id="gpu-related-error">
 <h2>4. GPU-related Error<a class="headerlink" href="#gpu-related-error" title="Link to this heading">¶</a></h2>
-<p>The error appears to be a VRAM out of memory error.</p>
+<p>The error appears to be a VRAM out-of-memory error.</p>
 <p>In this case, try lowering the <code class="docutils literal notranslate"><span class="pre">batch</span></code> (which can be set as a module parameter in YAML) as much as possible,
 If that doesn’t work, we recommend using a quantized model (if available)!</p>
 </section>
 <section id="unicodedecodeerror">
 <h2>5. UnicodeDecodeError<a class="headerlink" href="#unicodedecodeerror" title="Link to this heading">¶</a></h2>
 <p>Error reading a parquet file on Windows!</p>
-<p>The workaround on Windows is to use engine=’pyarrow’,
+<p>The workaround on Windows is to use <code class="docutils literal notranslate"><span class="pre">engine='pyarrow'</span></code>,
 This is something that needs to be fixed inside AutoRAG.</p>
 <p>We’ll try to fix it in the <a class="reference external" href="https://github.com/Marker-Inc-Korea/AutoRAG/issues/494">issue</a> :)</p>
 <p>For now, please use Mac or Linux (or WSL on Windows)!</p>

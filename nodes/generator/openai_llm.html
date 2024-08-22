@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -394,7 +394,7 @@
 <p>There are several advantages using <code class="docutils literal notranslate"><span class="pre">openai</span></code> module in AutoRAG.</p>
 <section id="auto-truncate-prompt">
 <h3>1. Auto-truncate prompt<a class="headerlink" href="#auto-truncate-prompt" title="Link to this heading">¶</a></h3>
-<p>Sometimes, prompt might exceed token limitation of model.
+<p>Sometimes, prompt might exceed a token limitation of the model.
 It will occur server-side error, and all your answer results will be gone.
 To prevent this, <code class="docutils literal notranslate"><span class="pre">openai_llm</span></code> module truncate prompt to the max length of gpt model.</p>
 </section>
@@ -402,13 +402,13 @@ To prevent this, <code class="docutils literal notranslate"><span class="pre">op
 <h3>2. Accurate token output<a class="headerlink" href="#accurate-token-output" title="Link to this heading">¶</a></h3>
 <p>In <code class="docutils literal notranslate"><span class="pre">llama_index_llm</span></code> module, it does not return proper tokens. It just return pseudo token using GPT2 tokenizer.</p>
 <p>When you use <code class="docutils literal notranslate"><span class="pre">openai_llm</span></code> module, you can get real tokens that used in gpt model.
-In the future, there will be a module that use token for boosting RAG performance.</p>
+In the future, there will be a module that uses token for boosting RAG performance.</p>
 </section>
 <section id="accurate-log-prob-output">
 <h3>3. Accurate log prob output<a class="headerlink" href="#accurate-log-prob-output" title="Link to this heading">¶</a></h3>
 <p>In <code class="docutils literal notranslate"><span class="pre">llama_index_llm</span></code> module, it does not return proper log probs since llama index does not support it.</p>
 <p>With <code class="docutils literal notranslate"><span class="pre">openai_llm</span></code> module, you can get real log probability to every token of generated answers.
-In the future, there sill be a module that use log probability, like answer filter.</p>
+In the future, there will be some modules that use log probability, like answer filter.</p>
 </section>
 </section>
 <section id="module-parameters">

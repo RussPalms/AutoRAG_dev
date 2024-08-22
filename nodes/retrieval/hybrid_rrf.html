@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -389,9 +389,12 @@
           <section id="hybrid-rrf">
 <h1>Hybrid - rrf<a class="headerlink" href="#hybrid-rrf" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">hybrid_rrf</span></code> module is designed to retrieve passages from multiple retrievals.
-The <code class="docutils literal notranslate"><span class="pre">hybrid_rrf</span></code> module is tailored for retrieving passages from multiple sources of information. It utilizes the Reciprocal Rank Fusion (RRF) algorithm to calculate final similarity scores. This calculation is based on the ranking of passages in each retrieval, effectively combining retrieval scores from different sources.</p>
-<section id="hybird-additional-explanation">
-<h2>❗️Hybird additional explanation<a class="headerlink" href="#hybird-additional-explanation" title="Link to this heading">¶</a></h2>
+The <code class="docutils literal notranslate"><span class="pre">hybrid_rrf</span></code> module is tailored for retrieving passages from multiple sources of information.
+It uses the Reciprocal Rank Fusion (RRF) algorithm to calculate final similarity scores.
+This calculation is based on the ranking of passages in each retrieval,
+effectively combining retrieval scores from different sources.</p>
+<section id="hybrid-additional-explanation">
+<h2>❗️Hybrid additional explanation<a class="headerlink" href="#hybrid-additional-explanation" title="Link to this heading">¶</a></h2>
 <p>You can specify which rrf_k range that you want to explore. AutoRAG will find the optimal rrf_k parameter among your
 specified range.
 So, specify the range of rrf_k using <code class="docutils literal notranslate"><span class="pre">weight_range</span></code> is important to use hybrid_rrf.</p>
@@ -476,7 +479,7 @@ You have to input this value as tuple. It looks like this. <code class="docutils
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Hybrid - rrf</a><ul>
-<li><a class="reference internal" href="#hybird-additional-explanation">❗️Hybird additional explanation</a></li>
+<li><a class="reference internal" href="#hybrid-additional-explanation">❗️Hybrid additional explanation</a></li>
 <li><a class="reference internal" href="#node-parameters"><strong>Node Parameters</strong></a></li>
 <li><a class="reference internal" href="#module-parameters"><strong>Module Parameters</strong></a></li>
 <li><a class="reference internal" href="#example-config-yaml"><strong>Example config.yaml</strong></a></li>

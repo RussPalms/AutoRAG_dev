@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -388,7 +388,8 @@
         <article role="main" id="furo-main-content">
           <section id="hyde">
 <h1>HyDE<a class="headerlink" href="#hyde" title="Link to this heading">¶</a></h1>
-<p>The HyDE is inspired by the paper “<a class="reference external" href="https://arxiv.org/abs/2212.10496">Precise Zero-shot Dense Retrieval without Relevance Labels</a>”. It uses a LLM model to generate a hypothetical passage for a given query.</p>
+<p>The HyDE is inspired by the paper “<a class="reference external" href="https://arxiv.org/abs/2212.10496">Precise Zero-shot Dense Retrieval without Relevance Labels</a>”.
+It uses an LLM model to generate a hypothetical passage for a given query.</p>
 <section id="module-parameters">
 <h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
 <p><strong>llm</strong>: The query expansion node requires setting parameters related to our generator modules.</p>
@@ -401,8 +402,7 @@ arguments (<code class="docutils literal notranslate"><span class="pre">kwargs</
 <p><strong>Additional Parameters</strong>:</p>
 <ul class="simple">
 <li><p><strong>prompt</strong>: You can use your own custom prompt for the LLM model.
-Default prompt is come from the
-paper “<a class="reference external" href="https://arxiv.org/abs/2212.10496">Precise Zero-shot Dense Retrieval without Relevance Labels</a>”.</p></li>
+Default prompt is coming from the paper “<a class="reference external" href="https://arxiv.org/abs/2212.10496">Precise Zero-shot Dense Retrieval without Relevance Labels</a>”.</p></li>
 </ul>
 </section>
 <section id="example-config-yaml">

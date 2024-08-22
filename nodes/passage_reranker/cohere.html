@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -393,12 +393,12 @@ It supports powerful and fast reranker for passage retrieval.
 Also, it supports multilingual languages.</p>
 <section id="before-usage">
 <h2>Before Usage<a class="headerlink" href="#before-usage" title="Link to this heading">¶</a></h2>
-<p>At first, you need to get the cohere API key from <a class="reference external" href="https://cohere.ai/">cohere</a>.</p>
-<p>Next, you can set your cohere API key in the environment variable.</p>
+<p>At first, you need to get the Cohere API key from <a class="reference external" href="https://cohere.ai/">cohere</a>.</p>
+<p>Next, you can set your Cohere API key in the environment variable.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">COHERE_API_KEY</span><span class="o">=</span>your_cohere_api_key
 </pre></div>
 </div>
-<p>Or, you can set your cohere API key in the config.yaml file directly.</p>
+<p>Or, you can set your Cohere API key in the config.yaml file directly.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cohere_reranker</span>
 <span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_cohere_api_key</span>
 </pre></div>
@@ -407,8 +407,10 @@ Also, it supports multilingual languages.</p>
 <section id="module-parameters">
 <h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><strong>batch</strong> : The size of batch. It sends the batch size of passages to cohere API at once. If it is too large, it can
-cause some error. (default: 64)</p></li>
+<li><p><strong>batch</strong> : The size of a batch.
+It sends the batch size of passages to cohere API at once.
+If it is too large, it can cause some error.
+(default: 64)</p></li>
 <li><p><strong>model</strong> : The type of model you want to use for reranking. Default is “rerank-multilingual-v2.0” and you can change
 it to “rerank-multilingual-v1.0” or “rerank-english-v2.0” (default: “rerank-multilingual-v2.0”)</p></li>
 <li><p><strong>api_key</strong> : The cohere api key.</p></li>

@@ -232,7 +232,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/optimization.html">How optimization works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/folder_structure.html">Folder Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make custom config yaml file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../optimization/custom_config.html">Make a custom config YAML file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../optimization/strategies.html">Strategy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Evaluation Metrics</span></p>
@@ -399,7 +399,7 @@ It supports powerful and fast reranker for passage retrieval.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">JINAAI_API_KEY</span><span class="o">=</span>your_jina_api_key
 </pre></div>
 </div>
-<p>Or, you can set your cohere API key in the config.yaml file directly.</p>
+<p>Or, you can set your JinaAI API key in the config.yaml file directly.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jina_reranker</span>
 <span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_jina_api_key</span>
 </pre></div>
@@ -408,7 +408,7 @@ It supports powerful and fast reranker for passage retrieval.</p>
 <section id="module-parameters">
 <h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><strong>batch</strong> : The size of batch. It sends the batch size of passages to jina API at once. If it is too large, it can
+<li><p><strong>batch</strong> : The size of a batch. It sends the batch size of passages to jina API at once. If it is too large, it can
 cause some error. (default: 8)
 You can increase when you have higher ‘rpm’ and ‘tpm’ limit from Jina AI.</p></li>
 <li><p><strong>model</strong> : The type of model you want to use for reranking. Default is “jina-reranker-v1-base-en” and you can change
