@@ -410,11 +410,36 @@
 </pre></div>
 </div>
 </section>
+<section id="use-runner">
+<h3>3. Use Runner<a class="headerlink" href="#use-runner" title="Link to this heading">¶</a></h3>
+<p>Run the web interface with the <code class="docutils literal notranslate"><span class="pre">Runner</span></code> you created in the YAML file or trial folder.<br />
+If <code class="docutils literal notranslate"><span class="pre">share=True</span></code>, you’ll receive an anywhere-accessible link that expires after 72 hours.</p>
+<div class="admonition-why-use-gradio-instead-of-streamlit admonition">
+<p class="admonition-title">Why use Gradio instead of Streamlit?</p>
+<p>Since the Streamlit Web Interface always needs to be launched in a new process, we couldn’t run it if we were using a custom model. So we replaced it with Gradio, which can be run in the same process</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">)</span>
+<span class="n">runner</span><span class="o">.</span><span class="n">run_web</span><span class="p">()</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_trial_folder</span><span class="p">(</span><span class="s1">&#39;your/path/to/trial_folder&#39;</span><span class="p">)</span>
+<span class="n">runner</span><span class="o">.</span><span class="n">run_web</span><span class="p">(</span><span class="n">server_name</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">server_port</span><span class="o">=</span><span class="mi">7680</span><span class="p">,</span> <span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="web-interface-example">
 <h3>Web Interface example<a class="headerlink" href="#web-interface-example" title="Link to this heading">¶</a></h3>
 <p>You can use the web interface to interact with the AutoRAG pipeline.</p>
 <p>The web interface provides a user-friendly environment to input queries and receive responses from the pipeline. The web interface is a convenient way to test the pipeline and observe its performance in real-time.</p>
+<section id="run-with-cli">
+<h4>Run with CLI<a class="headerlink" href="#run-with-cli" title="Link to this heading">¶</a></h4>
 <p><img alt="Web Interface" src="../_images/web_interface.png" /></p>
+</section>
+<section id="run-with-autorag-runner">
+<h4>Run with AutoRAG Runner<a class="headerlink" href="#run-with-autorag-runner" title="Link to this heading">¶</a></h4>
+<p><img alt="Web Interface Gradio" src="../_images/web_interface_gradio.png" /></p>
+</section>
 </section>
 </section>
 </section>
@@ -478,7 +503,12 @@
 <li><a class="reference internal" href="#running-the-web-interface">Running the Web Interface</a><ul>
 <li><a class="reference internal" href="#use-yaml-path">1. Use YAML path</a></li>
 <li><a class="reference internal" href="#use-a-trial-path">2. Use a trial path</a></li>
-<li><a class="reference internal" href="#web-interface-example">Web Interface example</a></li>
+<li><a class="reference internal" href="#use-runner">3. Use Runner</a></li>
+<li><a class="reference internal" href="#web-interface-example">Web Interface example</a><ul>
+<li><a class="reference internal" href="#run-with-cli">Run with CLI</a></li>
+<li><a class="reference internal" href="#run-with-autorag-runner">Run with AutoRAG Runner</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -377,8 +377,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.passagereranker.rankgpt</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">llama_index.core.base.llms.types</span> <span class="kn">import</span> <span class="n">ChatMessage</span><span class="p">,</span> <span class="n">ChatResponse</span>
@@ -390,7 +389,7 @@
 
 <span class="kn">from</span> <span class="nn">autorag</span> <span class="kn">import</span> <span class="n">generator_models</span>
 <span class="kn">from</span> <span class="nn">autorag.nodes.passagereranker.base</span> <span class="kn">import</span> <span class="n">passage_reranker_node</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">process_batch</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">get_event_loop</span><span class="p">,</span> <span class="n">process_batch</span>
 
 
 <div class="viewcode-block" id="rankgpt">
@@ -453,7 +452,7 @@
 		<span class="n">reranker</span><span class="o">.</span><span class="n">async_postprocess_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nodes_list</span><span class="p">,</span> <span class="n">query_bundles</span><span class="p">,</span> <span class="n">ids_list</span><span class="p">)</span>
 	<span class="p">]</span>
-	<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+	<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
 	<span class="n">rerank_result</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span><span class="p">))</span>
 	<span class="n">content_result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">rerank_result</span><span class="p">]</span>
 	<span class="n">score_result</span> <span class="o">=</span> <span class="p">[</span>

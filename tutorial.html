@@ -586,6 +586,12 @@ Running evaluation with another dataset in same folder can cause serious malfunc
 <h3>3. Run as a Web Interface<a class="headerlink" href="#run-as-a-web-interface" title="Link to this heading">¶</a></h3>
 <p>you can run this pipeline as a web interface.</p>
 <p>Check out the web interface at <a class="reference internal" href="deploy/web.html"><span class="std std-doc">here</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">)</span>
+<span class="n">runner</span><span class="o">.</span><span class="n">run_web</span><span class="p">()</span>
+</pre></div>
+</div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>run_web<span class="w"> </span>--yaml_path<span class="w"> </span>your/path/to/pipeline.yaml
 </pre></div>
 </div>
