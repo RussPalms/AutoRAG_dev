@@ -495,7 +495,7 @@ In our experiment, it occurred rate limit error when the batch size was 4.
 <section id="facing-import-error">
 <h3>Facing Import Error<a class="headerlink" href="#facing-import-error" title="Link to this heading">¶</a></h3>
 <p>If you encounter the following llama_index ImportError, you need to check your LlamaIndex version.</p>
-<p>If it is lower than 0.10.0, you need to use a version at least 0.10.0!</p>
+<p>If it is lower than 0.11.0, you need to use a version at least 0.11.0!</p>
 </section>
 </section>
 <section id="gpu-related-error">
@@ -511,6 +511,18 @@ If that doesn’t work, we recommend using a quantized model (if available)!</p>
 This is something that needs to be fixed inside AutoRAG.</p>
 <p>We’ll try to fix it in the <a class="reference external" href="https://github.com/Marker-Inc-Korea/AutoRAG/issues/494">issue</a> :)</p>
 <p>For now, please use Mac or Linux (or WSL on Windows)!</p>
+</section>
+<section id="ollama-requesttimeout-error">
+<h2>6. Ollama <code class="docutils literal notranslate"><span class="pre">RequestTimeOut</span></code> Error<a class="headerlink" href="#ollama-requesttimeout-error" title="Link to this heading">¶</a></h2>
+<p>If you encounter <code class="docutils literal notranslate"><span class="pre">RequestTimeOut</span></code> error, you can adjust the <code class="docutils literal notranslate"><span class="pre">timeout</span></code> parameter in the <code class="docutils literal notranslate"><span class="pre">ollama</span></code> module.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">        </span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_llm</span>
+<span class="w">            </span><span class="nt">llm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ollama</span>
+<span class="w">            </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama3</span>
+<span class="w">            </span><span class="nt">request_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># ⇒ You can change the timeout value</span>
+</pre></div>
+</div>
+<p>If you increase the timeout value but doesn’t resolve the error, it may be a ollama issue.</p>
 </section>
 </section>
 
@@ -586,6 +598,7 @@ This is something that needs to be fixed inside AutoRAG.</p>
 </li>
 <li><a class="reference internal" href="#gpu-related-error">4. GPU-related Error</a></li>
 <li><a class="reference internal" href="#unicodedecodeerror">5. UnicodeDecodeError</a></li>
+<li><a class="reference internal" href="#ollama-requesttimeout-error">6. Ollama <code class="docutils literal notranslate"><span class="pre">RequestTimeOut</span></code> Error</a></li>
 </ul>
 </li>
 </ul>
