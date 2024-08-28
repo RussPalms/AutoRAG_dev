@@ -383,13 +383,11 @@
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
-<span class="kn">import</span> <span class="nn">nest_asyncio</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">uvicorn</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">import</span> <span class="nn">gradio</span> <span class="k">as</span> <span class="nn">gr</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span>
 
 <span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">load_summary_file</span>
@@ -521,7 +519,7 @@
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> <span class="k">if</span> <span class="n">project_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">project_dir</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__add_api_route</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Runner.from_yaml">
@@ -609,8 +607,9 @@
 
 
 	<span class="k">def</span> <span class="nf">__add_api_route</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="nd">@self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/run&quot;</span><span class="p">)</span>
-		<span class="k">async</span> <span class="k">def</span> <span class="nf">run_pipeline</span><span class="p">(</span><span class="n">runner_input</span><span class="p">:</span> <span class="n">RunnerInput</span><span class="p">):</span>
+		<span class="nd">@self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/run&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+		<span class="k">def</span> <span class="nf">run_pipeline</span><span class="p">():</span>
+			<span class="n">runner_input</span> <span class="o">=</span> <span class="n">RunnerInput</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
 			<span class="n">query</span> <span class="o">=</span> <span class="n">runner_input</span><span class="o">.</span><span class="n">query</span>
 			<span class="n">result_column</span> <span class="o">=</span> <span class="n">runner_input</span><span class="o">.</span><span class="n">result_column</span>
 			<span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">result_column</span><span class="p">)</span>
@@ -626,7 +625,7 @@
 <span class="sd">		.. Code:: json</span>
 
 <span class="sd">		    {</span>
-<span class="sd">		        &quot;Query&quot;: &quot;your query&quot;,</span>
+<span class="sd">		        &quot;query&quot;: &quot;your query&quot;,</span>
 <span class="sd">		        &quot;result_column&quot;: &quot;generated_texts&quot;</span>
 <span class="sd">		    }</span>
 
@@ -640,11 +639,10 @@
 
 <span class="sd">		:param host: The host of the api server.</span>
 <span class="sd">		:param port: The port of the api server.</span>
-<span class="sd">		:param kwargs: Other arguments for uvicorn.run.</span>
+<span class="sd">		:param kwargs: Other arguments for Flask app.run.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="n">nest_asyncio</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
 		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run api server at </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-		<span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="s2">&quot;asyncio&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Runner.run_web">

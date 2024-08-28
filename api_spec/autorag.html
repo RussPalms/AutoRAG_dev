@@ -742,7 +742,7 @@ Default is <cite>generated_texts</cite>, which is the output of the <cite>genera
 <dd><p>Run the pipeline as api server.
 You can send POST request to <cite>http://host:port/run</cite> with json body like below:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;Query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your query&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your query&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;result_column&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;generated_texts&quot;</span>
 <span class="p">}</span>
 </pre></div>
@@ -758,7 +758,7 @@ You can send POST request to <cite>http://host:port/run</cite> with json body li
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>host</strong> – The host of the api server.</p></li>
 <li><p><strong>port</strong> – The port of the api server.</p></li>
-<li><p><strong>kwargs</strong> – Other arguments for uvicorn.run.</p></li>
+<li><p><strong>kwargs</strong> – Other arguments for Flask app.run.</p></li>
 </ul>
 </dd>
 </dl>
