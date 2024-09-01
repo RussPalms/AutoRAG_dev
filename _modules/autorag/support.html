@@ -398,6 +398,9 @@
 <a class="viewcode-back" href="../../api_spec/autorag.html#autorag.support.get_support_modules">[docs]</a>
 <span class="k">def</span> <span class="nf">get_support_modules</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 	<span class="n">support_modules</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="c1"># parse</span>
+		<span class="s2">&quot;langchain_parse&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.parse&quot;</span><span class="p">,</span> <span class="s2">&quot;langchain_parse&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;clova&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.parse&quot;</span><span class="p">,</span> <span class="s2">&quot;clova_ocr&quot;</span><span class="p">),</span>
 		<span class="c1"># query_expansion</span>
 		<span class="s2">&quot;query_decompose&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span> <span class="s2">&quot;query_decompose&quot;</span><span class="p">),</span>
 		<span class="s2">&quot;hyde&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span> <span class="s2">&quot;hyde&quot;</span><span class="p">),</span>

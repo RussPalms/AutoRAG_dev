@@ -386,6 +386,22 @@
 
 <span class="kn">import</span> <span class="nn">transformers</span>
 <span class="kn">from</span> <span class="nn">llama_index.core</span> <span class="kn">import</span> <span class="n">MockEmbedding</span>
+<span class="kn">from</span> <span class="nn">langchain_community.document_loaders</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">PDFMinerLoader</span><span class="p">,</span>
+	<span class="n">PDFPlumberLoader</span><span class="p">,</span>
+	<span class="n">PyPDFium2Loader</span><span class="p">,</span>
+	<span class="n">PyPDFLoader</span><span class="p">,</span>
+	<span class="n">PyMuPDFLoader</span><span class="p">,</span>
+	<span class="n">UnstructuredPDFLoader</span><span class="p">,</span>
+	<span class="n">CSVLoader</span><span class="p">,</span>
+	<span class="n">JSONLoader</span><span class="p">,</span>
+	<span class="n">UnstructuredMarkdownLoader</span><span class="p">,</span>
+	<span class="n">BSHTMLLoader</span><span class="p">,</span>
+	<span class="n">UnstructuredXMLLoader</span><span class="p">,</span>
+	<span class="n">DirectoryLoader</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">langchain_unstructured</span> <span class="kn">import</span> <span class="n">UnstructuredLoader</span>
+<span class="kn">from</span> <span class="nn">langchain_upstage</span> <span class="kn">import</span> <span class="n">UpstageLayoutAnalysisLoader</span>
 <span class="kn">from</span> <span class="nn">llama_index.core.llms.mock</span> <span class="kn">import</span> <span class="n">MockLLM</span>
 <span class="kn">from</span> <span class="nn">llama_index.embeddings.huggingface</span> <span class="kn">import</span> <span class="n">HuggingFaceEmbedding</span>
 <span class="kn">from</span> <span class="nn">llama_index.embeddings.openai</span> <span class="kn">import</span> <span class="n">OpenAIEmbedding</span>
@@ -465,6 +481,31 @@
 	<span class="s2">&quot;openailike&quot;</span><span class="p">:</span> <span class="n">OpenAILike</span><span class="p">,</span>
 	<span class="s2">&quot;ollama&quot;</span><span class="p">:</span> <span class="n">Ollama</span><span class="p">,</span>
 	<span class="s2">&quot;mock&quot;</span><span class="p">:</span> <span class="n">MockLLM</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">parse_modules</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="c1"># PDF</span>
+	<span class="s2">&quot;pdfminer&quot;</span><span class="p">:</span> <span class="n">PDFMinerLoader</span><span class="p">,</span>
+	<span class="s2">&quot;pdfplumber&quot;</span><span class="p">:</span> <span class="n">PDFPlumberLoader</span><span class="p">,</span>
+	<span class="s2">&quot;pypdfium2&quot;</span><span class="p">:</span> <span class="n">PyPDFium2Loader</span><span class="p">,</span>
+	<span class="s2">&quot;pypdf&quot;</span><span class="p">:</span> <span class="n">PyPDFLoader</span><span class="p">,</span>
+	<span class="s2">&quot;pymupdf&quot;</span><span class="p">:</span> <span class="n">PyMuPDFLoader</span><span class="p">,</span>
+	<span class="s2">&quot;unstructuredpdf&quot;</span><span class="p">:</span> <span class="n">UnstructuredPDFLoader</span><span class="p">,</span>
+	<span class="s2">&quot;upstagelayoutanalysis&quot;</span><span class="p">:</span> <span class="n">UpstageLayoutAnalysisLoader</span><span class="p">,</span>
+	<span class="c1"># Common File Types</span>
+	<span class="c1"># 1. CSV</span>
+	<span class="s2">&quot;csv&quot;</span><span class="p">:</span> <span class="n">CSVLoader</span><span class="p">,</span>
+	<span class="c1"># 2. JSON</span>
+	<span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="n">JSONLoader</span><span class="p">,</span>
+	<span class="c1"># 3. Markdown</span>
+	<span class="s2">&quot;unstructuredmarkdown&quot;</span><span class="p">:</span> <span class="n">UnstructuredMarkdownLoader</span><span class="p">,</span>
+	<span class="c1"># 4. HTML</span>
+	<span class="s2">&quot;bshtml&quot;</span><span class="p">:</span> <span class="n">BSHTMLLoader</span><span class="p">,</span>
+	<span class="c1"># 5. XML</span>
+	<span class="s2">&quot;unstructuredxml&quot;</span><span class="p">:</span> <span class="n">UnstructuredXMLLoader</span><span class="p">,</span>
+	<span class="c1"># 6. All files</span>
+	<span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="n">DirectoryLoader</span><span class="p">,</span>
+	<span class="s2">&quot;unstructured&quot;</span><span class="p">:</span> <span class="n">UnstructuredLoader</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">rich_format</span> <span class="o">=</span> <span class="s2">&quot;[</span><span class="si">%(filename)s</span><span class="s2">:</span><span class="si">%(lineno)s</span><span class="s2">] &gt;&gt; </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
