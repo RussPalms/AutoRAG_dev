@@ -322,7 +322,6 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../../../api_spec/autorag.data.beta.html">autorag.data.beta package</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of autorag.data.beta package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../../api_spec/autorag.data.beta.generation_gt.html">autorag.data.beta.generation_gt package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../api_spec/autorag.data.beta.query.html">autorag.data.beta.query package</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../../../api_spec/autorag.data.beta.schema.html">autorag.data.beta.schema package</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api_spec/autorag.data.corpus.html">autorag.data.corpus package</a></li>
@@ -391,14 +390,16 @@
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.data.corpus.llama_index</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">llama_index.core</span> <span class="kn">import</span> <span class="n">Document</span>
-<span class="kn">from</span> <span class="nn">llama_index.core.schema</span> <span class="kn">import</span> <span class="n">TextNode</span><span class="p">,</span> <span class="n">NodeRelationship</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.schema</span> <span class="kn">import</span> <span class="n">TextNode</span>
 
-<span class="kn">from</span> <span class="nn">autorag.data.utils.util</span> <span class="kn">import</span> <span class="n">add_essential_metadata</span>
+<span class="kn">from</span> <span class="nn">autorag.data.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">add_essential_metadata</span><span class="p">,</span>
+	<span class="n">add_essential_metadata_llama_text_node</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">save_parquet_safe</span>
 
 
@@ -486,27 +487,6 @@
 		<span class="n">save_parquet_safe</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">output_filepath</span><span class="p">,</span> <span class="n">upsert</span><span class="o">=</span><span class="n">upsert</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="n">corpus_df</span></div>
-
-
-
-<div class="viewcode-block" id="add_essential_metadata_llama_text_node">
-<a class="viewcode-back" href="../../../../api_spec/autorag.data.corpus.html#autorag.data.corpus.llama_index.add_essential_metadata_llama_text_node">[docs]</a>
-<span class="k">def</span> <span class="nf">add_essential_metadata_llama_text_node</span><span class="p">(</span><span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">relationships</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-	<span class="k">if</span> <span class="s2">&quot;last_modified_datetime&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
-		<span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;last_modified_datetime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-
-	<span class="k">if</span> <span class="s2">&quot;prev_id&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
-		<span class="k">if</span> <span class="n">NodeRelationship</span><span class="o">.</span><span class="n">PREVIOUS</span> <span class="ow">in</span> <span class="n">relationships</span><span class="p">:</span>
-			<span class="n">prev_node</span> <span class="o">=</span> <span class="n">relationships</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">NodeRelationship</span><span class="o">.</span><span class="n">PREVIOUS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-			<span class="k">if</span> <span class="n">prev_node</span><span class="p">:</span>
-				<span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;prev_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prev_node</span><span class="o">.</span><span class="n">node_id</span>
-
-	<span class="k">if</span> <span class="s2">&quot;next_id&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
-		<span class="k">if</span> <span class="n">NodeRelationship</span><span class="o">.</span><span class="n">NEXT</span> <span class="ow">in</span> <span class="n">relationships</span><span class="p">:</span>
-			<span class="n">next_node</span> <span class="o">=</span> <span class="n">relationships</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">NodeRelationship</span><span class="o">.</span><span class="n">NEXT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-			<span class="k">if</span> <span class="n">next_node</span><span class="p">:</span>
-				<span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;next_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_node</span><span class="o">.</span><span class="n">node_id</span>
-	<span class="k">return</span> <span class="n">metadata</span></div>
 
 </pre></div>
         </article>

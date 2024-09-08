@@ -12,10 +12,10 @@
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
     <link rel="index" title="Index" href="../../../../../genindex.html" /><link rel="search" title="Search" href="../../../../../search.html" />
-        <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/data/beta/generation_gt/openai_gen_gt.html" />
+        <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/data/beta/query/llama_gen_query.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>autorag.data.beta.generation_gt.openai_gen_gt - AutoRAG documentation</title>
+        <title>autorag.data.beta.query.llama_gen_query - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
@@ -388,102 +388,82 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <h1>Source code for autorag.data.beta.generation_gt.openai_gen_gt</h1><div class="highlight"><pre>
+          <h1>Source code for autorag.data.beta.query.llama_gen_query</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
-<span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncClient</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.base.llms.base</span> <span class="kn">import</span> <span class="n">BaseLLM</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.base.llms.types</span> <span class="kn">import</span> <span class="n">ChatResponse</span><span class="p">,</span> <span class="n">ChatMessage</span><span class="p">,</span> <span class="n">MessageRole</span>
 
-<span class="kn">from</span> <span class="nn">autorag.data.beta.generation_gt.base</span> <span class="kn">import</span> <span class="n">add_gen_gt</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.generation_gt.prompt</span> <span class="kn">import</span> <span class="n">GEN_GT_SYSTEM_PROMPT</span>
-
-
-<div class="viewcode-block" id="Response">
-<a class="viewcode-back" href="../../../../../api_spec/autorag.data.beta.generation_gt.html#autorag.data.beta.generation_gt.openai_gen_gt.Response">[docs]</a>
-<span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-	<span class="n">answer</span><span class="p">:</span> <span class="nb">str</span></div>
+<span class="kn">from</span> <span class="nn">autorag.data.beta.query.prompt</span> <span class="kn">import</span> <span class="n">QUERY_GEN_PROMPT</span>
 
 
-
-<div class="viewcode-block" id="make_gen_gt_openai">
-<a class="viewcode-back" href="../../../../../api_spec/autorag.data.beta.generation_gt.html#autorag.data.beta.generation_gt.openai_gen_gt.make_gen_gt_openai">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">make_gen_gt_openai</span><span class="p">(</span>
+<div class="viewcode-block" id="llama_index_generate_base">
+<a class="viewcode-back" href="../../../../../api_spec/autorag.data.beta.query.html#autorag.data.beta.query.llama_gen_query.llama_index_generate_base">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">llama_index_generate_base</span><span class="p">(</span>
 	<span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
-	<span class="n">client</span><span class="p">:</span> <span class="n">AsyncClient</span><span class="p">,</span>
-	<span class="n">system_prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-	<span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4o-2024-08-06&quot;</span><span class="p">,</span>
-<span class="p">):</span>
-	<span class="n">retrieval_gt_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;retrieval_gt_contents&quot;</span><span class="p">])</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">BaseLLM</span><span class="p">,</span>
+	<span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ChatMessage</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+	<span class="n">context</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;retrieval_gt_contents&quot;</span><span class="p">]))</span>
+	<span class="n">context_str</span> <span class="o">=</span> <span class="s2">&quot;Text:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+		<span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="p">)]</span>
 	<span class="p">)</span>
-	<span class="n">query</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span>
-	<span class="n">passage_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">retrieval_gt_contents</span><span class="p">)</span>
-	<span class="n">user_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Text:</span><span class="se">\n</span><span class="s2">&lt;|text_start|&gt;</span><span class="se">\n</span><span class="si">{</span><span class="n">passage_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&lt;|text_end|&gt;</span><span class="se">\n\n</span><span class="s2">Question:</span><span class="se">\n</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Answer:&quot;</span>
+	<span class="n">user_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Text:</span><span class="se">\n</span><span class="si">{</span><span class="n">context_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Generated Question from the Text:</span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">user_prompt</span><span class="p">))</span>
 
-	<span class="n">completion</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
-		<span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
-		<span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-			<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">system_prompt</span><span class="p">},</span>
-			<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">user_prompt</span><span class="p">},</span>
-		<span class="p">],</span>
-		<span class="n">temperature</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-		<span class="n">response_format</span><span class="o">=</span><span class="n">Response</span><span class="p">,</span>
-	<span class="p">)</span>
-	<span class="n">response</span><span class="p">:</span> <span class="n">Response</span> <span class="o">=</span> <span class="n">completion</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">parsed</span>
-	<span class="k">return</span> <span class="n">add_gen_gt</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">answer</span><span class="p">)</span></div>
+	<span class="n">chat_response</span><span class="p">:</span> <span class="n">ChatResponse</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm</span><span class="o">.</span><span class="n">achat</span><span class="p">(</span><span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">)</span>
+	<span class="n">row</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">chat_response</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+	<span class="k">return</span> <span class="n">row</span></div>
 
 
 
-<div class="viewcode-block" id="make_concise_gen_gt">
-<a class="viewcode-back" href="../../../../../api_spec/autorag.data.beta.generation_gt.html#autorag.data.beta.generation_gt.openai_gen_gt.make_concise_gen_gt">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">make_concise_gen_gt</span><span class="p">(</span>
+<div class="viewcode-block" id="factoid_query_gen">
+<a class="viewcode-back" href="../../../../../api_spec/autorag.data.beta.query.html#autorag.data.beta.query.llama_gen_query.factoid_query_gen">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">factoid_query_gen</span><span class="p">(</span>
 	<span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
-	<span class="n">client</span><span class="p">:</span> <span class="n">AsyncClient</span><span class="p">,</span>
-	<span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4o-2024-08-06&quot;</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">BaseLLM</span><span class="p">,</span>
 	<span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Generate concise generation_gt using OpenAI Structured Output for preventing errors.</span>
-<span class="sd">	It generates a concise answer, so it is generally a word or just a phrase.</span>
-
-<span class="sd">	:param row: The input row of the qa dataframe.</span>
-<span class="sd">	:param client: The OpenAI async client.</span>
-<span class="sd">	:param model_name: The model name that supports structured output.</span>
-<span class="sd">	    It has to be &quot;gpt-4o-2024-08-06&quot; or &quot;gpt-4o-mini-2024-07-18&quot;.</span>
-<span class="sd">	:param lang: The language code of the prompt.</span>
-<span class="sd">		Default is &quot;en&quot;.</span>
-<span class="sd">	:return: The output row of the qa dataframe with added &quot;generation_gt&quot; in it.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="k">await</span> <span class="n">make_gen_gt_openai</span><span class="p">(</span>
-		<span class="n">row</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">GEN_GT_SYSTEM_PROMPT</span><span class="p">[</span><span class="s2">&quot;concise&quot;</span><span class="p">][</span><span class="n">lang</span><span class="p">],</span> <span class="n">model_name</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+	<span class="k">return</span> <span class="k">await</span> <span class="n">llama_index_generate_base</span><span class="p">(</span>
+		<span class="n">row</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">QUERY_GEN_PROMPT</span><span class="p">[</span><span class="s2">&quot;factoid_single_hop&quot;</span><span class="p">][</span><span class="n">lang</span><span class="p">]</span>
 	<span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="make_basic_gen_gt">
-<a class="viewcode-back" href="../../../../../api_spec/autorag.data.beta.generation_gt.html#autorag.data.beta.generation_gt.openai_gen_gt.make_basic_gen_gt">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">make_basic_gen_gt</span><span class="p">(</span>
+<div class="viewcode-block" id="concept_completion_query_gen">
+<a class="viewcode-back" href="../../../../../api_spec/autorag.data.beta.query.html#autorag.data.beta.query.llama_gen_query.concept_completion_query_gen">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">concept_completion_query_gen</span><span class="p">(</span>
 	<span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
-	<span class="n">client</span><span class="p">:</span> <span class="n">AsyncClient</span><span class="p">,</span>
-	<span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4o-2024-08-06&quot;</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">BaseLLM</span><span class="p">,</span>
 	<span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Generate basic generation_gt using OpenAI Structured Output for preventing errors.</span>
-<span class="sd">	It generates a &quot;basic&quot; answer, and its prompt is simple.</span>
-
-<span class="sd">	:param row: The input row of the qa dataframe.</span>
-<span class="sd">	:param client: The OpenAI async client.</span>
-<span class="sd">	:param model_name: The model name that supports structured output.</span>
-<span class="sd">	    It has to be &quot;gpt-4o-2024-08-06&quot; or &quot;gpt-4o-mini-2024-07-18&quot;.</span>
-<span class="sd">	:param lang: The language code of the prompt.</span>
-<span class="sd">		Default is &quot;en&quot;.</span>
-<span class="sd">	:return: The output row of the qa dataframe with added &quot;generation_gt&quot; in it.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="k">await</span> <span class="n">make_gen_gt_openai</span><span class="p">(</span>
-		<span class="n">row</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">GEN_GT_SYSTEM_PROMPT</span><span class="p">[</span><span class="s2">&quot;basic&quot;</span><span class="p">][</span><span class="n">lang</span><span class="p">],</span> <span class="n">model_name</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+	<span class="k">return</span> <span class="k">await</span> <span class="n">llama_index_generate_base</span><span class="p">(</span>
+		<span class="n">row</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">QUERY_GEN_PROMPT</span><span class="p">[</span><span class="s2">&quot;concept_completion&quot;</span><span class="p">][</span><span class="n">lang</span><span class="p">]</span>
 	<span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="two_hop_incremental">
+<a class="viewcode-back" href="../../../../../api_spec/autorag.data.beta.query.html#autorag.data.beta.query.llama_gen_query.two_hop_incremental">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">two_hop_incremental</span><span class="p">(</span>
+	<span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="n">BaseLLM</span><span class="p">,</span>
+	<span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+	<span class="n">messages</span> <span class="o">=</span> <span class="n">QUERY_GEN_PROMPT</span><span class="p">[</span><span class="s2">&quot;two_hop_incremental&quot;</span><span class="p">][</span><span class="n">lang</span><span class="p">]</span>
+	<span class="n">passages</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;retrieval_gt_contents&quot;</span><span class="p">]</span>
+	<span class="k">assert</span> <span class="p">(</span>
+		<span class="nb">len</span><span class="p">(</span><span class="n">passages</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+	<span class="p">),</span> <span class="s2">&quot;You have to sample more than two passages for making two-hop questions.&quot;</span>
+	<span class="n">context_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Document 1: </span><span class="si">{</span><span class="n">passages</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">Document 2: </span><span class="si">{</span><span class="n">passages</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+	<span class="n">user_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Generated two-hop Question from two Documents:</span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">user_prompt</span><span class="p">))</span>
+
+	<span class="n">chat_response</span><span class="p">:</span> <span class="n">ChatResponse</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm</span><span class="o">.</span><span class="n">achat</span><span class="p">(</span><span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">)</span>
+	<span class="n">response</span> <span class="o">=</span> <span class="n">chat_response</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+	<span class="n">row</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">row</span></div>
 
 </pre></div>
         </article>
