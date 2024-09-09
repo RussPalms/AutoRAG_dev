@@ -226,6 +226,8 @@
 <li class="toctree-l2"><a class="reference internal" href="data_creation/beta/tutorial.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_creation/beta/query_gen.html">Query Generation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_creation/beta/query_gen.html#question-types">Question types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_creation/beta/filter.html">Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_creation/beta/filter.html#unanswerable-question-filtering">1. Unanswerable question filtering</a></li>
 </ul>
 </li>
 </ul>
@@ -1257,6 +1259,8 @@
           <li><a href="api_spec/autorag.data.beta.html#autorag.data.beta.schema.Raw.batch_apply">(autorag.data.beta.schema.Raw method)</a>, <a href="api_spec/autorag.data.beta.schema.html#autorag.data.beta.schema.Raw.batch_apply">[1]</a>
 </li>
         </ul></li>
+        <li><a href="api_spec/autorag.data.beta.html#autorag.data.beta.schema.QA.batch_filter">batch_filter() (autorag.data.beta.schema.QA method)</a>, <a href="api_spec/autorag.data.beta.schema.html#autorag.data.beta.schema.QA.batch_filter">[1]</a>
+</li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.bert_score">bert_score() (in module autorag.evaluation.metric.generation)</a>
 </li>
     </ul></td>
@@ -1423,6 +1427,8 @@
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.fetch_one_content">fetch_one_content() (in module autorag.utils.util)</a>
 </li>
+        <li><a href="api_spec/autorag.data.beta.html#autorag.data.beta.schema.QA.filter">filter() (autorag.data.beta.schema.QA method)</a>, <a href="api_spec/autorag.data.beta.schema.html#autorag.data.beta.schema.QA.filter">[1]</a>
+</li>
         <li><a href="api_spec/autorag.html#autorag.strategy.filter_by_threshold">filter_by_threshold() (in module autorag.strategy)</a>
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.filter_dict_keys">filter_dict_keys() (in module autorag.utils.util)</a>
@@ -1435,10 +1441,10 @@
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.run.find_unique_elems">find_unique_elems() (in module autorag.nodes.retrieval.run)</a>
 </li>
-        <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.flag_embedding_llm.flag_embedding_llm_reranker">flag_embedding_llm_reranker() (in module autorag.nodes.passagereranker.flag_embedding_llm)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.flag_embedding_llm.flag_embedding_llm_reranker">flag_embedding_llm_reranker() (in module autorag.nodes.passagereranker.flag_embedding_llm)</a>
+</li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.flag_embedding.flag_embedding_reranker">flag_embedding_reranker() (in module autorag.nodes.passagereranker.flag_embedding)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.flag_embedding.flag_embedding_run_model">flag_embedding_run_model() (in module autorag.nodes.passagereranker.flag_embedding)</a>
