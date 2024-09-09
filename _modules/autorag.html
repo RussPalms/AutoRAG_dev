@@ -408,6 +408,7 @@
 <span class="kn">from</span> <span class="nn">llama_index.llms.ollama</span> <span class="kn">import</span> <span class="n">Ollama</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai_like</span> <span class="kn">import</span> <span class="n">OpenAILike</span>
+<span class="kn">from</span> <span class="nn">langchain.embeddings</span> <span class="kn">import</span> <span class="n">OpenAIEmbeddings</span>
 <span class="kn">from</span> <span class="nn">rich.logging</span> <span class="kn">import</span> <span class="n">RichHandler</span>
 
 <span class="n">version_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;VERSION&quot;</span><span class="p">)</span>
@@ -448,6 +449,7 @@
 
 
 <span class="n">embedding_models</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="c1"># llama index</span>
 	<span class="s2">&quot;openai&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span>
 		<span class="n">OpenAIEmbedding</span>
 	<span class="p">),</span>  <span class="c1"># default model is OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002</span>
@@ -471,6 +473,8 @@
 	<span class="p">),</span>
 	<span class="s2">&quot;huggingface_bge_m3&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">HuggingFaceEmbedding</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;BAAI/bge-m3&quot;</span><span class="p">),</span>
 	<span class="s2">&quot;mock&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">MockEmbeddingRandom</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">768</span><span class="p">),</span>
+	<span class="c1"># langchain</span>
+	<span class="s2">&quot;openai_langchain&quot;</span><span class="p">:</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">OpenAIEmbeddings</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="n">generator_models</span> <span class="o">=</span> <span class="p">{</span>

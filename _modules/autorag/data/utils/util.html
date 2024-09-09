@@ -508,15 +508,10 @@
 
 <div class="viewcode-block" id="get_start_end_idx">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.utils.html#autorag.data.utils.util.get_start_end_idx">[docs]</a>
-<span class="k">def</span> <span class="nf">get_start_end_idx</span><span class="p">(</span>
-	<span class="n">original_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">search_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chunk_type</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-	<span class="k">if</span> <span class="n">chunk_type</span> <span class="ow">in</span> <span class="p">[</span>
-		<span class="s2">&quot;SemanticSplitterNodeParser&quot;</span><span class="p">,</span>
-		<span class="s2">&quot;SemanticDoubleMergingSplitterNodeParser&quot;</span><span class="p">,</span>
-	<span class="p">]:</span>
-		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+<span class="k">def</span> <span class="nf">get_start_end_idx</span><span class="p">(</span><span class="n">original_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">search_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 	<span class="n">start_idx</span> <span class="o">=</span> <span class="n">original_text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">search_str</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">start_idx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 	<span class="n">end_idx</span> <span class="o">=</span> <span class="n">start_idx</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">search_str</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span> <span class="o">-</span> <span class="mi">1</span></div>
 

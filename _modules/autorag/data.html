@@ -418,6 +418,12 @@
 	<span class="n">SemanticDoubleMergingSplitterNodeParser</span><span class="p">,</span>
 	<span class="n">SimpleFileNodeParser</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">langchain.text_splitter</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">RecursiveCharacterTextSplitter</span><span class="p">,</span>
+	<span class="n">CharacterTextSplitter</span><span class="p">,</span>
+	<span class="n">KonlpyTextSplitter</span><span class="p">,</span>
+	<span class="n">SentenceTransformersTokenTextSplitter</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">autorag</span> <span class="kn">import</span> <span class="n">LazyInit</span>
 
@@ -459,6 +465,14 @@
 	<span class="s2">&quot;semanticdoublemerging&quot;</span><span class="p">:</span> <span class="n">SemanticDoubleMergingSplitterNodeParser</span><span class="p">,</span>
 	<span class="c1"># Simple</span>
 	<span class="s2">&quot;simplefile&quot;</span><span class="p">:</span> <span class="n">SimpleFileNodeParser</span><span class="p">,</span>
+	<span class="c1"># LangChain</span>
+	<span class="c1"># Token</span>
+	<span class="s2">&quot;sentencetransformerstoken&quot;</span><span class="p">:</span> <span class="n">SentenceTransformersTokenTextSplitter</span><span class="p">,</span>
+	<span class="c1"># Character</span>
+	<span class="s2">&quot;recursivecharacter&quot;</span><span class="p">:</span> <span class="n">RecursiveCharacterTextSplitter</span><span class="p">,</span>
+	<span class="s2">&quot;character&quot;</span><span class="p">:</span> <span class="n">CharacterTextSplitter</span><span class="p">,</span>
+	<span class="c1"># Sentence</span>
+	<span class="s2">&quot;konlpy&quot;</span><span class="p">:</span> <span class="n">KonlpyTextSplitter</span><span class="p">,</span>
 <span class="p">}</span>
 
 
