@@ -441,7 +441,14 @@
 		<span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
 	<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Corpus&quot;</span><span class="p">:</span>
 		<span class="k">return</span> <span class="n">Corpus</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span></div>
-</div>
+
+
+	<span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Raw</span><span class="p">),</span> <span class="s2">&quot;You can only add Raw instances.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">data</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span>
+			<span class="n">drop</span><span class="o">=</span><span class="kc">True</span>
+		<span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span></div>
 
 
 
