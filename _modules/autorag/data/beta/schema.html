@@ -394,7 +394,9 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">process_batch</span><span class="p">,</span> <span class="n">get_event_loop</span>
+
+<span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">process_batch</span><span class="p">,</span> <span class="n">get_event_loop</span><span class="p">,</span> <span class="n">fetch_contents</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
@@ -437,10 +439,10 @@
 
 <div class="viewcode-block" id="Raw.chunk">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.beta.schema.html#autorag.data.beta.schema.Raw.chunk">[docs]</a>
-	<span class="k">def</span> <span class="nf">chunk</span><span class="p">(</span>
-		<span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
-	<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Corpus&quot;</span><span class="p">:</span>
-		<span class="k">return</span> <span class="n">Corpus</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span></div>
+	<span class="k">def</span> <span class="nf">chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">module_params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Corpus&quot;</span><span class="p">:</span>
+		<span class="n">chunk_module</span> <span class="o">=</span> <span class="n">get_support_modules</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+		<span class="n">chunked_result</span> <span class="o">=</span> <span class="n">chunk_module</span><span class="p">(</span><span class="n">parsed_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">module_params</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">Corpus</span><span class="p">(</span><span class="n">chunked_result</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
 
 	<span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -572,6 +574,19 @@
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.beta.schema.html#autorag.data.beta.schema.QA.map">[docs]</a>
 	<span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QA&quot;</span><span class="p">:</span>
 		<span class="k">return</span> <span class="n">QA</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">linked_corpus</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="QA.make_retrieval_gt_contents">
+<a class="viewcode-back" href="../../../../api_spec/autorag.data.beta.schema.html#autorag.data.beta.schema.QA.make_retrieval_gt_contents">[docs]</a>
+	<span class="k">def</span> <span class="nf">make_retrieval_gt_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QA&quot;</span><span class="p">:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Make retrieval_gt_contents column from retrieval_gt column.</span>
+<span class="sd">		:return: The QA instance that has a retrieval_gt_contents column.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;retrieval_gt_contents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;retrieval_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linked_corpus</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+		<span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="QA.update_corpus">
