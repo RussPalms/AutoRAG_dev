@@ -391,9 +391,10 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.generator.vllm</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">inspect</span>
+<span></span><span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
 
@@ -455,21 +456,25 @@
 
 <div class="viewcode-block" id="make_vllm_instance">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.vllm.make_vllm_instance">[docs]</a>
-<span class="k">def</span> <span class="nf">make_vllm_instance</span><span class="p">(</span><span class="n">llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">make_vllm_instance</span><span class="p">(</span><span class="n">llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
 	<span class="kn">from</span> <span class="nn">vllm</span> <span class="kn">import</span> <span class="n">LLM</span>
+	<span class="kn">from</span> <span class="nn">vllm</span> <span class="kn">import</span> <span class="n">SamplingParams</span>
 
 	<span class="n">model_from_args</span> <span class="o">=</span> <span class="n">input_args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 	<span class="n">model</span> <span class="o">=</span> <span class="n">llm</span> <span class="k">if</span> <span class="n">model_from_args</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">model_from_args</span>
-	<span class="n">init_params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">LLM</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-	<span class="n">keyword_init_params</span> <span class="o">=</span> <span class="p">[</span>
-		<span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">init_params</span> <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">param</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span>
-	<span class="p">]</span>
-	<span class="n">input_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-	<span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">keyword_init_params</span><span class="p">:</span>
-		<span class="n">v</span> <span class="o">=</span> <span class="n">input_args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-		<span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="n">input_kwargs</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-	<span class="k">return</span> <span class="n">LLM</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">input_kwargs</span><span class="p">)</span></div>
+	<span class="n">from_optional_params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span>
+		<span class="n">SamplingParams</span><span class="o">.</span><span class="n">from_optional</span>
+	<span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+	<span class="n">sampling_params_init_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">from_optional_params</span><span class="p">]</span>
+
+	<span class="n">result_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">input_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+		<span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sampling_params_init_params</span><span class="p">:</span>
+			<span class="n">result_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+	<span class="c1"># pop used result_kwargs keys in input_args</span>
+	<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">result_kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+		<span class="n">input_args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">LLM</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">result_kwargs</span><span class="p">)</span></div>
 
 
 
@@ -483,8 +488,10 @@
 
 		<span class="n">destroy_model_parallel</span><span class="p">()</span>
 		<span class="k">del</span> <span class="n">vllm_instance</span>
-		<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+		<span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 		<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+		<span class="n">torch</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">destroy_process_group</span><span class="p">()</span>
+		<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="k">del</span> <span class="n">vllm_instance</span></div>
 
