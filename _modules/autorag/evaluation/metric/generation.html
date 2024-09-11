@@ -392,7 +392,6 @@
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.evaluation.metric.generation</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
@@ -409,7 +408,9 @@
 <span class="kn">from</span> <span class="nn">sacrebleu.metrics.bleu</span> <span class="kn">import</span> <span class="n">BLEU</span>
 
 <span class="kn">from</span> <span class="nn">autorag</span> <span class="kn">import</span> <span class="n">embedding_models</span>
+<span class="kn">from</span> <span class="nn">autorag.evaluation.metric.util</span> <span class="kn">import</span> <span class="n">autorag_metric_loop</span>
 <span class="kn">from</span> <span class="nn">autorag.evaluation.metric.util</span> <span class="kn">import</span> <span class="n">calculate_cosine_similarity</span>
+<span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
 	<span class="n">get_event_loop</span><span class="p">,</span>
 	<span class="n">process_batch</span><span class="p">,</span>
@@ -418,48 +419,18 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="generation_metric">
-<a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.generation_metric">[docs]</a>
-<span class="k">def</span> <span class="nf">generation_metric</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-	<span class="nd">@convert_inputs_to_list</span>
-	<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-		<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">generations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
-	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Compute generation metric.</span>
-
-<span class="sd">		:param generation_gt: A list of ground truth.</span>
-<span class="sd">		    Must be 2-d list of string.</span>
-<span class="sd">		    Because it can be a multiple ground truth.</span>
-<span class="sd">		:param generations: A list of generations that LLM generated.</span>
-<span class="sd">		:param kwargs: The additional arguments for metric function.</span>
-<span class="sd">		:return: A list of computed metric scores.</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="c1"># make generation_gt and generations to pd dataframe</span>
-		<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-			<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">generation_gt</span><span class="p">,</span> <span class="n">generations</span><span class="p">))</span>
-		<span class="p">)</span>
-		<span class="k">return</span> <span class="n">result</span>
-
-	<span class="k">return</span> <span class="n">wrapper</span></div>
-
-
-
 <div class="viewcode-block" id="huggingface_evaluate">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.huggingface_evaluate">[docs]</a>
 <span class="nd">@convert_inputs_to_list</span>
 <span class="k">def</span> <span class="nf">huggingface_evaluate</span><span class="p">(</span>
-	<span class="n">instance</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">generations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="n">instance</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Compute huggingface evaluate metric.</span>
 
 <span class="sd">	:param instance: The instance of huggingface evaluates metric.</span>
 <span class="sd">	:param key: The key to retrieve result score from huggingface evaluate result.</span>
-<span class="sd">	:param generation_gt: A list of ground truth.</span>
-<span class="sd">	    Must be 2-d list of string.</span>
-<span class="sd">	:param generations: A list of generations that LLM generated.</span>
+<span class="sd">	:param metric_inputs: A list of MetricInput schema</span>
 <span class="sd">	:param kwargs: The additional arguments for metric function.</span>
 <span class="sd">	:return: The list of scores.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -477,7 +448,7 @@
 		<span class="p">)</span>
 
 	<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">compute_score</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">generation_gt</span><span class="p">,</span> <span class="n">generations</span><span class="p">))</span>
+		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">compute_score</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">generation_gt</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">generated_texts</span><span class="p">),</span> <span class="n">metric_inputs</span><span class="p">)</span>
 	<span class="p">)</span>
 	<span class="k">return</span> <span class="n">result</span></div>
 
@@ -485,10 +456,9 @@
 
 <div class="viewcode-block" id="bleu">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.bleu">[docs]</a>
-<span class="nd">@convert_inputs_to_list</span>
+<span class="nd">@autorag_metric_loop</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_texts&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">bleu</span><span class="p">(</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">generations</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">tokenize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 	<span class="n">smooth_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;exp&quot;</span><span class="p">,</span>
 	<span class="n">smooth_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -499,15 +469,12 @@
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Computes the BLEU metric given pred and ground-truth.</span>
 
+<span class="sd">	:param metric_inputs: A list of MetricInput schema (Required Field -&gt; &quot;generation_gt&quot;, &quot;generated_texts&quot;)</span>
 <span class="sd">	:param tokenize: The tokenizer to use. If None, defaults to language-specific tokenizers with &#39;13a&#39; as the fallback default. check #https://github.com/mjpost/sacrebleu/blob/master/sacrebleu/metrics/bleu.py</span>
 <span class="sd">	:param smooth_method: The smoothing method to use (&#39;floor&#39;, &#39;add-k&#39;, &#39;exp&#39; or &#39;none&#39;).</span>
 <span class="sd">	:param smooth_value: The smoothing value for `floor` and `add-k` methods. `None` falls back to default value.</span>
 <span class="sd">	:param max_ngram_order: If given, it overrides the maximum n-gram order (default: 4) when computing precisions.</span>
 <span class="sd">	:param trg_lang: An optional language code to raise potential tokenizer warnings.</span>
-<span class="sd">	:param generation_gt: A list of ground truth.</span>
-<span class="sd">	    Must be 2-d list of string.</span>
-<span class="sd">	    Because it can be a multiple ground truth.</span>
-<span class="sd">	:param generations: A list of generations that LLM generated.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">bleu_instance</span> <span class="o">=</span> <span class="n">BLEU</span><span class="p">(</span>
 		<span class="n">tokenize</span><span class="o">=</span><span class="n">tokenize</span><span class="p">,</span>
@@ -520,8 +487,10 @@
 
 	<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
 		<span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">bleu_instance</span><span class="o">.</span><span class="n">sentence_score</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
-			<span class="nb">zip</span><span class="p">(</span><span class="n">generations</span><span class="p">,</span> <span class="n">generation_gt</span><span class="p">),</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">bleu_instance</span><span class="o">.</span><span class="n">sentence_score</span><span class="p">(</span>
+				<span class="n">x</span><span class="o">.</span><span class="n">generated_texts</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">generation_gt</span>
+			<span class="p">)</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
+			<span class="n">metric_inputs</span><span class="p">,</span>
 		<span class="p">)</span>
 	<span class="p">)</span>
 	<span class="k">return</span> <span class="n">result</span></div>
@@ -530,10 +499,9 @@
 
 <div class="viewcode-block" id="meteor">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.meteor">[docs]</a>
-<span class="nd">@convert_inputs_to_list</span>
+<span class="nd">@autorag_metric_loop</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_texts&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">meteor</span><span class="p">(</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">generations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
 	<span class="n">beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span>
 	<span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -541,10 +509,7 @@
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Compute meteor score for generation.</span>
 
-<span class="sd">	:param generation_gt: A list of ground truth.</span>
-<span class="sd">	        Must be 2-d list of string.</span>
-<span class="sd">	        Because it can be a multiple ground truth.</span>
-<span class="sd">	:param generations: A list of generations that LLM generated.</span>
+<span class="sd">	:param metric_inputs: A list of MetricInput schema (Required Field -&gt; &quot;generation_gt&quot;, &quot;generated_texts&quot;)</span>
 <span class="sd">	:param alpha: Parameter for controlling relative weights of precision and recall.</span>
 <span class="sd">	    Default is 0.9.</span>
 <span class="sd">	:param beta: Parameter for controlling shape of penalty as a</span>
@@ -559,8 +524,7 @@
 	<span class="n">result</span> <span class="o">=</span> <span class="n">huggingface_evaluate</span><span class="p">(</span>
 		<span class="n">meteor_instance</span><span class="p">,</span>
 		<span class="s2">&quot;meteor&quot;</span><span class="p">,</span>
-		<span class="n">generation_gt</span><span class="p">,</span>
-		<span class="n">generations</span><span class="p">,</span>
+		<span class="n">metric_inputs</span><span class="p">,</span>
 		<span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
 		<span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span>
 		<span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span>
@@ -572,10 +536,9 @@
 
 <div class="viewcode-block" id="rouge">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.rouge">[docs]</a>
-<span class="nd">@convert_inputs_to_list</span>
+<span class="nd">@autorag_metric_loop</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_texts&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">rouge</span><span class="p">(</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">generations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">rouge_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rougeL&quot;</span><span class="p">,</span>
 	<span class="n">use_stemmer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 	<span class="n">split_summaries</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -584,10 +547,7 @@
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Compute rouge score for generation.</span>
 
-<span class="sd">	:param generation_gt: A list of ground truth.</span>
-<span class="sd">	        Must be 2-d list of string.</span>
-<span class="sd">	        Because it can be a multiple ground truth.</span>
-<span class="sd">	:param generations: A list of generations that LLM generated.</span>
+<span class="sd">	:param metric_inputs: A list of MetricInput schema (Required Field -&gt; &quot;generation_gt&quot;, &quot;generated_texts&quot;)</span>
 <span class="sd">	:param rouge_type: A rouge type to use for evaluation.</span>
 <span class="sd">	    Default is &#39;RougeL&#39;.</span>
 <span class="sd">	    Choose between rouge1, rouge2, rougeL, and rougeLSum.</span>
@@ -617,7 +577,10 @@
 			<span class="n">rouge_type</span>
 		<span class="p">]</span><span class="o">.</span><span class="n">fmeasure</span>
 
-	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">compute</span><span class="p">(</span><span class="n">gt</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span> <span class="k">for</span> <span class="n">gt</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">generation_gt</span><span class="p">,</span> <span class="n">generations</span><span class="p">)]</span>
+	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">compute</span><span class="p">(</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generation_gt</span><span class="p">,</span> <span class="n">metric_input</span><span class="o">.</span><span class="n">generated_texts</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span>
+	<span class="p">]</span>
 	<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
 	<span class="n">result</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span><span class="p">))</span>
 
@@ -628,21 +591,16 @@
 
 <div class="viewcode-block" id="sem_score">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.sem_score">[docs]</a>
-<span class="nd">@convert_inputs_to_list</span>
+<span class="nd">@autorag_metric_loop</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_texts&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">sem_score</span><span class="p">(</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">generations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">embedding_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseEmbedding</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Compute sem score between generation gt and pred with cosine similarity.</span>
 
-<span class="sd">	:param generation_gt: A list of ground truth.</span>
-<span class="sd">	        Must be 2-d list of string.</span>
-<span class="sd">	        Because it can be a multiple ground truth.</span>
-<span class="sd">	        It will get the max of cosine similarity between generation_gt and pred.</span>
-<span class="sd">	:param generations: A list of generations that LLM generated.</span>
+<span class="sd">	:param metric_inputs: A list of MetricInput schema (Required Field -&gt; &quot;generation_gt&quot;, &quot;generated_texts&quot;)</span>
 <span class="sd">	:param embedding_model: Embedding model to use for compute cosine similarity.</span>
 <span class="sd">	    Default is all-mpnet-base-v2 embedding model.</span>
 <span class="sd">	    The paper used this embedding model.</span>
@@ -650,6 +608,8 @@
 <span class="sd">	    Default is 128</span>
 <span class="sd">	:return: A list of computed metric scores.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">generations</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generated_texts</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
+	<span class="n">generation_gt</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generation_gt</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
 	<span class="k">if</span> <span class="n">embedding_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="n">embedding_model</span> <span class="o">=</span> <span class="n">embedding_models</span><span class="p">[</span><span class="s2">&quot;huggingface_all_mpnet_base_v2&quot;</span><span class="p">]</span>
 
@@ -696,10 +656,9 @@
 
 <div class="viewcode-block" id="g_eval">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.g_eval">[docs]</a>
-<span class="nd">@convert_inputs_to_list</span>
+<span class="nd">@autorag_metric_loop</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_texts&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">g_eval</span><span class="p">(</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">generations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">metrics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 	<span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4-0125-preview&quot;</span><span class="p">,</span>
 	<span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
@@ -710,11 +669,7 @@
 <span class="sd">	It evaluates the generation result by coherence, consistency, fluency, and relevance.</span>
 <span class="sd">	It uses only &#39;openai&#39; model, and we recommend to use gpt-4 for evaluation accuracy.</span>
 
-<span class="sd">	:param generation_gt: A list of ground truth.</span>
-<span class="sd">	    Must be 2-d list of string.</span>
-<span class="sd">	    Because it can be a multiple ground truth.</span>
-<span class="sd">	    It will get the max of g_eval score.</span>
-<span class="sd">	:param generations: A list of generations that LLM generated.</span>
+<span class="sd">	:param metric_inputs: A list of MetricInput schema (Required Field -&gt; &quot;generation_gt&quot;, &quot;generated_texts&quot;)</span>
 <span class="sd">	:param metrics: A list of metrics to use for evaluation.</span>
 <span class="sd">	    Default is all metrics, which is [&#39;coherence&#39;, &#39;consistency&#39;, &#39;fluency&#39;, &#39;relevance&#39;].</span>
 <span class="sd">	:param model: OpenAI model name.</span>
@@ -723,6 +678,8 @@
 <span class="sd">	    Default is 8.</span>
 <span class="sd">	:return: G-Eval score.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">generations</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generated_texts</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
+	<span class="n">generation_gt</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generation_gt</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
 	<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
 	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="n">async_g_eval</span><span class="p">(</span><span class="n">gt</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
@@ -804,14 +761,15 @@
 
 <div class="viewcode-block" id="bert_score">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.bert_score">[docs]</a>
-<span class="nd">@convert_inputs_to_list</span>
+<span class="nd">@autorag_metric_loop</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_texts&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">bert_score</span><span class="p">(</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">generations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
 	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
 	<span class="n">n_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+	<span class="n">generations</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generated_texts</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
+	<span class="n">generation_gt</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generation_gt</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
 	<span class="n">evaluator</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;bertscore&quot;</span><span class="p">)</span>
 
 	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>

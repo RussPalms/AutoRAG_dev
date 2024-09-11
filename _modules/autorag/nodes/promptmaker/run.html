@@ -401,6 +401,7 @@
 
 <span class="kn">from</span> <span class="nn">autorag.evaluation</span> <span class="kn">import</span> <span class="n">evaluate_generation</span>
 <span class="kn">from</span> <span class="nn">autorag.evaluation.util</span> <span class="kn">import</span> <span class="n">cast_metrics</span>
+<span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
 <span class="kn">from</span> <span class="nn">autorag.strategy</span> <span class="kn">import</span> <span class="n">measure_speed</span><span class="p">,</span> <span class="n">filter_by_threshold</span><span class="p">,</span> <span class="n">select_best</span>
 <span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
 <span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">validate_qa_dataset</span>
@@ -531,6 +532,8 @@
 		<span class="n">generation_gt</span> <span class="o">=</span> <span class="n">qa_data</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 		<span class="n">generation_gt</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">generation_gt</span><span class="p">))</span>
 
+		<span class="n">metric_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">MetricInput</span><span class="p">(</span><span class="n">generation_gt</span><span class="o">=</span><span class="n">gen_gt</span><span class="p">)</span> <span class="k">for</span> <span class="n">gen_gt</span> <span class="ow">in</span> <span class="n">generation_gt</span><span class="p">]</span>
+
 		<span class="n">all_prompts</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
 			<span class="n">all_prompts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;prompts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
@@ -539,7 +542,7 @@
 			<span class="n">all_prompts</span><span class="p">,</span>
 			<span class="n">generator_callables</span><span class="p">,</span>
 			<span class="n">generator_params</span><span class="p">,</span>
-			<span class="n">generation_gt</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span>
+			<span class="n">metric_inputs</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span>
 			<span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">],</span>
 			<span class="n">project_dir</span><span class="p">,</span>
 			<span class="n">strategy_name</span><span class="o">=</span><span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
@@ -634,7 +637,7 @@
 	<span class="n">prompts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
 	<span class="n">generator_funcs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
 	<span class="n">generator_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">metrics</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]],</span>
 	<span class="n">project_dir</span><span class="p">,</span>
 	<span class="n">strategy_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -648,7 +651,7 @@
 	<span class="p">)</span>
 	<span class="n">evaluation_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
 		<span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate_generator_result</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">generation_gt</span><span class="p">,</span> <span class="n">metrics</span><span class="p">),</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate_generator_result</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">metric_inputs</span><span class="p">,</span> <span class="n">metrics</span><span class="p">),</span>
 			<span class="nb">zip</span><span class="p">(</span><span class="n">generator_results</span><span class="p">,</span> <span class="n">generator_funcs</span><span class="p">),</span>
 		<span class="p">)</span>
 	<span class="p">)</span>
@@ -669,10 +672,10 @@
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.run.evaluate_generator_result">[docs]</a>
 <span class="k">def</span> <span class="nf">evaluate_generator_result</span><span class="p">(</span>
 	<span class="n">result_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">metrics</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-	<span class="nd">@evaluate_generation</span><span class="p">(</span><span class="n">generation_gt</span><span class="o">=</span><span class="n">generation_gt</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">)</span>
+	<span class="nd">@evaluate_generation</span><span class="p">(</span><span class="n">metric_inputs</span><span class="o">=</span><span class="n">metric_inputs</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 		<span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 

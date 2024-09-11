@@ -406,6 +406,7 @@
 	<span class="n">bert_score</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">autorag.evaluation.util</span> <span class="kn">import</span> <span class="n">cast_metrics</span>
+<span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
 
 <span class="n">GENERATION_METRIC_FUNC_DICT</span> <span class="o">=</span> <span class="p">{</span>
 	<span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span> <span class="n">func</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="p">[</span><span class="n">bleu</span><span class="p">,</span> <span class="n">meteor</span><span class="p">,</span> <span class="n">rouge</span><span class="p">,</span> <span class="n">sem_score</span><span class="p">,</span> <span class="n">g_eval</span><span class="p">,</span> <span class="n">bert_score</span><span class="p">]</span>
@@ -415,7 +416,7 @@
 <div class="viewcode-block" id="evaluate_generation">
 <a class="viewcode-back" href="../../../api_spec/autorag.evaluation.html#autorag.evaluation.generation.evaluate_generation">[docs]</a>
 <span class="k">def</span> <span class="nf">evaluate_generation</span><span class="p">(</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span>
+		<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span>
 <span class="p">):</span>
 	<span class="k">def</span> <span class="nf">decorator_evaluate_generation</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
 		<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
@@ -436,6 +437,8 @@
 				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
 					<span class="s2">&quot;Input func must return string list as generated answer at the first return value.&quot;</span>
 				<span class="p">)</span>
+			<span class="k">for</span> <span class="n">metric_input</span><span class="p">,</span> <span class="n">generated_text</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">,</span> <span class="n">generated_str</span><span class="p">):</span>
+				<span class="n">metric_input</span><span class="o">.</span><span class="n">generated_texts</span> <span class="o">=</span> <span class="n">generated_text</span>
 
 			<span class="n">metric_scores</span> <span class="o">=</span> <span class="p">{}</span>
 			<span class="n">metric_names</span><span class="p">,</span> <span class="n">metric_params</span> <span class="o">=</span> <span class="n">cast_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
@@ -447,11 +450,11 @@
 						<span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2"> will be ignored.&quot;</span>
 					<span class="p">)</span>
 				<span class="k">else</span><span class="p">:</span>
+
 					<span class="n">metric_scores</span><span class="p">[</span><span class="n">metric_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">GENERATION_METRIC_FUNC_DICT</span><span class="p">[</span>
 						<span class="n">metric_name</span>
 					<span class="p">](</span>
-						<span class="n">generation_gt</span><span class="o">=</span><span class="n">generation_gt</span><span class="p">,</span>
-						<span class="n">generations</span><span class="o">=</span><span class="n">generated_str</span><span class="p">,</span>
+						<span class="n">metric_inputs</span><span class="o">=</span><span class="n">metric_inputs</span><span class="p">,</span>
 						<span class="o">**</span><span class="n">metric_param</span><span class="p">,</span>
 					<span class="p">)</span>
 

@@ -395,13 +395,14 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">from</span> <span class="nn">autorag.evaluation</span> <span class="kn">import</span> <span class="n">evaluate_retrieval</span>
+<span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
 <span class="kn">from</span> <span class="nn">autorag.strategy</span> <span class="kn">import</span> <span class="n">measure_speed</span><span class="p">,</span> <span class="n">filter_by_threshold</span><span class="p">,</span> <span class="n">select_best</span>
 <span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">get_best_row</span><span class="p">,</span> <span class="n">to_list</span>
@@ -448,6 +449,9 @@
 		<span class="p">]</span>
 		<span class="k">for</span> <span class="n">inner_array</span> <span class="ow">in</span> <span class="n">retrieval_gt</span>
 	<span class="p">]</span>
+	<span class="c1"># make rows to metric_inputs</span>
+	<span class="n">metric_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">MetricInput</span><span class="p">(</span><span class="n">retrieval_gt</span><span class="o">=</span><span class="n">ret_gt</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">generation_gt</span><span class="o">=</span><span class="n">gen_gt</span><span class="p">)</span> <span class="k">for</span> <span class="n">ret_gt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">gen_gt</span> <span class="ow">in</span>
+				<span class="nb">zip</span><span class="p">(</span><span class="n">retrieval_gt</span><span class="p">,</span> <span class="n">qa_df</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">qa_df</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())]</span>
 
 	<span class="n">save_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">,</span> <span class="s2">&quot;retrieval&quot;</span><span class="p">)</span>  <span class="c1"># node name</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_dir</span><span class="p">):</span>
@@ -482,10 +486,8 @@
 			<span class="nb">map</span><span class="p">(</span>
 				<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate_retrieval_node</span><span class="p">(</span>
 					<span class="n">x</span><span class="p">,</span>
-					<span class="n">retrieval_gt</span><span class="p">,</span>
+					<span class="n">metric_inputs</span><span class="p">,</span>
 					<span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metrics&quot;</span><span class="p">),</span>
-					<span class="n">qa_df</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-					<span class="n">qa_df</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
 				<span class="p">),</span>
 				<span class="n">result</span><span class="p">,</span>
 			<span class="p">)</span>
@@ -666,8 +668,7 @@
 					<span class="n">module</span><span class="p">,</span>
 					<span class="n">module_param</span><span class="p">,</span>
 					<span class="n">strategies</span><span class="p">,</span>
-					<span class="n">retrieval_gt</span><span class="p">,</span>
-					<span class="n">qa_df</span><span class="p">,</span>
+					<span class="n">metric_inputs</span><span class="p">,</span>
 					<span class="n">project_dir</span><span class="p">,</span>
 					<span class="n">previous_result</span><span class="p">,</span>
 				<span class="p">)</span>
@@ -743,28 +744,22 @@
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.run.evaluate_retrieval_node">[docs]</a>
 <span class="k">def</span> <span class="nf">evaluate_retrieval_node</span><span class="p">(</span>
 	<span class="n">result_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-	<span class="n">retrieval_gt</span><span class="p">,</span>
-	<span class="n">metrics</span><span class="p">,</span>
-	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
+		<span class="n">metrics</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Evaluate retrieval node from retrieval node result dataframe.</span>
 
 <span class="sd">	:param result_df: The result dataframe from a retrieval node.</span>
-<span class="sd">	:param retrieval_gt: Ground truth for retrieval from qa dataset.</span>
+<span class="sd">	:param metric_inputs: List of metric input schema for AutoRAG.</span>
 <span class="sd">	:param metrics: Metric list from input strategies.</span>
-<span class="sd">	:param queries: Query list from input strategies.</span>
-<span class="sd">	:param generation_gt: Ground truth for generation from qa dataset.</span>
 <span class="sd">	:return: Return result_df with metrics columns.</span>
 <span class="sd">	    The columns will be &#39;retrieved_contents&#39;, &#39;retrieved_ids&#39;, &#39;retrieve_scores&#39;, and metric names.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="nd">@evaluate_retrieval</span><span class="p">(</span>
-		<span class="n">retrieval_gt</span><span class="o">=</span><span class="n">retrieval_gt</span><span class="p">,</span>
+		<span class="n">metric_inputs</span><span class="o">=</span><span class="n">metric_inputs</span><span class="p">,</span>
 		<span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
-		<span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
-		<span class="n">generation_gt</span><span class="o">=</span><span class="n">generation_gt</span><span class="p">,</span>
 	<span class="p">)</span>
 	<span class="k">def</span> <span class="nf">evaluate_this_module</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
 		<span class="k">return</span> <span class="p">(</span>
@@ -911,8 +906,7 @@
 	<span class="n">hybrid_module_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
 	<span class="n">hybrid_module_param</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
 	<span class="n">strategy</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
-	<span class="n">retrieval_gt</span><span class="p">,</span>
-	<span class="n">qa_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+		<span class="n">input_metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
 	<span class="n">project_dir</span><span class="p">,</span>
 	<span class="n">previous_result</span><span class="p">,</span>
 <span class="p">):</span>
@@ -944,10 +938,8 @@
 		<span class="nb">map</span><span class="p">(</span>
 			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate_retrieval_node</span><span class="p">(</span>
 				<span class="n">x</span><span class="p">,</span>
-				<span class="n">retrieval_gt</span><span class="p">,</span>
+				<span class="n">input_metrics</span><span class="p">,</span>
 				<span class="n">strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metrics&quot;</span><span class="p">),</span>
-				<span class="n">qa_df</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-				<span class="n">qa_df</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
 			<span class="p">),</span>
 			<span class="n">result_list</span><span class="p">,</span>
 		<span class="p">)</span>

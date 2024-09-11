@@ -401,12 +401,13 @@
 	<span class="n">retrieval_token_precision</span><span class="p">,</span>
 	<span class="n">retrieval_token_recall</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
 
 
 <div class="viewcode-block" id="evaluate_retrieval_contents">
 <a class="viewcode-back" href="../../../api_spec/autorag.evaluation.html#autorag.evaluation.retrieval_contents.evaluate_retrieval_contents">[docs]</a>
-<span class="k">def</span> <span class="nf">evaluate_retrieval_contents</span><span class="p">(</span><span class="n">retrieval_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-	<span class="k">def</span> <span class="nf">decorator_evaluate_retireval_contents</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">evaluate_retrieval_contents</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+	<span class="k">def</span> <span class="nf">decorator_evaluate_retrieval_contents</span><span class="p">(</span>
 		<span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
 			<span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span>
 		<span class="p">],</span>
@@ -428,6 +429,8 @@
 				<span class="n">retrieval_token_precision</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span> <span class="n">retrieval_token_precision</span><span class="p">,</span>
 				<span class="n">retrieval_token_f1</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span> <span class="n">retrieval_token_f1</span><span class="p">,</span>
 			<span class="p">}</span>
+			<span class="k">for</span> <span class="n">metric_input</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">,</span> <span class="n">contents</span><span class="p">):</span>
+				<span class="n">metric_input</span><span class="o">.</span><span class="n">retrieved_contents</span> <span class="o">=</span> <span class="n">content</span>
 
 			<span class="n">metrics_scores</span> <span class="o">=</span> <span class="p">{}</span>
 			<span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
@@ -437,8 +440,9 @@
 					<span class="p">)</span>
 				<span class="k">else</span><span class="p">:</span>
 					<span class="n">metric_func</span> <span class="o">=</span> <span class="n">metric_funcs</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
+					<span class="c1"># Extract each required field from all payloads</span>
 					<span class="n">metric_scores</span> <span class="o">=</span> <span class="n">metric_func</span><span class="p">(</span>
-						<span class="n">gt_contents</span><span class="o">=</span><span class="n">retrieval_gt</span><span class="p">,</span> <span class="n">pred_contents</span><span class="o">=</span><span class="n">contents</span>
+						<span class="n">metric_inputs</span><span class="o">=</span><span class="n">metric_inputs</span>
 					<span class="p">)</span>
 					<span class="n">metrics_scores</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric_scores</span>
 
@@ -455,7 +459,7 @@
 
 		<span class="k">return</span> <span class="n">wrapper</span>
 
-	<span class="k">return</span> <span class="n">decorator_evaluate_retireval_contents</span></div>
+	<span class="k">return</span> <span class="n">decorator_evaluate_retrieval_contents</span></div>
 
 </pre></div>
         </article>

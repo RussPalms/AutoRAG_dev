@@ -400,6 +400,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.run</span> <span class="kn">import</span> <span class="n">evaluate_retrieval_node</span>
+<span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
 <span class="kn">from</span> <span class="nn">autorag.strategy</span> <span class="kn">import</span> <span class="n">measure_speed</span><span class="p">,</span> <span class="n">filter_by_threshold</span><span class="p">,</span> <span class="n">select_best</span>
 <span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">make_combinations</span><span class="p">,</span> <span class="n">explode</span>
@@ -410,13 +411,13 @@
 <div class="viewcode-block" id="run_query_expansion_node">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.run.run_query_expansion_node">[docs]</a>
 <span class="k">def</span> <span class="nf">run_query_expansion_node</span><span class="p">(</span>
-	<span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
-	<span class="n">module_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
-	<span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-	<span class="n">node_line_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-	<span class="n">strategies</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+        <span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
+        <span class="n">module_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
+        <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">node_line_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">strategies</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Run evaluation and select the best module among query expansion node results.</span>
 <span class="sd">	Initially, retrieval is run using expanded_queries, the result of the query_expansion module.</span>
 <span class="sd">	The retrieval module is run as a combination of the retrieval_modules in strategies.</span>
@@ -432,197 +433,201 @@
 <span class="sd">	:param strategies: Strategies for query expansion node.</span>
 <span class="sd">	:return: The best result dataframe.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">):</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">)</span>
-	<span class="n">node_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">,</span> <span class="s2">&quot;query_expansion&quot;</span><span class="p">)</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">node_dir</span><span class="p">):</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">node_dir</span><span class="p">)</span>
-	<span class="n">project_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">)</span>
+    <span class="n">node_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">,</span> <span class="s2">&quot;query_expansion&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">node_dir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">node_dir</span><span class="p">)</span>
+    <span class="n">project_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
 
-	<span class="c1"># run query expansion</span>
-	<span class="n">results</span><span class="p">,</span> <span class="n">execution_times</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
-		<span class="o">*</span><span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">task</span><span class="p">:</span> <span class="n">measure_speed</span><span class="p">(</span>
-				<span class="n">task</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-				<span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span>
-				<span class="n">previous_result</span><span class="o">=</span><span class="n">previous_result</span><span class="p">,</span>
-				<span class="o">**</span><span class="n">task</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-			<span class="p">),</span>
-			<span class="nb">zip</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">module_params</span><span class="p">),</span>
-		<span class="p">)</span>
-	<span class="p">)</span>
-	<span class="n">average_times</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">execution_times</span><span class="p">))</span>
+    <span class="c1"># run query expansion</span>
+    <span class="n">results</span><span class="p">,</span> <span class="n">execution_times</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
+        <span class="o">*</span><span class="nb">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">task</span><span class="p">:</span> <span class="n">measure_speed</span><span class="p">(</span>
+                <span class="n">task</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span>
+                <span class="n">previous_result</span><span class="o">=</span><span class="n">previous_result</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">task</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="nb">zip</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">module_params</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">average_times</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">execution_times</span><span class="p">))</span>
 
-	<span class="c1"># save results to folder</span>
-	<span class="n">pseudo_module_params</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">module_params</span><span class="p">)</span>
-	<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">module_param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pseudo_module_params</span><span class="p">):</span>
-		<span class="k">if</span> <span class="s2">&quot;prompt&quot;</span> <span class="ow">in</span> <span class="n">module_params</span><span class="p">:</span>
-			<span class="n">module_param</span><span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-	<span class="n">filepaths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">.parquet&quot;</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">modules</span><span class="p">)))</span>
-	<span class="p">)</span>
-	<span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">filepaths</span><span class="p">))</span>
-	<span class="p">)</span>  <span class="c1"># execute save to parquet</span>
-	<span class="n">filenames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">filepaths</span><span class="p">))</span>
+    <span class="c1"># save results to folder</span>
+    <span class="n">pseudo_module_params</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">module_params</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">module_param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pseudo_module_params</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;prompt&quot;</span> <span class="ow">in</span> <span class="n">module_params</span><span class="p">:</span>
+            <span class="n">module_param</span><span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">filepaths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">.parquet&quot;</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">modules</span><span class="p">)))</span>
+    <span class="p">)</span>
+    <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">filepaths</span><span class="p">))</span>
+    <span class="p">)</span>  <span class="c1"># execute save to parquet</span>
+    <span class="n">filenames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">filepaths</span><span class="p">))</span>
 
-	<span class="c1"># make summary file</span>
-	<span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-		<span class="p">{</span>
-			<span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filenames</span><span class="p">,</span>
-			<span class="s2">&quot;module_name&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">module</span><span class="p">:</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">modules</span><span class="p">)),</span>
-			<span class="s2">&quot;module_params&quot;</span><span class="p">:</span> <span class="n">module_params</span><span class="p">,</span>
-			<span class="s2">&quot;execution_time&quot;</span><span class="p">:</span> <span class="n">average_times</span><span class="p">,</span>
-		<span class="p">}</span>
-	<span class="p">)</span>
+    <span class="c1"># make summary file</span>
+    <span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filenames</span><span class="p">,</span>
+            <span class="s2">&quot;module_name&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">module</span><span class="p">:</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">modules</span><span class="p">)),</span>
+            <span class="s2">&quot;module_params&quot;</span><span class="p">:</span> <span class="n">module_params</span><span class="p">,</span>
+            <span class="s2">&quot;execution_time&quot;</span><span class="p">:</span> <span class="n">average_times</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 
-	<span class="c1"># Run evaluation when there are more than one module.</span>
-	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-		<span class="c1"># pop general keys from strategies (e.g. metrics, speed_threshold)</span>
-		<span class="n">general_key</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">,</span> <span class="s2">&quot;speed_threshold&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy&quot;</span><span class="p">]</span>
-		<span class="n">general_strategy</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-			<span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">general_key</span><span class="p">,</span> <span class="n">strategies</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-		<span class="p">)</span>
-		<span class="n">extra_strategy</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-			<span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">general_key</span><span class="p">,</span> <span class="n">strategies</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-		<span class="p">)</span>
+    <span class="c1"># Run evaluation when there are more than one module.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># pop general keys from strategies (e.g. metrics, speed_threshold)</span>
+        <span class="n">general_key</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">,</span> <span class="s2">&quot;speed_threshold&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy&quot;</span><span class="p">]</span>
+        <span class="n">general_strategy</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">general_key</span><span class="p">,</span> <span class="n">strategies</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="n">extra_strategy</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">general_key</span><span class="p">,</span> <span class="n">strategies</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="p">)</span>
 
-		<span class="c1"># first, filter by threshold if it is enabled.</span>
-		<span class="k">if</span> <span class="n">general_strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;speed_threshold&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="n">results</span><span class="p">,</span> <span class="n">filenames</span> <span class="o">=</span> <span class="n">filter_by_threshold</span><span class="p">(</span>
-				<span class="n">results</span><span class="p">,</span> <span class="n">average_times</span><span class="p">,</span> <span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;speed_threshold&quot;</span><span class="p">],</span> <span class="n">filenames</span>
-			<span class="p">)</span>
+        <span class="c1"># first, filter by threshold if it is enabled.</span>
+        <span class="k">if</span> <span class="n">general_strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;speed_threshold&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">,</span> <span class="n">filenames</span> <span class="o">=</span> <span class="n">filter_by_threshold</span><span class="p">(</span>
+                <span class="n">results</span><span class="p">,</span> <span class="n">average_times</span><span class="p">,</span> <span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;speed_threshold&quot;</span><span class="p">],</span> <span class="n">filenames</span>
+            <span class="p">)</span>
 
-		<span class="c1"># check metrics in strategy</span>
-		<span class="k">if</span> <span class="n">general_strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metrics&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-				<span class="s2">&quot;You must at least one metrics for query expansion evaluation.&quot;</span>
-			<span class="p">)</span>
+        <span class="c1"># check metrics in strategy</span>
+        <span class="k">if</span> <span class="n">general_strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metrics&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;You must at least one metrics for query expansion evaluation.&quot;</span>
+            <span class="p">)</span>
 
-		<span class="k">if</span> <span class="n">extra_strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;top_k&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="n">extra_strategy</span><span class="p">[</span><span class="s2">&quot;top_k&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># default value</span>
+        <span class="k">if</span> <span class="n">extra_strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;top_k&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">extra_strategy</span><span class="p">[</span><span class="s2">&quot;top_k&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># default value</span>
 
-		<span class="c1"># get retrieval modules from strategy</span>
-		<span class="n">retrieval_callables</span><span class="p">,</span> <span class="n">retrieval_params</span> <span class="o">=</span> <span class="n">make_retrieval_callable_params</span><span class="p">(</span>
-			<span class="n">extra_strategy</span>
-		<span class="p">)</span>
+        <span class="c1"># get retrieval modules from strategy</span>
+        <span class="n">retrieval_callables</span><span class="p">,</span> <span class="n">retrieval_params</span> <span class="o">=</span> <span class="n">make_retrieval_callable_params</span><span class="p">(</span>
+            <span class="n">extra_strategy</span>
+        <span class="p">)</span>
 
-		<span class="c1"># get retrieval_gt</span>
-		<span class="n">retrieval_gt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
-			<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;qa.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
-		<span class="p">)[</span><span class="s2">&quot;retrieval_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="c1"># get retrieval_gt</span>
+        <span class="n">retrieval_gt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;qa.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
+        <span class="p">)[</span><span class="s2">&quot;retrieval_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-		<span class="c1"># run evaluation</span>
-		<span class="n">evaluation_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-			<span class="nb">map</span><span class="p">(</span>
-				<span class="k">lambda</span> <span class="n">result</span><span class="p">:</span> <span class="n">evaluate_one_query_expansion_node</span><span class="p">(</span>
-					<span class="n">retrieval_callables</span><span class="p">,</span>
-					<span class="n">retrieval_params</span><span class="p">,</span>
-					<span class="n">result</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-					<span class="n">retrieval_gt</span><span class="p">,</span>
-					<span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">],</span>
-					<span class="n">project_dir</span><span class="p">,</span>
-					<span class="n">previous_result</span><span class="p">,</span>
-					<span class="n">general_strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
-				<span class="p">),</span>
-				<span class="n">results</span><span class="p">,</span>
-			<span class="p">)</span>
-		<span class="p">)</span>
+        <span class="c1"># make rows to metric_inputs</span>
+        <span class="n">metric_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">MetricInput</span><span class="p">(</span><span class="n">retrieval_gt</span><span class="o">=</span><span class="n">ret_gt</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">generation_gt</span><span class="o">=</span><span class="n">gen_gt</span><span class="p">)</span> <span class="k">for</span> <span class="n">ret_gt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">gen_gt</span>
+                         <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">retrieval_gt</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                                <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())]</span>
 
-		<span class="n">evaluation_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-			<span class="p">{</span>
-				<span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filenames</span><span class="p">,</span>
-				<span class="o">**</span><span class="p">{</span>
-					<span class="sa">f</span><span class="s2">&quot;query_expansion_</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span>
-						<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">metric_name</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">evaluation_results</span><span class="p">)</span>
-					<span class="p">)</span>
-					<span class="k">for</span> <span class="n">metric_name</span> <span class="ow">in</span> <span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">]</span>
-				<span class="p">},</span>
-			<span class="p">}</span>
-		<span class="p">)</span>
-		<span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-			<span class="n">on</span><span class="o">=</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">evaluation_df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span>
-		<span class="p">)</span>
+        <span class="c1"># run evaluation</span>
+        <span class="n">evaluation_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">result</span><span class="p">:</span> <span class="n">evaluate_one_query_expansion_node</span><span class="p">(</span>
+                    <span class="n">retrieval_callables</span><span class="p">,</span>
+                    <span class="n">retrieval_params</span><span class="p">,</span>
+                    <span class="p">[</span>
+                        <span class="nb">setattr</span><span class="p">(</span><span class="n">metric_input</span><span class="p">,</span> <span class="s2">&quot;queries&quot;</span><span class="p">,</span> <span class="n">queries</span><span class="p">)</span> <span class="ow">or</span> <span class="n">metric_input</span>
+                        <span class="k">for</span> <span class="n">metric_input</span><span class="p">,</span> <span class="n">queries</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;queries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+                    <span class="p">],</span>
+                    <span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">],</span>
+                    <span class="n">project_dir</span><span class="p">,</span>
+                    <span class="n">previous_result</span><span class="p">,</span>
+                    <span class="n">general_strategy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
+                <span class="p">),</span>
+                <span class="n">results</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
-		<span class="n">best_result</span><span class="p">,</span> <span class="n">best_filename</span> <span class="o">=</span> <span class="n">select_best</span><span class="p">(</span>
-			<span class="n">evaluation_results</span><span class="p">,</span>
-			<span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">],</span>
-			<span class="n">filenames</span><span class="p">,</span>
-			<span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
-		<span class="p">)</span>
-		<span class="c1"># change metric name columns to query_expansion_metric_name</span>
-		<span class="n">best_result</span> <span class="o">=</span> <span class="n">best_result</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-			<span class="n">columns</span><span class="o">=</span><span class="p">{</span>
-				<span class="n">metric_name</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;query_expansion_</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">&quot;</span>
-				<span class="k">for</span> <span class="n">metric_name</span> <span class="ow">in</span> <span class="n">strategies</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">]</span>
-			<span class="p">}</span>
-		<span class="p">)</span>
-		<span class="n">best_result</span> <span class="o">=</span> <span class="n">best_result</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
-			<span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span>
-		<span class="p">)</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">best_result</span><span class="p">,</span> <span class="n">best_filename</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-		<span class="n">best_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">previous_result</span><span class="p">,</span> <span class="n">best_result</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">evaluation_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filenames</span><span class="p">,</span>
+                <span class="o">**</span><span class="p">{</span>
+                    <span class="sa">f</span><span class="s2">&quot;query_expansion_</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span>
+                        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">metric_name</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">evaluation_results</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">metric_name</span> <span class="ow">in</span> <span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">]</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+            <span class="n">on</span><span class="o">=</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">evaluation_df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span>
+        <span class="p">)</span>
 
-	<span class="c1"># add &#39;is_best&#39; column at summary file</span>
-	<span class="n">summary_df</span><span class="p">[</span><span class="s2">&quot;is_best&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">best_filename</span>
+        <span class="n">best_result</span><span class="p">,</span> <span class="n">best_filename</span> <span class="o">=</span> <span class="n">select_best</span><span class="p">(</span>
+            <span class="n">evaluation_results</span><span class="p">,</span>
+            <span class="n">general_strategy</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">],</span>
+            <span class="n">filenames</span><span class="p">,</span>
+            <span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># change metric name columns to query_expansion_metric_name</span>
+        <span class="n">best_result</span> <span class="o">=</span> <span class="n">best_result</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">metric_name</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;query_expansion_</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">for</span> <span class="n">metric_name</span> <span class="ow">in</span> <span class="n">strategies</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">best_result</span> <span class="o">=</span> <span class="n">best_result</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">best_result</span><span class="p">,</span> <span class="n">best_filename</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">best_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">previous_result</span><span class="p">,</span> <span class="n">best_result</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-	<span class="c1"># save files</span>
-	<span class="n">summary_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_dir</span><span class="p">,</span> <span class="s2">&quot;summary.csv&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-	<span class="n">best_result</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;best_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">best_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.parquet&quot;</span><span class="p">),</span>
-		<span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-	<span class="p">)</span>
+    <span class="c1"># add &#39;is_best&#39; column at summary file</span>
+    <span class="n">summary_df</span><span class="p">[</span><span class="s2">&quot;is_best&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">best_filename</span>
 
-	<span class="k">return</span> <span class="n">best_result</span></div>
+    <span class="c1"># save files</span>
+    <span class="n">summary_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_dir</span><span class="p">,</span> <span class="s2">&quot;summary.csv&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">best_result</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;best_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">best_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.parquet&quot;</span><span class="p">),</span>
+        <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">best_result</span></div>
 
 
 
 <div class="viewcode-block" id="evaluate_one_query_expansion_node">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.run.evaluate_one_query_expansion_node">[docs]</a>
 <span class="k">def</span> <span class="nf">evaluate_one_query_expansion_node</span><span class="p">(</span>
-	<span class="n">retrieval_funcs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
-	<span class="n">retrieval_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
-	<span class="n">expanded_queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">retrieval_gt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">project_dir</span><span class="p">,</span>
-	<span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-	<span class="n">strategy_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">retrieval_funcs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
+        <span class="n">retrieval_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
+        <span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
+        <span class="n">metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">project_dir</span><span class="p">,</span>
+        <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">strategy_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-	<span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">expanded_queries</span>
-	<span class="n">retrieval_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span>
-				<span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">previous_result</span><span class="o">=</span><span class="n">previous_result</span><span class="p">,</span> <span class="o">**</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-			<span class="p">),</span>
-			<span class="nb">zip</span><span class="p">(</span><span class="n">retrieval_funcs</span><span class="p">,</span> <span class="n">retrieval_params</span><span class="p">),</span>
-		<span class="p">)</span>
-	<span class="p">)</span>
-	<span class="n">evaluation_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate_retrieval_node</span><span class="p">(</span>
-				<span class="n">x</span><span class="p">,</span>
-				<span class="n">retrieval_gt</span><span class="p">,</span>
-				<span class="n">metrics</span><span class="p">,</span>
-				<span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-				<span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-			<span class="p">),</span>
-			<span class="n">retrieval_results</span><span class="p">,</span>
-		<span class="p">)</span>
-	<span class="p">)</span>
-	<span class="n">best_result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">select_best</span><span class="p">(</span>
-		<span class="n">evaluation_results</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">strategy_name</span><span class="o">=</span><span class="n">strategy_name</span>
-	<span class="p">)</span>
-	<span class="n">best_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">previous_result</span><span class="p">,</span> <span class="n">best_result</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">return</span> <span class="n">best_result</span></div>
+    <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;queries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">queries</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
+    <span class="n">retrieval_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span>
+                <span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">previous_result</span><span class="o">=</span><span class="n">previous_result</span><span class="p">,</span> <span class="o">**</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">),</span>
+            <span class="nb">zip</span><span class="p">(</span><span class="n">retrieval_funcs</span><span class="p">,</span> <span class="n">retrieval_params</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">evaluation_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate_retrieval_node</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">,</span>
+                <span class="n">metric_inputs</span><span class="p">,</span>
+                <span class="n">metrics</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">retrieval_results</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">best_result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">select_best</span><span class="p">(</span>
+        <span class="n">evaluation_results</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">strategy_name</span><span class="o">=</span><span class="n">strategy_name</span>
+    <span class="p">)</span>
+    <span class="n">best_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">previous_result</span><span class="p">,</span> <span class="n">best_result</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_result</span></div>
 
 
 
 <div class="viewcode-block" id="make_retrieval_callable_params">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.run.make_retrieval_callable_params">[docs]</a>
 <span class="k">def</span> <span class="nf">make_retrieval_callable_params</span><span class="p">(</span><span class="n">strategy_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	strategy_dict looks like this:</span>
 
 <span class="sd">	.. Code:: json</span>
@@ -637,30 +642,30 @@
 <span class="sd">	      }</span>
 
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">node_dict</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">strategy_dict</span><span class="p">)</span>
-	<span class="n">retrieval_module_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="n">node_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
-		<span class="s2">&quot;retrieval_modules&quot;</span><span class="p">,</span> <span class="kc">None</span>
-	<span class="p">)</span>
-	<span class="k">if</span> <span class="n">retrieval_module_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">retrieval_module_list</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="p">{</span>
-				<span class="s2">&quot;module_type&quot;</span><span class="p">:</span> <span class="s2">&quot;bm25&quot;</span><span class="p">,</span>
-			<span class="p">}</span>
-		<span class="p">]</span>
-	<span class="n">node_params</span> <span class="o">=</span> <span class="n">node_dict</span>
-	<span class="n">modules</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">module_dict</span><span class="p">:</span> <span class="n">get_support_modules</span><span class="p">(</span><span class="n">module_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;module_type&quot;</span><span class="p">)),</span>
-			<span class="n">retrieval_module_list</span><span class="p">,</span>
-		<span class="p">)</span>
-	<span class="p">)</span>
-	<span class="n">param_combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">module_dict</span><span class="p">:</span> <span class="n">make_combinations</span><span class="p">({</span><span class="o">**</span><span class="n">module_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">node_params</span><span class="p">}),</span>
-			<span class="n">retrieval_module_list</span><span class="p">,</span>
-		<span class="p">)</span>
-	<span class="p">)</span>
-	<span class="k">return</span> <span class="n">explode</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">param_combinations</span><span class="p">)</span></div>
+    <span class="n">node_dict</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">strategy_dict</span><span class="p">)</span>
+    <span class="n">retrieval_module_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="n">node_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+        <span class="s2">&quot;retrieval_modules&quot;</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">retrieval_module_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">retrieval_module_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;module_type&quot;</span><span class="p">:</span> <span class="s2">&quot;bm25&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="n">node_params</span> <span class="o">=</span> <span class="n">node_dict</span>
+    <span class="n">modules</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">module_dict</span><span class="p">:</span> <span class="n">get_support_modules</span><span class="p">(</span><span class="n">module_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;module_type&quot;</span><span class="p">)),</span>
+            <span class="n">retrieval_module_list</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">param_combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">module_dict</span><span class="p">:</span> <span class="n">make_combinations</span><span class="p">({</span><span class="o">**</span><span class="n">module_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">node_params</span><span class="p">}),</span>
+            <span class="n">retrieval_module_list</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">explode</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">param_combinations</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
