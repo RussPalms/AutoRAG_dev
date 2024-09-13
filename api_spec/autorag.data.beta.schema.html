@@ -447,6 +447,20 @@ If you select multiple passages from each passage, it will be a multi-hop QA set
 It contains qid and retrieval_gt columns.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.data.beta.schema.Corpus.to_parquet">
+<span class="sig-name descname"><span class="pre">to_parquet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/data/beta/schema.html#Corpus.to_parquet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.data.beta.schema.Corpus.to_parquet" title="Link to this definition">¶</a></dt>
+<dd><p>Save the corpus to the AutoRAG compatible parquet file.
+It is not for the data creation, for running AutoRAG.
+If you want to save it directly, use the below code.
+<cite>corpus.data.to_parquet(save_path)</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>save_path</strong> – The path to save the corpus.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -484,6 +498,23 @@ It contains qid and retrieval_gt columns.</p>
 <dt class="sig sig-object py" id="autorag.data.beta.schema.QA.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#autorag.data.beta.schema.QA" title="autorag.data.beta.schema.QA"><span class="pre">QA</span></a></span></span><a class="reference internal" href="../_modules/autorag/data/beta/schema.html#QA.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.data.beta.schema.QA.map" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.data.beta.schema.QA.to_parquet">
+<span class="sig-name descname"><span class="pre">to_parquet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qa_save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corpus_save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/data/beta/schema.html#QA.to_parquet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.data.beta.schema.QA.to_parquet" title="Link to this definition">¶</a></dt>
+<dd><p>Save the qa and corpus to the AutoRAG compatible parquet file.
+It is not for the data creation, for running AutoRAG.
+If you want to save it directly, use the below code.
+<cite>qa.data.to_parquet(save_path)</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>qa_save_path</strong> – The path to save the qa dataset.</p></li>
+<li><p><strong>corpus_save_path</strong> – The path to save the corpus.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="autorag.data.beta.schema.QA.update_corpus">
@@ -583,6 +614,7 @@ It has two column names, ‘raw_id’ and ‘contents’.</p>
 <li><a class="reference internal" href="#autorag.data.beta.schema.Corpus.linked_raw"><code class="docutils literal notranslate"><span class="pre">Corpus.linked_raw</span></code></a></li>
 <li><a class="reference internal" href="#autorag.data.beta.schema.Corpus.map"><code class="docutils literal notranslate"><span class="pre">Corpus.map()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.data.beta.schema.Corpus.sample"><code class="docutils literal notranslate"><span class="pre">Corpus.sample()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.data.beta.schema.Corpus.to_parquet"><code class="docutils literal notranslate"><span class="pre">Corpus.to_parquet()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#autorag.data.beta.schema.QA"><code class="docutils literal notranslate"><span class="pre">QA</span></code></a><ul>
@@ -592,6 +624,7 @@ It has two column names, ‘raw_id’ and ‘contents’.</p>
 <li><a class="reference internal" href="#autorag.data.beta.schema.QA.linked_corpus"><code class="docutils literal notranslate"><span class="pre">QA.linked_corpus</span></code></a></li>
 <li><a class="reference internal" href="#autorag.data.beta.schema.QA.make_retrieval_gt_contents"><code class="docutils literal notranslate"><span class="pre">QA.make_retrieval_gt_contents()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.data.beta.schema.QA.map"><code class="docutils literal notranslate"><span class="pre">QA.map()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.data.beta.schema.QA.to_parquet"><code class="docutils literal notranslate"><span class="pre">QA.to_parquet()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.data.beta.schema.QA.update_corpus"><code class="docutils literal notranslate"><span class="pre">QA.update_corpus()</span></code></a></li>
 </ul>
 </li>
