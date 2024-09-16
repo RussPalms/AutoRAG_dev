@@ -415,14 +415,171 @@
         <article role="main" id="furo-main-content">
           <section id="chunk">
 <h1>Chunk<a class="headerlink" href="#chunk" title="Link to this heading">¶</a></h1>
-<section id="supported-modules">
-<h2>Supported Modules<a class="headerlink" href="#supported-modules" title="Link to this heading">¶</a></h2>
+<p>In this section, we will cover how to chunk parsed result.</p>
+<p>It is a crucial step because if the parsed result is not chunked well, the RAG will not be optimized well.</p>
+<p>Using only YAML files, you can easily use the various chunk methods.
+The chunked result is saved according to the data format used by AutoRAG.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The sample chunk pipeline looks like this.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.chunker</span> <span class="kn">import</span> <span class="n">Chunker</span>
+
+<span class="n">chunker</span> <span class="o">=</span> <span class="n">Chunker</span><span class="o">.</span><span class="n">from_parquet</span><span class="p">(</span><span class="n">parsed_data_path</span><span class="o">=</span><span class="s2">&quot;your/parsed/data/path&quot;</span><span class="p">)</span>
+<span class="n">chunker</span><span class="o">.</span><span class="n">start_chunking</span><span class="p">(</span><span class="s2">&quot;your/path/to/chunk_config.yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<section id="add-file-name">
+<h3>1. Add File Name<a class="headerlink" href="#add-file-name" title="Link to this heading">¶</a></h3>
+<p>You need to set one of ‘English’ and ‘Korean’
+The ‘add_file_name’ feature is to add a file_name to chunked_contents.
+This is used to prevent hallucination by retrieving contents from the wrong document.
+Default form of English is <code class="docutils literal notranslate"><span class="pre">&quot;file_name:</span> <span class="pre">{file_name}\n</span> <span class="pre">contents:</span> <span class="pre">{content}&quot;</span></code></p>
+<section id="example-yaml">
+<h4>Example YAML<a class="headerlink" href="#example-yaml" title="Link to this heading">¶</a></h4>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_chunk</span>
+<span class="w">    </span><span class="nt">chunk_method</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">Token</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Sentence</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">chunk_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">1024</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">512</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">chunk_overlap</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<span class="w">    </span><span class="nt">add_file_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">english</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="sentence-splitter">
+<h3>2. Sentence Splitter<a class="headerlink" href="#sentence-splitter" title="Link to this heading">¶</a></h3>
+<p>The following chunk methods in the <code class="docutils literal notranslate"><span class="pre">llama_index_chunk</span></code> module use the sentence splitter.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Semantic_llama_index</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SemanticDoubling</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SentenceWindow</span></code></p></li>
+</ul>
+<p>The following methods use <code class="docutils literal notranslate"><span class="pre">PunktSentenceTokenizer</span></code> as the default sentence splitter.</p>
+<p>See below for the available languages of <code class="docutils literal notranslate"><span class="pre">PunktSentenceTokenizer</span></code>.</p>
+<p>[“Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Italian, Malayalam, Norwegian, Polish, Portuguese, Russian, Slovenian, Spanish, Swedish, Turkish”]</p>
+<p>So if the language you want to use is not in the list, or you want to use a different sentence splitter, you can use the sentence_splitter parameter.</p>
+<section id="available-sentence-splitter">
+<h4>Available Sentence Splitter<a class="headerlink" href="#available-sentence-splitter" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/bab2min/kiwipiepy">kiwi</a> : For Korean 🇰🇷</p></li>
+</ul>
+</section>
+<section id="id1">
+<h4>Example YAML<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_chunk</span>
+<span class="w">    </span><span class="nt">chunk_method</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">SentenceWindow</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">sentence_splitter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kiwi</span>
+<span class="w">    </span><span class="nt">window_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">    </span><span class="nt">add_file_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">english</span>
+</pre></div>
+</div>
+</section>
+<section id="using-sentence-splitter-that-is-not-in-the-available-sentence-splitter">
+<h4>Using sentence splitter that is not in the Available Sentence Splitter<a class="headerlink" href="#using-sentence-splitter-that-is-not-in-the-available-sentence-splitter" title="Link to this heading">¶</a></h4>
+<p>If you want to use <code class="docutils literal notranslate"><span class="pre">kiwi</span></code>, you can use the following code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data</span> <span class="kn">import</span> <span class="n">sentence_splitter_modules</span><span class="p">,</span> <span class="n">LazyInit</span>
+
+<span class="k">def</span> <span class="nf">split_by_sentence_kiwi</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+	<span class="kn">from</span> <span class="nn">kiwipiepy</span> <span class="kn">import</span> <span class="n">Kiwi</span>
+
+	<span class="n">kiwi</span> <span class="o">=</span> <span class="n">Kiwi</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+		<span class="n">kiwi_result</span> <span class="o">=</span> <span class="n">kiwi</span><span class="o">.</span><span class="n">split_into_sents</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="n">sentences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">kiwi_result</span><span class="p">))</span>
+
+		<span class="k">return</span> <span class="n">sentences</span>
+
+	<span class="k">return</span> <span class="n">split</span>
+
+<span class="n">sentence_splitter_modules</span><span class="p">[</span><span class="s2">&quot;kiwi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LazyInit</span><span class="p">(</span><span class="n">split_by_sentence_kiwi</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="run-chunk-pipeline">
+<h2>Run Chunk Pipeline<a class="headerlink" href="#run-chunk-pipeline" title="Link to this heading">¶</a></h2>
+<section id="set-chunker-instance">
+<h3>1. Set chunker instance<a class="headerlink" href="#set-chunker-instance" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.chunker</span> <span class="kn">import</span> <span class="n">Chunker</span>
+
+<span class="n">chunker</span> <span class="o">=</span> <span class="n">Chunker</span><span class="o">.</span><span class="n">from_parquet</span><span class="p">(</span><span class="n">parsed_data_path</span><span class="o">=</span><span class="s2">&quot;your/parsed/data/path&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition-want-to-specify-project-folder admonition">
+<p class="admonition-title">Want to specify project folder?</p>
+<p>You can specify project directory with <code class="docutils literal notranslate"><span class="pre">--project_dir</span></code> option or project_dir parameter.</p>
+</div>
+</section>
+<section id="set-yaml-file">
+<h3>2. Set YAML file<a class="headerlink" href="#set-yaml-file" title="Link to this heading">¶</a></h3>
+<p>Here is an example of how to use the <code class="docutils literal notranslate"><span class="pre">llama_index_chunk</span></code> module.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_chunk</span>
+<span class="w">    </span><span class="nt">chunk_method</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">Token</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Sentence</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">chunk_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">1024</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">512</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">chunk_overlap</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+</pre></div>
+</div>
+</section>
+<section id="start-chunking">
+<h3>3. Start chunking<a class="headerlink" href="#start-chunking" title="Link to this heading">¶</a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">start_chunking</span></code> function to start parsing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">chunker</span><span class="o">.</span><span class="n">start_chunking</span><span class="p">(</span><span class="s2">&quot;your/path/to/chunk_config.yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="check-the-result">
+<h3>4. Check the result<a class="headerlink" href="#check-the-result" title="Link to this heading">¶</a></h3>
+<p>If you set <code class="docutils literal notranslate"><span class="pre">project_dir</span></code> parameter, you can check the result in the project directory.
+If not, you can check the result in the current directory.</p>
+<p>The way to check the result is the same as the <code class="docutils literal notranslate"><span class="pre">Evaluator</span></code> and <code class="docutils literal notranslate"><span class="pre">Parser</span></code> in AutoRAG.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">trial_folder</span></code> is created in <code class="docutils literal notranslate"><span class="pre">project_dir</span></code> first.</p>
+<p>If the chunking is completed successfully, the following three types of files are created in the trial_folder.</p>
+<ol class="arabic simple">
+<li><p>Chunked Result</p></li>
+<li><p>Used YAML file</p></li>
+<li><p>Summary file</p></li>
+</ol>
+<p>For example, if chunking is performed using three chunk methods, the following files are created.
+<code class="docutils literal notranslate"><span class="pre">0.parquet</span></code>, <code class="docutils literal notranslate"><span class="pre">1.parquet</span></code>, <code class="docutils literal notranslate"><span class="pre">2.parquet</span></code>, <code class="docutils literal notranslate"><span class="pre">parse_config.yaml</span></code>, <code class="docutils literal notranslate"><span class="pre">summary.csv</span></code></p>
+<p>Finally, in the summary.csv file, you can see information about the chunked result, such as what chunk method was used to chunk it.</p>
+</section>
+</section>
+<section id="output-columns">
+<h2>Output Columns<a class="headerlink" href="#output-columns" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">doc_id</span></code>: Document ID. The type is string.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contents</span></code>: The contents of the chunked data. The type is string.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: The path of the document. The type is string.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_end_idx</span></code>:</p>
+<ul>
+<li><p>Store index of chunked_str based on original_str before chunking</p></li>
+<li><p>stored to map the retrieval_gt of Evaluation QA Dataset according to various chunk methods.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metadata</span></code>: It is also stored in the passage after the data of the parsed result is chunked. The type is dictionary.</p>
+<ul>
+<li><p>Depending on the dataformat of AutoRAG’s <code class="docutils literal notranslate"><span class="pre">Parsed</span> <span class="pre">Result</span></code>, metadata should have the following keys: <code class="docutils literal notranslate"><span class="pre">page</span></code>, <code class="docutils literal notranslate"><span class="pre">last_modified_datetime</span></code>, <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="supported-chunk-modules">
+<h3>Supported Chunk Modules<a class="headerlink" href="#supported-chunk-modules" title="Link to this heading">¶</a></h3>
+<p>📌 You can check our all Chunk modules
+at <a class="reference external" href="https://edai.notion.site/Supporting-Chunk-Modules-8db803dba2ec4cd0a8789659106e86a3?pvs=4">here</a></p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="langchain_chunk.html">Langchain Chunk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="llama_index_chunk.html">Llama Index Chunk</a></li>
 </ul>
 </div>
+</section>
 </section>
 </section>
 
@@ -482,7 +639,31 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Chunk</a><ul>
-<li><a class="reference internal" href="#supported-modules">Supported Modules</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#features">Features</a><ul>
+<li><a class="reference internal" href="#add-file-name">1. Add File Name</a><ul>
+<li><a class="reference internal" href="#example-yaml">Example YAML</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sentence-splitter">2. Sentence Splitter</a><ul>
+<li><a class="reference internal" href="#available-sentence-splitter">Available Sentence Splitter</a></li>
+<li><a class="reference internal" href="#id1">Example YAML</a></li>
+<li><a class="reference internal" href="#using-sentence-splitter-that-is-not-in-the-available-sentence-splitter">Using sentence splitter that is not in the Available Sentence Splitter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#run-chunk-pipeline">Run Chunk Pipeline</a><ul>
+<li><a class="reference internal" href="#set-chunker-instance">1. Set chunker instance</a></li>
+<li><a class="reference internal" href="#set-yaml-file">2. Set YAML file</a></li>
+<li><a class="reference internal" href="#start-chunking">3. Start chunking</a></li>
+<li><a class="reference internal" href="#check-the-result">4. Check the result</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output-columns">Output Columns</a><ul>
+<li><a class="reference internal" href="#supported-chunk-modules">Supported Chunk Modules</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

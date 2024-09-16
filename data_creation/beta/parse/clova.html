@@ -191,7 +191,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -407,7 +407,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -415,6 +415,35 @@
         <article role="main" id="furo-main-content">
           <section id="clova">
 <h1>Clova<a class="headerlink" href="#clova" title="Link to this heading">¶</a></h1>
+<p>Parse raw documents to use Naver
+<a class="reference external" href="https://guide.ncloud-docs.com/docs/clovaocr-overview">Clova OCR</a>.</p>
+<p>Clova OCR divides the document into pages for parsing.</p>
+<section id="table-detection">
+<h2>Table Detection<a class="headerlink" href="#table-detection" title="Link to this heading">¶</a></h2>
+<p>If you have tables in your raw document, set <code class="docutils literal notranslate"><span class="pre">table_detection:</span> <span class="pre">true</span></code> to use clova ocr table detection feature.</p>
+<section id="point">
+<h3>Point<a class="headerlink" href="#point" title="Link to this heading">¶</a></h3>
+<section id="html-parser">
+<h4>1. HTML Parser<a class="headerlink" href="#html-parser" title="Link to this heading">¶</a></h4>
+<p>Clova OCR provides parsed table information in complex JSON format.
+It converts the complex JSON form of the table to HTML for storage in the LLM.</p>
+<p>The parser was created by our own AutoRAG team and you can find the detailed code in the <code class="docutils literal notranslate"><span class="pre">json_to_html_table</span></code> function in <code class="docutils literal notranslate"><span class="pre">autorag.data.parse.clova</span></code>.</p>
+</section>
+<section id="the-text-information-comes-separately-from-the-table-information">
+<h4>2. The text information comes separately from the table information.<a class="headerlink" href="#the-text-information-comes-separately-from-the-table-information" title="Link to this heading">¶</a></h4>
+<p>If your document is a table + text, the text information comes separately from the table information.
+So when using table_detection, it will be saved in <code class="docutils literal notranslate"><span class="pre">{text}\n\ntable</span> <span class="pre">html:\n{table}</span></code> format.</p>
+</section>
+</section>
+</section>
+<section id="example-yaml">
+<h2>Example YAML<a class="headerlink" href="#example-yaml" title="Link to this heading">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clova</span>
+<span class="w">    </span><span class="nt">table_detection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</section>
 </section>
 
         </article>
@@ -460,8 +489,35 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Clova</a><ul>
+<li><a class="reference internal" href="#table-detection">Table Detection</a><ul>
+<li><a class="reference internal" href="#point">Point</a><ul>
+<li><a class="reference internal" href="#html-parser">1. HTML Parser</a></li>
+<li><a class="reference internal" href="#the-text-information-comes-separately-from-the-table-information">2. The text information comes separately from the table information.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example-yaml">Example YAML</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

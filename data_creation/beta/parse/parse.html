@@ -415,26 +415,93 @@
         <article role="main" id="furo-main-content">
           <section id="parse">
 <h1>Parse<a class="headerlink" href="#parse" title="Link to this heading">¶</a></h1>
-<p>Using only YAML files, you can easily use the various document loaders of the langchain.
+<p>In this section, we will cover how to parse raw documents.</p>
+<p>It is a crucial step to parse the raw documents.
+Because if the raw documents are not parsed well, the RAG will not be optimized well.</p>
+<p>Using only YAML files, you can easily use the various document loaders.
 The parsed result is saved according to the data format used by AutoRAG.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The sample parse pipeline looks like this.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.parser</span> <span class="kn">import</span> <span class="n">Parser</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">data_path_glob</span><span class="o">=</span><span class="s2">&quot;your/data/path/*&quot;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">start_parsing</span><span class="p">(</span><span class="s2">&quot;your/path/to/parse_config.yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="run-parse-pipeline">
+<h2>Run Parse Pipeline<a class="headerlink" href="#run-parse-pipeline" title="Link to this heading">¶</a></h2>
+<section id="set-parser-instance">
+<h3>1. Set parser instance<a class="headerlink" href="#set-parser-instance" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.parser</span> <span class="kn">import</span> <span class="n">Parser</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">data_path_glob</span><span class="o">=</span><span class="s2">&quot;your/data/path/*&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="parameter-data-path-glob">
+<h4>📌 Parameter: <code class="docutils literal notranslate"><span class="pre">data_path_glob</span></code><a class="headerlink" href="#parameter-data-path-glob" title="Link to this heading">¶</a></h4>
+<p>Parser instance requires <code class="docutils literal notranslate"><span class="pre">data_path_glob</span></code> parameter.
+This parameter is used to specify the path of the documents to be parsed.</p>
+<p>Only glob patterns are supported.</p>
+<p>You can use the wildcard character <code class="docutils literal notranslate"><span class="pre">*</span></code> to specify multiple files.</p>
+<p>you can specify the file extension like <code class="docutils literal notranslate"><span class="pre">*.pdf</span></code> to specific file types.</p>
+<div class="admonition-want-to-specify-project-folder admonition">
+<p class="admonition-title">Want to specify project folder?</p>
+<p>You can specify project directory with <code class="docutils literal notranslate"><span class="pre">--project_dir</span></code> option or project_dir parameter.</p>
+</div>
+</section>
+</section>
+<section id="set-yaml-file">
+<h3>2. Set YAML file<a class="headerlink" href="#set-yaml-file" title="Link to this heading">¶</a></h3>
+<p>Here is an example of how to use the <code class="docutils literal notranslate"><span class="pre">langchain_parse</span></code> module.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">langchain_parse</span>
+<span class="w">    </span><span class="nt">parse_method</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">pdfminer</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pdfplumber</span><span class="w"> </span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="start-parsing">
+<h3>3. Start parsing<a class="headerlink" href="#start-parsing" title="Link to this heading">¶</a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">start_parsing</span></code> function to start parsing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span><span class="o">.</span><span class="n">start_parsing</span><span class="p">(</span><span class="s2">&quot;your/path/to/parse_config.yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="check-the-result">
+<h3>4. Check the result<a class="headerlink" href="#check-the-result" title="Link to this heading">¶</a></h3>
+<p>If you set <code class="docutils literal notranslate"><span class="pre">project_dir</span></code> parameter, you can check the result in the project directory.
+If not, you can check the result in the current directory.</p>
+<p>The way to check the result is the same as the <code class="docutils literal notranslate"><span class="pre">Evaluator</span></code> and <code class="docutils literal notranslate"><span class="pre">Chunker</span></code> in AutoRAG.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">trial_folder</span></code> is created in <code class="docutils literal notranslate"><span class="pre">project_dir</span></code> first.</p>
+<p>If the parsing is completed successfully, the following three types of files are created in the trial_folder.</p>
+<ol class="arabic simple">
+<li><p>Parsed Result</p></li>
+<li><p>Used YAML file</p></li>
+<li><p>Summary file</p></li>
+</ol>
+<p>For example, if parsing is performed using three parse methods, the following files are created.
+<code class="docutils literal notranslate"><span class="pre">0.parquet</span></code>, <code class="docutils literal notranslate"><span class="pre">1.parquet</span></code>, <code class="docutils literal notranslate"><span class="pre">2.parquet</span></code>, <code class="docutils literal notranslate"><span class="pre">parse_config.yaml</span></code>, <code class="docutils literal notranslate"><span class="pre">summary.csv</span></code></p>
+<p>Finally, in the summary.csv file, you can see information about the parsed result, such as what parse method was used to parse it.</p>
+</section>
+</section>
 <section id="output-columns">
 <h2>Output Columns<a class="headerlink" href="#output-columns" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>texts: Parsed text from the document.</p></li>
-<li><p>path: Path of the document.</p></li>
-<li><p>pages: Number of pages in the document. Contains page if parsing on a per-page basis, otherwise -1.</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">texts</span></code>: Parsed text from the document.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: Path of the document.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pages</span></code>: Number of pages in the document. Contains page if parsing on a per-page basis, otherwise -1.</p>
 <ul>
 <li><p>Modules that parse per page: [ <code class="docutils literal notranslate"><span class="pre">clova</span></code>, <code class="docutils literal notranslate"><span class="pre">table_hybrid_parse</span></code> ]</p></li>
 <li><p>Modules that don’t parse on a per-page basis: [ <code class="docutils literal notranslate"><span class="pre">langchain_parse</span></code>, <code class="docutils literal notranslate"><span class="pre">llama_parse</span></code> ]</p></li>
 </ul>
 </li>
-<li><p>last_modified_datetime: Last modified datetime of the document.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_modified_datetime</span></code>: Last modified datetime of the document.</p></li>
 </ul>
-</section>
-<section id="id1">
-<h2><a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
-<section id="supported-modules">
-<h3>Supported Modules<a class="headerlink" href="#supported-modules" title="Link to this heading">¶</a></h3>
+<section id="supported-parse-modules">
+<h3>Supported Parse Modules<a class="headerlink" href="#supported-parse-modules" title="Link to this heading">¶</a></h3>
+<p>📌 You can check our all Parse modules
+at <a class="reference external" href="https://edai.notion.site/Supporting-Parse-Modules-e0b7579c7c0e4fb2963e408eeccddd75?pvs=4">here</a></p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="langchain_parse.html">Langchain Parse</a></li>
@@ -503,9 +570,19 @@ The parsed result is saved according to the data format used by AutoRAG.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Parse</a><ul>
-<li><a class="reference internal" href="#output-columns">Output Columns</a></li>
-<li><a class="reference internal" href="#id1"></a><ul>
-<li><a class="reference internal" href="#supported-modules">Supported Modules</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#run-parse-pipeline">Run Parse Pipeline</a><ul>
+<li><a class="reference internal" href="#set-parser-instance">1. Set parser instance</a><ul>
+<li><a class="reference internal" href="#parameter-data-path-glob">📌 Parameter: <code class="docutils literal notranslate"><span class="pre">data_path_glob</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#set-yaml-file">2. Set YAML file</a></li>
+<li><a class="reference internal" href="#start-parsing">3. Start parsing</a></li>
+<li><a class="reference internal" href="#check-the-result">4. Check the result</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output-columns">Output Columns</a><ul>
+<li><a class="reference internal" href="#supported-parse-modules">Supported Parse Modules</a></li>
 </ul>
 </li>
 </ul>

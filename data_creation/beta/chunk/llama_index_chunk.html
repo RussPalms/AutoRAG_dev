@@ -191,7 +191,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -407,7 +407,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -415,6 +415,71 @@
         <article role="main" id="furo-main-content">
           <section id="llama-index-chunk">
 <h1>Llama Index Chunk<a class="headerlink" href="#llama-index-chunk" title="Link to this heading">¶</a></h1>
+<p>Chunk parsed results to use <a class="reference external" href="https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/">Llama Index Node_Parsers &amp; Text Splitters</a>.</p>
+<section id="available-chunk-method">
+<h2>Available Chunk Method<a class="headerlink" href="#available-chunk-method" title="Link to this heading">¶</a></h2>
+<section id="token">
+<h3>1. Token<a class="headerlink" href="#token" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/token_text_splitter/">Token</a></p></li>
+</ul>
+</section>
+<section id="sentence">
+<h3>2. Sentence<a class="headerlink" href="#sentence" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/sentence_splitter/">Sentence</a></p></li>
+</ul>
+</section>
+<section id="window">
+<h3>3. Window<a class="headerlink" href="#window" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/sentence_window/">SentenceWindow</a></p></li>
+</ul>
+</section>
+<section id="semantic">
+<h3>4. Semantic<a class="headerlink" href="#semantic" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/semantic_splitter/">semantic_llama_index</a></p></li>
+<li><p><a class="reference external" href="https://docs.llamaindex.ai/en/stable/examples/node_parsers/semantic_double_merging_chunking/">SemanticDoubleMerging</a></p></li>
+</ul>
+</section>
+<section id="simple">
+<h3>5. Simple<a class="headerlink" href="#simple" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.llamaindex.ai/en/v0.10.19/api/llama_index.core.node_parser.SimpleFileNodeParser.html">Simple</a></p></li>
+</ul>
+<section id="example-yaml">
+<h4>Example YAML<a class="headerlink" href="#example-yaml" title="Link to this heading">¶</a></h4>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_chunk</span>
+<span class="w">    </span><span class="nt">chunk_method</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">Token</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Sentence</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">chunk_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">1024</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">512</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">chunk_overlap</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<span class="w">    </span><span class="nt">add_file_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">english</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="using-llama-index-chunk-method-that-is-not-in-the-available-chunk-method">
+<h2>Using Llama Index Chunk Method that is not in the Available Chunk Method<a class="headerlink" href="#using-llama-index-chunk-method-that-is-not-in-the-available-chunk-method" title="Link to this heading">¶</a></h2>
+<p>You can find more information about the llama index chunk method at
+<a class="reference external" href="https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/">here</a>.</p>
+<section id="how-to-use">
+<h3>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading">¶</a></h3>
+<p>If you want to use <code class="docutils literal notranslate"><span class="pre">HTMLNodeParser</span></code> that is not in the available chunk method, you can use the following code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data</span> <span class="kn">import</span> <span class="n">chunk_modules</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.node_parser</span> <span class="kn">import</span> <span class="n">HTMLNodeParser</span>
+
+<span class="n">chunk_modules</span><span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">HTMLNodeParser</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The key value in chunk_modules must always be written in lowercase.</p>
+</div>
+</section>
+</section>
 </section>
 
         </article>
@@ -460,8 +525,41 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Llama Index Chunk</a><ul>
+<li><a class="reference internal" href="#available-chunk-method">Available Chunk Method</a><ul>
+<li><a class="reference internal" href="#token">1. Token</a></li>
+<li><a class="reference internal" href="#sentence">2. Sentence</a></li>
+<li><a class="reference internal" href="#window">3. Window</a></li>
+<li><a class="reference internal" href="#semantic">4. Semantic</a></li>
+<li><a class="reference internal" href="#simple">5. Simple</a><ul>
+<li><a class="reference internal" href="#example-yaml">Example YAML</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-llama-index-chunk-method-that-is-not-in-the-available-chunk-method">Using Llama Index Chunk Method that is not in the Available Chunk Method</a><ul>
+<li><a class="reference internal" href="#how-to-use">How to Use</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

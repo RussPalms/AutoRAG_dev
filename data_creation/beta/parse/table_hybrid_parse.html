@@ -191,7 +191,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -407,7 +407,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -415,6 +415,81 @@
         <article role="main" id="furo-main-content">
           <section id="table-hybrid-parse">
 <h1>Table Hybrid Parse<a class="headerlink" href="#table-hybrid-parse" title="Link to this heading">¶</a></h1>
+<p>Parse raw documents using a combination of text and table parsing modules.</p>
+<p>Because OCR models are paid models, it can be expensive to OCR-parse all raw documents.</p>
+<p>OCR models are primarily used to parse raw documents that contain tables.
+Therefore, it is cost-effective to parse raw documents that do not contain tables with non-OCR methods and parse raw documents that do contain tables with OCR.</p>
+<p>To accomplish this, the Table Hybrid Parse module performs parsing in the following steps</p>
+<ol class="arabic simple">
+<li><p>breaks the raw document into pages.</p></li>
+<li><p>uses table detection to distinguish between pages that contain tables and pages that do not.</p></li>
+<li><p>pages that do not contain tables are parsed by the text parsing module.</p></li>
+<li><p>Parses pages that contain tables with the table parsing module.</p></li>
+<li><p>merge the parsing results to return the final result.</p></li>
+</ol>
+<section id="table-detection">
+<h2>Table Detection<a class="headerlink" href="#table-detection" title="Link to this heading">¶</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">PDFPlumber</span></code> to split pages with and without tables.</p>
+</section>
+<section id="table-parse-available-modules">
+<h2>Table Parse Available Modules<a class="headerlink" href="#table-parse-available-modules" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">llama_parse</span></code></p>
+<ul>
+<li><p>You need to add <code class="docutils literal notranslate"><span class="pre">result_type:</span> <span class="pre">markdown</span></code> to the table_params.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clova</span></code></p>
+<ul>
+<li><p>You need to add <code class="docutils literal notranslate"><span class="pre">table_detection:</span> <span class="pre">true</span></code> to the table_params.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">langchain_parse</span></code></p>
+<ul>
+<li><p>You need to add <code class="docutils literal notranslate"><span class="pre">parse_method:</span> <span class="pre">upstagelayoutanalysis</span></code> to the table_params.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">text_parse_module</span></code>: str</p>
+<ul>
+<li><p>The module to use for text parsing.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">text_params</span></code>: dict</p>
+<ul>
+<li><p>parameters for the text parsing module</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table_parse_module</span></code>: str</p>
+<ul>
+<li><p>The module to use for table parsing.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table_params</span></code>: dict</p>
+<ul>
+<li><p>parameters for the table parsing module</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="example-yaml">
+<h2>Example YAML<a class="headerlink" href="#example-yaml" title="Link to this heading">¶</a></h2>
+<p>If you want to use the <code class="docutils literal notranslate"><span class="pre">langchain_parse</span></code> module for text parsing and the <code class="docutils literal notranslate"><span class="pre">clova</span></code> module for table parsing, you can use the <code class="docutils literal notranslate"><span class="pre">table_hybrid_parse</span></code> module.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_hybrid_parse</span>
+<span class="w">    </span><span class="nt">text_parse_module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">langchain_parse</span>
+<span class="w">    </span><span class="nt">text_params</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">parse_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdfplumber</span>
+<span class="w">    </span><span class="nt">table_parse_module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clova</span>
+<span class="w">    </span><span class="nt">table_params</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">table_detection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</section>
 </section>
 
         </article>
@@ -460,8 +535,30 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Table Hybrid Parse</a><ul>
+<li><a class="reference internal" href="#table-detection">Table Detection</a></li>
+<li><a class="reference internal" href="#table-parse-available-modules">Table Parse Available Modules</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#example-yaml">Example YAML</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
