@@ -338,10 +338,12 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../api_spec/autorag.html">autorag package</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of autorag package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../api_spec/autorag.data.html">autorag.data package</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of autorag.data package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../../api_spec/autorag.data.beta.html">autorag.data.beta package</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of autorag.data.beta package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_spec/autorag.data.beta.filter.html">autorag.data.beta.filter package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../api_spec/autorag.data.beta.generation_gt.html">autorag.data.beta.generation_gt package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../api_spec/autorag.data.beta.query.html">autorag.data.beta.query package</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_spec/autorag.data.chunk.html">autorag.data.chunk package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_spec/autorag.data.corpus.html">autorag.data.corpus package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_spec/autorag.data.parse.html">autorag.data.parse package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_spec/autorag.data.qacreation.html">autorag.data.qacreation package</a></li>
@@ -1075,6 +1077,33 @@
 		<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
 		<span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">loop</span></div>
+
+
+
+<div class="viewcode-block" id="find_key_values">
+<a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.find_key_values">[docs]</a>
+<span class="k">def</span> <span class="nf">find_key_values</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Recursively find all values for a specific key in a nested dictionary or list.</span>
+
+<span class="sd">	:param data: The dictionary or list to search.</span>
+<span class="sd">	:param target_key: The key to search for.</span>
+<span class="sd">	:return: A list of values associated with the target key.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">target_key</span><span class="p">:</span>
+				<span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+				<span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">find_key_values</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">target_key</span><span class="p">))</span>
+	<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+				<span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">find_key_values</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target_key</span><span class="p">))</span>
+
+	<span class="k">return</span> <span class="n">values</span></div>
 
 </pre></div>
         </article>
