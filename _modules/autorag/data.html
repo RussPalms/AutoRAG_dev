@@ -426,7 +426,7 @@
 	<span class="n">DirectoryLoader</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">langchain_unstructured</span> <span class="kn">import</span> <span class="n">UnstructuredLoader</span>
-<span class="kn">from</span> <span class="nn">langchain_upstage</span> <span class="kn">import</span> <span class="n">UpstageLayoutAnalysisLoader</span>
+<span class="kn">from</span> <span class="nn">langchain_upstage</span> <span class="kn">import</span> <span class="n">UpstageDocumentParseLoader</span>
 
 <span class="kn">from</span> <span class="nn">llama_index.core.node_parser</span> <span class="kn">import</span> <span class="p">(</span>
 	<span class="n">TokenTextSplitter</span><span class="p">,</span>
@@ -467,7 +467,7 @@
 	<span class="c1"># 6. All files</span>
 	<span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="n">DirectoryLoader</span><span class="p">,</span>
 	<span class="s2">&quot;unstructured&quot;</span><span class="p">:</span> <span class="n">UnstructuredLoader</span><span class="p">,</span>
-	<span class="s2">&quot;upstagelayoutanalysis&quot;</span><span class="p">:</span> <span class="n">UpstageLayoutAnalysisLoader</span><span class="p">,</span>
+	<span class="s2">&quot;upstagedocumentparse&quot;</span><span class="p">:</span> <span class="n">UpstageDocumentParseLoader</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">chunk_modules</span> <span class="o">=</span> <span class="p">{</span>
