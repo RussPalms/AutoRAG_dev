@@ -411,61 +411,75 @@
           <h1>Source code for autorag.nodes.passagecompressor.longllmlingua</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">llmlingua</span> <span class="kn">import</span> <span class="n">PromptCompressor</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.passagecompressor.base</span> <span class="kn">import</span> <span class="n">passage_compressor_node</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.passagecompressor.base</span> <span class="kn">import</span> <span class="n">BasePassageCompressor</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">pop_params</span><span class="p">,</span> <span class="n">result_to_dataframe</span>
 
 
-<div class="viewcode-block" id="longllmlingua">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.longllmlingua.longllmlingua">[docs]</a>
-<span class="nd">@passage_compressor_node</span>
-<span class="k">def</span> <span class="nf">longllmlingua</span><span class="p">(</span>
-	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">scores</span><span class="p">,</span>
-	<span class="n">ids</span><span class="p">,</span>
-	<span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NousResearch/Llama-2-7b-hf&quot;</span><span class="p">,</span>
-	<span class="n">instructions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-	<span class="n">target_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
-	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Compresses the retrieved texts using LongLLMLingua.</span>
-<span class="sd">	For more information, visit https://github.com/microsoft/LLMLingua.</span>
+<span class="c1"># TODO: Parallel Processing Refactoring at #460</span>
 
-<span class="sd">	:param queries: The queries for retrieved passages.</span>
-<span class="sd">	:param contents: The contents of retrieved passages.</span>
-<span class="sd">	:param scores: The scores of retrieved passages.</span>
-<span class="sd">	    Do not use in this function, so you can pass an empty list.</span>
-<span class="sd">	:param ids: The ids of retrieved passages.</span>
-<span class="sd">	    Do not use in this function, so you can pass an empty list.</span>
-<span class="sd">	:param model_name: The model name to use for compression.</span>
-<span class="sd">	    Default is &quot;NousResearch/Llama-2-7b-hf&quot;.</span>
-<span class="sd">	:param instructions: The instructions for compression.</span>
-<span class="sd">	    Default is None. When it is None, it will use default instructions.</span>
-<span class="sd">	:param target_token: The target token for compression.</span>
-<span class="sd">	    Default is 300.</span>
-<span class="sd">	:param kwargs: Additional keyword arguments.</span>
-<span class="sd">	:return: The list of compressed texts.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">if</span> <span class="n">instructions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">instructions</span> <span class="o">=</span> <span class="s2">&quot;Given the context, please answer the final question&quot;</span>
-	<span class="n">llm_lingua</span> <span class="o">=</span> <span class="n">PromptCompressor</span><span class="p">(</span>
-		<span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
-	<span class="p">)</span>
-	<span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
-		<span class="n">llmlingua_pure</span><span class="p">(</span>
-			<span class="n">query</span><span class="p">,</span> <span class="n">contents_</span><span class="p">,</span> <span class="n">llm_lingua</span><span class="p">,</span> <span class="n">instructions</span><span class="p">,</span> <span class="n">target_token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-		<span class="p">)</span>
-		<span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">contents_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
-	<span class="p">]</span>
 
-	<span class="k">del</span> <span class="n">llm_lingua</span>
-	<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-		<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+<div class="viewcode-block" id="LongLLMLingua">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.longllmlingua.LongLLMLingua">[docs]</a>
+<span class="k">class</span> <span class="nc">LongLLMLingua</span><span class="p">(</span><span class="n">BasePassageCompressor</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NousResearch/Llama-2-7b-hf&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+		<span class="n">model_init_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">PromptCompressor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">llm_lingua</span> <span class="o">=</span> <span class="n">PromptCompressor</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="o">**</span><span class="n">model_init_params</span><span class="p">)</span>
 
-	<span class="k">return</span> <span class="n">results</span></div>
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_lingua</span>
+		<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+			<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LongLLMLingua.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.longllmlingua.LongLLMLingua.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_contents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">results</span><span class="p">))</span></div>
+
+
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+		<span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">instructions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+		<span class="n">target_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Compresses the retrieved texts using LongLLMLingua.</span>
+<span class="sd">		For more information, visit https://github.com/microsoft/LLMLingua.</span>
+
+<span class="sd">		:param queries: The queries for retrieved passages.</span>
+<span class="sd">		:param contents: The contents of retrieved passages.</span>
+<span class="sd">		:param model_name: The model name to use for compression.</span>
+<span class="sd">		    The default is &quot;NousResearch/Llama-2-7b-hf&quot;.</span>
+<span class="sd">		:param instructions: The instructions for compression.</span>
+<span class="sd">		    Default is None. When it is None, it will use default instructions.</span>
+<span class="sd">		:param target_token: The target token for compression.</span>
+<span class="sd">		    Default is 300.</span>
+<span class="sd">		:param kwargs: Additional keyword arguments.</span>
+<span class="sd">		:return: The list of compressed texts.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">instructions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">instructions</span> <span class="o">=</span> <span class="s2">&quot;Given the context, please answer the final question&quot;</span>
+		<span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+			<span class="n">llmlingua_pure</span><span class="p">(</span>
+				<span class="n">query</span><span class="p">,</span> <span class="n">contents_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_lingua</span><span class="p">,</span> <span class="n">instructions</span><span class="p">,</span> <span class="n">target_token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+			<span class="p">)</span>
+			<span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">contents_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+		<span class="p">]</span>
+
+		<span class="k">return</span> <span class="n">results</span></div>
 
 
 
@@ -484,7 +498,7 @@
 
 <span class="sd">	:param query: The query for retrieved passages.</span>
 <span class="sd">	:param contents: The contents of retrieved passages.</span>
-<span class="sd">	:param llm_lingua: The llm instance that will be used to compress.</span>
+<span class="sd">	:param llm_lingua: The llm instance, that will be used to compress.</span>
 <span class="sd">	:param instructions: The instructions for compression.</span>
 <span class="sd">	:param target_token: The target token for compression.</span>
 <span class="sd">	    Default is 300.</span>
@@ -493,13 +507,14 @@
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="c1"># split by &quot;\n\n&quot; (recommended by LongLLMLingua authors)</span>
 	<span class="n">new_context_texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="n">contents</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)]</span>
+	<span class="n">compress_prompt_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">PromptCompressor</span><span class="o">.</span><span class="n">compress_prompt</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 	<span class="n">compressed_prompt</span> <span class="o">=</span> <span class="n">llm_lingua</span><span class="o">.</span><span class="n">compress_prompt</span><span class="p">(</span>
 		<span class="n">new_context_texts</span><span class="p">,</span>
 		<span class="n">question</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
 		<span class="n">instruction</span><span class="o">=</span><span class="n">instructions</span><span class="p">,</span>
 		<span class="n">rank_method</span><span class="o">=</span><span class="s2">&quot;longllmlingua&quot;</span><span class="p">,</span>
 		<span class="n">target_token</span><span class="o">=</span><span class="n">target_token</span><span class="p">,</span>
-		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">compress_prompt_params</span><span class="p">,</span>
 	<span class="p">)</span>
 	<span class="n">compressed_prompt_txt</span> <span class="o">=</span> <span class="n">compressed_prompt</span><span class="p">[</span><span class="s2">&quot;compressed_prompt&quot;</span><span class="p">]</span>
 

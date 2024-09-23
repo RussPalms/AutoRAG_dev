@@ -409,12 +409,15 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.retrieval.hybrid_cc</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.retrieval</span> <span class="kn">import</span> <span class="n">retrieval_node</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.base</span> <span class="kn">import</span> <span class="n">HybridRetrieval</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">pop_params</span><span class="p">,</span> <span class="n">fetch_contents</span><span class="p">,</span> <span class="n">result_to_dataframe</span>
 
 
 <div class="viewcode-block" id="normalize_mm">
@@ -470,9 +473,73 @@
 <span class="p">}</span>
 
 
+<div class="viewcode-block" id="HybridCC">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.hybrid_cc.HybridCC">[docs]</a>
+<span class="k">class</span> <span class="nc">HybridCC</span><span class="p">(</span><span class="n">HybridRetrieval</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">ids</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
+		<span class="n">scores</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
+		<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+		<span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+		<span class="n">normalize_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mm&quot;</span><span class="p">,</span>
+		<span class="n">semantic_theoretical_min_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
+		<span class="n">lexical_theoretical_min_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+	<span class="p">):</span>
+		<span class="k">return</span> <span class="n">hybrid_cc</span><span class="p">(</span>
+			<span class="n">ids</span><span class="p">,</span>
+			<span class="n">scores</span><span class="p">,</span>
+			<span class="n">top_k</span><span class="p">,</span>
+			<span class="n">weight</span><span class="p">,</span>
+			<span class="n">normalize_method</span><span class="p">,</span>
+			<span class="n">semantic_theoretical_min_value</span><span class="p">,</span>
+			<span class="n">lexical_theoretical_min_value</span><span class="p">,</span>
+		<span class="p">)</span>
+
+<div class="viewcode-block" id="HybridCC.run_evaluator">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.hybrid_cc.HybridCC.run_evaluator">[docs]</a>
+	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">run_evaluator</span><span class="p">(</span>
+		<span class="bp">cls</span><span class="p">,</span>
+		<span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+		<span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+		<span class="o">*</span><span class="n">args</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+	<span class="p">):</span>
+		<span class="k">if</span> <span class="s2">&quot;ids&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s2">&quot;scores&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+			<span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+			<span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
+				<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;corpus.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
+			<span class="p">)</span>
+
+			<span class="n">params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">hybrid_cc</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">assert</span> <span class="p">(</span>
+				<span class="s2">&quot;ids&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="s2">&quot;scores&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="s2">&quot;top_k&quot;</span> <span class="ow">in</span> <span class="n">params</span>
+			<span class="p">),</span> <span class="s2">&quot;ids, scores, and top_k must be specified.&quot;</span>
+
+			<span class="nd">@result_to_dataframe</span><span class="p">(</span>
+				<span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span>
+			<span class="p">)</span>
+			<span class="k">def</span> <span class="nf">__cc</span><span class="p">(</span><span class="o">**</span><span class="n">cc_params</span><span class="p">):</span>
+				<span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">hybrid_cc</span><span class="p">(</span><span class="o">**</span><span class="n">cc_params</span><span class="p">)</span>
+				<span class="n">contents</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+				<span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span>
+
+			<span class="k">return</span> <span class="n">__cc</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">assert</span> <span class="p">(</span>
+				<span class="s2">&quot;target_modules&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s2">&quot;target_module_params&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span>
+			<span class="p">),</span> <span class="s2">&quot;target_modules and target_module_params must be specified if there is not ids and scores.&quot;</span>
+			<span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">previous_result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">del</span> <span class="n">instance</span>
+			<span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="hybrid_cc">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.hybrid_cc.hybrid_cc">[docs]</a>
-<span class="nd">@retrieval_node</span>
 <span class="k">def</span> <span class="nf">hybrid_cc</span><span class="p">(</span>
 	<span class="n">ids</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
 	<span class="n">scores</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>

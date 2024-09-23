@@ -409,28 +409,43 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.queryexpansion.base</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">functools</span>
+<span></span><span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
-<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span><span class="p">,</span> <span class="n">validate_qa_dataset</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.util</span> <span class="kn">import</span> <span class="n">make_generator_callable_param</span>
+<span class="kn">from</span> <span class="nn">autorag.schema</span> <span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">validate_qa_dataset</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="query_expansion_node">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.base.query_expansion_node">[docs]</a>
-<span class="k">def</span> <span class="nf">query_expansion_node</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;queries&quot;</span><span class="p">])</span>
-	<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-		<span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running query expansion node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="BaseQueryExpansion">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.base.BaseQueryExpansion">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseQueryExpansion</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;Initialize query expansion node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span>
+		<span class="p">)</span>
+		<span class="c1"># set generator module for query expansion</span>
+		<span class="n">generator_class</span><span class="p">,</span> <span class="n">generator_param</span> <span class="o">=</span> <span class="n">make_generator_callable_param</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">generator_class</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">generator_param</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;Delete query expansion node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span>
+		<span class="p">)</span>
+
+<div class="viewcode-block" id="BaseQueryExpansion.cast_to_run">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.base.BaseQueryExpansion.cast_to_run">[docs]</a>
+	<span class="k">def</span> <span class="nf">cast_to_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;Running query expansion node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span>
+		<span class="p">)</span>
 		<span class="n">validate_qa_dataset</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
 
 		<span class="c1"># find queries columns</span>
@@ -438,52 +453,32 @@
 			<span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
 		<span class="p">),</span> <span class="s2">&quot;previous_result must have query column.&quot;</span>
 		<span class="n">queries</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">queries</span></div>
 
-		<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;pass_query_expansion&quot;</span><span class="p">:</span>
-			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">)</span>
 
-		<span class="c1"># pop prompt from kwargs</span>
-		<span class="k">if</span> <span class="s2">&quot;prompt&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-			<span class="n">prompt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;prompt&quot;</span><span class="p">)</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-
-		<span class="c1"># set generator module for query expansion</span>
-		<span class="n">generator_callable</span><span class="p">,</span> <span class="n">generator_param</span> <span class="o">=</span> <span class="n">make_generator_callable_param</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-
-		<span class="c1"># run query expansion function</span>
-		<span class="n">expanded_queries</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span>
-			<span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
-			<span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
-			<span class="n">generator_func</span><span class="o">=</span><span class="n">generator_callable</span><span class="p">,</span>
-			<span class="n">generator_params</span><span class="o">=</span><span class="n">generator_param</span><span class="p">,</span>
-		<span class="p">)</span>
-		<span class="c1"># delete empty string in the nested expanded queries list</span>
-		<span class="n">expanded_queries</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">sublist</span><span class="p">))</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">expanded_queries</span>
-		<span class="p">]</span>
-		<span class="n">expanded_queries</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">sublist</span><span class="p">))</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">expanded_queries</span>
-		<span class="p">]</span>
-		<span class="k">return</span> <span class="n">expanded_queries</span>
-
-	<span class="k">return</span> <span class="n">wrapper</span></div>
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">_check_expanded_query</span><span class="p">(</span><span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">expanded_queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span>
+				<span class="k">lambda</span> <span class="n">query</span><span class="p">,</span> <span class="n">expanded_query_list</span><span class="p">:</span> <span class="n">check_expanded_query</span><span class="p">(</span>
+					<span class="n">query</span><span class="p">,</span> <span class="n">expanded_query_list</span>
+				<span class="p">),</span>
+				<span class="n">queries</span><span class="p">,</span>
+				<span class="n">expanded_queries</span><span class="p">,</span>
+			<span class="p">)</span>
+		<span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="make_generator_callable_param">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.base.make_generator_callable_param">[docs]</a>
-<span class="k">def</span> <span class="nf">make_generator_callable_param</span><span class="p">(</span><span class="n">generator_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]):</span>
-	<span class="k">if</span> <span class="s2">&quot;generator_module_type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">generator_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-		<span class="n">generator_dict</span> <span class="o">=</span> <span class="p">{</span>
-			<span class="s2">&quot;generator_module_type&quot;</span><span class="p">:</span> <span class="s2">&quot;llama_index_llm&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;llm&quot;</span><span class="p">:</span> <span class="s2">&quot;openai&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span>
-		<span class="p">}</span>
-	<span class="n">module_str</span> <span class="o">=</span> <span class="n">generator_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;generator_module_type&quot;</span><span class="p">)</span>
-	<span class="n">module_callable</span> <span class="o">=</span> <span class="n">get_support_modules</span><span class="p">(</span><span class="n">module_str</span><span class="p">)</span>
-	<span class="n">module_param</span> <span class="o">=</span> <span class="n">generator_dict</span>
-	<span class="k">return</span> <span class="n">module_callable</span><span class="p">,</span> <span class="n">module_param</span></div>
+<div class="viewcode-block" id="check_expanded_query">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.base.check_expanded_query">[docs]</a>
+<span class="k">def</span> <span class="nf">check_expanded_query</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">expanded_query_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+	<span class="c1"># check if the expanded query is the same as the original query</span>
+	<span class="n">expanded_query_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">expanded_query_list</span><span class="p">))</span>
+	<span class="k">return</span> <span class="p">[</span>
+		<span class="n">expanded_query</span> <span class="k">if</span> <span class="n">expanded_query</span> <span class="k">else</span> <span class="n">query</span>
+		<span class="k">for</span> <span class="n">expanded_query</span> <span class="ow">in</span> <span class="n">expanded_query_list</span>
+	<span class="p">]</span></div>
 
 </pre></div>
         </article>

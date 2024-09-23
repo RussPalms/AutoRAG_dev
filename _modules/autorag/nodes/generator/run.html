@@ -411,7 +411,7 @@
           <h1>Source code for autorag.nodes.generator.run</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -425,7 +425,7 @@
 <div class="viewcode-block" id="run_generator_node">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.run.run_generator_node">[docs]</a>
 <span class="k">def</span> <span class="nf">run_generator_node</span><span class="p">(</span>
-	<span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
+	<span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
 	<span class="n">module_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
 	<span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
 	<span class="n">node_line_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -460,7 +460,10 @@
 	<span class="n">results</span><span class="p">,</span> <span class="n">execution_times</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
 		<span class="o">*</span><span class="nb">map</span><span class="p">(</span>
 			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">measure_speed</span><span class="p">(</span>
-				<span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">previous_result</span><span class="o">=</span><span class="n">previous_result</span><span class="p">,</span> <span class="o">**</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+				<span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">run_evaluator</span><span class="p">,</span>
+				<span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span>
+				<span class="n">previous_result</span><span class="o">=</span><span class="n">previous_result</span><span class="p">,</span>
+				<span class="o">**</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
 			<span class="p">),</span>
 			<span class="nb">zip</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">module_params</span><span class="p">),</span>
 		<span class="p">)</span>
@@ -542,7 +545,9 @@
 <div class="viewcode-block" id="evaluate_generator_node">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.run.evaluate_generator_node">[docs]</a>
 <span class="k">def</span> <span class="nf">evaluate_generator_node</span><span class="p">(</span>
-		<span class="n">result_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span>
+	<span class="n">result_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
+	<span class="n">metrics</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]],</span>
 <span class="p">):</span>
 	<span class="nd">@evaluate_generation</span><span class="p">(</span><span class="n">metric_inputs</span><span class="o">=</span><span class="n">metric_inputs</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">evaluate_generation_module</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>

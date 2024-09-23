@@ -409,16 +409,66 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.retrieval.hybrid_rrf</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.retrieval</span> <span class="kn">import</span> <span class="n">retrieval_node</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.base</span> <span class="kn">import</span> <span class="n">HybridRetrieval</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">pop_params</span><span class="p">,</span> <span class="n">fetch_contents</span><span class="p">,</span> <span class="n">result_to_dataframe</span>
+
+
+<div class="viewcode-block" id="HybridRRF">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.hybrid_rrf.HybridRRF">[docs]</a>
+<span class="k">class</span> <span class="nc">HybridRRF</span><span class="p">(</span><span class="n">HybridRetrieval</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="n">rrf_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">hybrid_rrf</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">rrf_k</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HybridRRF.run_evaluator">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.hybrid_rrf.HybridRRF.run_evaluator">[docs]</a>
+	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">run_evaluator</span><span class="p">(</span>
+		<span class="bp">cls</span><span class="p">,</span>
+		<span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+		<span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+		<span class="o">*</span><span class="n">args</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+	<span class="p">):</span>
+		<span class="k">if</span> <span class="s2">&quot;ids&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s2">&quot;scores&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+			<span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+			<span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
+				<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;corpus.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
+			<span class="p">)</span>
+
+			<span class="n">params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">hybrid_rrf</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">assert</span> <span class="p">(</span>
+				<span class="s2">&quot;ids&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="s2">&quot;scores&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="s2">&quot;top_k&quot;</span> <span class="ow">in</span> <span class="n">params</span>
+			<span class="p">),</span> <span class="s2">&quot;ids, scores, and top_k must be specified.&quot;</span>
+
+			<span class="nd">@result_to_dataframe</span><span class="p">(</span>
+				<span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span>
+			<span class="p">)</span>
+			<span class="k">def</span> <span class="nf">__rrf</span><span class="p">(</span><span class="o">**</span><span class="n">rrf_params</span><span class="p">):</span>
+				<span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">hybrid_rrf</span><span class="p">(</span><span class="o">**</span><span class="n">rrf_params</span><span class="p">)</span>
+				<span class="n">contents</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
+				<span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span>
+
+			<span class="k">return</span> <span class="n">__rrf</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">assert</span> <span class="p">(</span>
+				<span class="s2">&quot;target_modules&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s2">&quot;target_module_params&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span>
+			<span class="p">),</span> <span class="s2">&quot;target_modules and target_module_params must be specified if there is not ids and scores.&quot;</span>
+			<span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">previous_result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">del</span> <span class="n">instance</span>
+			<span class="k">return</span> <span class="n">result</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="hybrid_rrf">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.hybrid_rrf.hybrid_rrf">[docs]</a>
-<span class="nd">@retrieval_node</span>
 <span class="k">def</span> <span class="nf">hybrid_rrf</span><span class="p">(</span>
 	<span class="n">ids</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
 	<span class="n">scores</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
@@ -431,11 +481,11 @@
 <span class="sd">	RRF (Rank Reciprocal Fusion) is a method to fuse multiple retrieval results.</span>
 <span class="sd">	It is common to fuse dense retrieval and sparse retrieval results using RRF.</span>
 <span class="sd">	To use this function, you must input ids and scores as tuple.</span>
-<span class="sd">	It is uniquer than other retrieval modules, because it does not really execute retrieval,</span>
-<span class="sd">	but just fuse the results of other retrieval functions.</span>
+<span class="sd">	It is more unique than other retrieval modules because it does not really execute retrieval but just fuses</span>
+<span class="sd">	the results of other retrieval functions.</span>
 <span class="sd">	So you have to run more than two retrieval modules before running this function.</span>
 <span class="sd">	And collect ids and scores result from each retrieval module.</span>
-<span class="sd">	Make it as tuple and input it to this function.</span>
+<span class="sd">	Make it as a tuple and input it to this function.</span>
 
 <span class="sd">	:param ids: The tuple of ids that you want to fuse.</span>
 <span class="sd">	    The length of this must be the same as the length of scores.</span>
@@ -447,8 +497,8 @@
 <span class="sd">	    Default is 60.</span>
 <span class="sd">	    For more information, please visit our documentation.</span>
 <span class="sd">	:param rrf_k: (Deprecated) Hyperparameter for RRF.</span>
-<span class="sd">	    It was originally rrf_k value. Will remove at further version.</span>
-<span class="sd">	:return: The tuple of ids and fused scores that fused by RRF.</span>
+<span class="sd">	    It was originally rrf_k value. Will remove at a further version.</span>
+<span class="sd">	:return: The tuple of ids and fused scores that are fused by RRF.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="s2">&quot;The length of ids and scores must be the same.&quot;</span>
 	<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;You must input more than one retrieval results.&quot;</span>

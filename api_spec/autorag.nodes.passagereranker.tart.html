@@ -480,35 +480,15 @@ registered hooks while the latter silently ignores them.</p>
 </section>
 <section id="module-autorag.nodes.passagereranker.tart.tart">
 <span id="autorag-nodes-passagereranker-tart-tart-module"></span><h2>autorag.nodes.passagereranker.tart.tart module<a class="headerlink" href="#module-autorag.nodes.passagereranker.tart.tart" title="Link to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="autorag.nodes.passagereranker.tart.tart.tart">
-<span class="sig-prename descclassname"><span class="pre">autorag.nodes.passagereranker.tart.tart.</span></span><span class="sig-name descname"><span class="pre">tart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contents_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instruction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Find</span> <span class="pre">passage</span> <span class="pre">to</span> <span class="pre">answer</span> <span class="pre">given</span> <span class="pre">question'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/tart/tart.html#tart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.tart.tart.tart" title="Link to this definition">¶</a></dt>
-<dd><p>Rerank a list of contents based on their relevance to a query using Tart.
-TART is a reranker based on TART (<a class="reference external" href="https://github.com/facebookresearch/tart">https://github.com/facebookresearch/tart</a>).
-You can rerank the passages with the instruction using TARTReranker.
-The default model is facebook/tart-full-flan-t5-xl.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>queries</strong> – The list of queries to use for reranking</p></li>
-<li><p><strong>contents_list</strong> – The list of lists of contents to rerank</p></li>
-<li><p><strong>scores_list</strong> – The list of lists of scores retrieved from the initial ranking</p></li>
-<li><p><strong>ids_list</strong> – The list of lists of ids retrieved from the initial ranking</p></li>
-<li><p><strong>top_k</strong> – The number of passages to be retrieved</p></li>
-<li><p><strong>instruction</strong> – <p>The instruction for reranking.
-Note: default instruction is “Find passage to answer given question”</p>
-<blockquote>
-<div><p>The default instruction from the TART paper is being used.
-If you want to use a different instruction, you can change the instruction through this parameter</p>
-</div></blockquote>
-</p></li>
-<li><p><strong>batch</strong> – The number of queries to be processed in a batch</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple of lists containing the reranked contents, ids, and scores</p>
-</dd>
-</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.nodes.passagereranker.tart.tart.Tart">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.nodes.passagereranker.tart.tart.</span></span><span class="sig-name descname"><span class="pre">Tart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/tart/tart.html#Tart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.tart.tart.Tart" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.base.BasePassageReranker" title="autorag.nodes.passagereranker.base.BasePassageReranker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePassageReranker</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.nodes.passagereranker.tart.tart.Tart.pure">
+<span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/tart/tart.html#Tart.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.tart.tart.Tart.pure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -665,7 +645,10 @@ Args:</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.nodes.passagereranker.tart.tart">autorag.nodes.passagereranker.tart.tart module</a><ul>
-<li><a class="reference internal" href="#autorag.nodes.passagereranker.tart.tart.tart"><code class="docutils literal notranslate"><span class="pre">tart()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.nodes.passagereranker.tart.tart.Tart"><code class="docutils literal notranslate"><span class="pre">Tart</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.nodes.passagereranker.tart.tart.Tart.pure"><code class="docutils literal notranslate"><span class="pre">Tart.pure()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#autorag.nodes.passagereranker.tart.tart.tart_run_model"><code class="docutils literal notranslate"><span class="pre">tart_run_model()</span></code></a></li>
 </ul>
 </li>

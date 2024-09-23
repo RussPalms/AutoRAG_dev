@@ -411,43 +411,90 @@
           <h1>Source code for autorag.nodes.generator.llama_index_llm</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">llama_index.core.llms</span> <span class="kn">import</span> <span class="n">LLM</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.generator.base</span> <span class="kn">import</span> <span class="n">generator_node</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">get_event_loop</span><span class="p">,</span> <span class="n">process_batch</span>
+<span class="kn">from</span> <span class="nn">autorag</span> <span class="kn">import</span> <span class="n">generator_models</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.generator.base</span> <span class="kn">import</span> <span class="n">BaseGenerator</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">get_event_loop</span><span class="p">,</span>
+	<span class="n">process_batch</span><span class="p">,</span>
+	<span class="n">result_to_dataframe</span><span class="p">,</span>
+	<span class="n">pop_params</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="llama_index_llm">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.llama_index_llm.llama_index_llm">[docs]</a>
-<span class="nd">@generator_node</span>
-<span class="k">def</span> <span class="nf">llama_index_llm</span><span class="p">(</span>
-	<span class="n">prompts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">llm</span><span class="p">:</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Llama Index LLM module.</span>
-<span class="sd">	It gets the LLM instance from llama index, and returns generated text by the input prompt.</span>
-<span class="sd">	It does not generate the right log probs, but it returns the pseudo log probs,</span>
-<span class="sd">	which is not meant to be used for other modules.</span>
+<div class="viewcode-block" id="LlamaIndexLLM">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.llama_index_llm.LlamaIndexLLM">[docs]</a>
+<span class="k">class</span> <span class="nc">LlamaIndexLLM</span><span class="p">(</span><span class="n">BaseGenerator</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initialize the Llama Index LLM module.</span>
 
-<span class="sd">	:param prompts: A list of prompts.</span>
-<span class="sd">	:param llm: A llama index LLM instance.</span>
-<span class="sd">	:param batch: The batch size for llm.</span>
-<span class="sd">	    Set low if you face some errors.</span>
-<span class="sd">	:return: A tuple of three elements.</span>
-<span class="sd">	    The first element is a list of generated text.</span>
-<span class="sd">	    The second element is a list of generated text&#39;s token ids, used tokenizer is GPT2Tokenizer.</span>
-<span class="sd">	    The third element is a list of generated text&#39;s pseudo log probs.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">llm</span><span class="o">.</span><span class="n">acomplete</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span> <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span><span class="p">]</span>
-	<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
-	<span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span><span class="p">))</span>
+<span class="sd">		:param project_dir: The project directory.</span>
+<span class="sd">		:param llm: A llama index LLM instance.</span>
+<span class="sd">		:param batch: The batch size for llm.</span>
+<span class="sd">			Set low if you face some errors.</span>
+<span class="sd">			Default is 16.</span>
+<span class="sd">		:param kwargs: The extra parameters for initializing the llm instance.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">generator_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+				<span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="si">}</span><span class="s2"> is not a valid llm name. Please check the llm name.&quot;</span>
+				<span class="s2">&quot;You can check valid llm names from autorag.generator_models.&quot;</span>
+			<span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="o">=</span> <span class="n">batch</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span> <span class="o">==</span> <span class="s2">&quot;huggingfacellm&quot;</span><span class="p">:</span>
+			<span class="n">model_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;model_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_name</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">if</span> <span class="s2">&quot;model_name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+					<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+						<span class="s2">&quot;`model` or `model_name` parameter must be provided for using huggingfacellm.&quot;</span>
+					<span class="p">)</span>
+			<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;tokenizer_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;model_name&quot;</span><span class="p">]</span>
+		<span class="n">llm_class</span> <span class="o">=</span> <span class="n">generator_models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">llm_instance</span> <span class="o">=</span> <span class="n">llm_class</span><span class="p">(</span><span class="o">**</span><span class="n">pop_params</span><span class="p">(</span><span class="n">llm_class</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
 
-	<span class="n">generated_texts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">results</span><span class="p">))</span>
-	<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;gpt2&quot;</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-	<span class="n">tokenized_ids</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">generated_texts</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span>
-	<span class="n">pseudo_log_probs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">tokenized_ids</span><span class="p">))</span>
-	<span class="k">return</span> <span class="n">generated_texts</span><span class="p">,</span> <span class="n">tokenized_ids</span><span class="p">,</span> <span class="n">pseudo_log_probs</span></div>
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_instance</span>
+
+<div class="viewcode-block" id="LlamaIndexLLM.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.llama_index_llm.LlamaIndexLLM.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_tokens&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_log_probs&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">prompts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="o">=</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">prompts</span><span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">prompts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Llama Index LLM module.</span>
+<span class="sd">		It gets the LLM instance from llama index, and returns generated text by the input prompt.</span>
+<span class="sd">		It does not generate the right log probs, but it returns the pseudo log probs,</span>
+<span class="sd">		which are not meant to be used for other modules.</span>
+
+<span class="sd">		:param prompts: A list of prompts.</span>
+<span class="sd">		:return: A tuple of three elements.</span>
+<span class="sd">			The first element is a list of a generated text.</span>
+<span class="sd">			The second element is a list of generated text&#39;s token ids, used tokenizer is GPT2Tokenizer.</span>
+<span class="sd">			The third element is a list of generated text&#39;s pseudo log probs.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">llm_instance</span><span class="o">.</span><span class="n">acomplete</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span> <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span><span class="p">]</span>
+		<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
+		<span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="p">))</span>
+
+		<span class="n">generated_texts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">results</span><span class="p">))</span>
+		<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;gpt2&quot;</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+		<span class="n">tokenized_ids</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">generated_texts</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span>
+		<span class="n">pseudo_log_probs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">tokenized_ids</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">generated_texts</span><span class="p">,</span> <span class="n">tokenized_ids</span><span class="p">,</span> <span class="n">pseudo_log_probs</span></div>
 
 </pre></div>
         </article>

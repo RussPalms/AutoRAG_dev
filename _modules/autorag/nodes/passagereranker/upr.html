@@ -417,73 +417,103 @@
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">T5Tokenizer</span><span class="p">,</span> <span class="n">T5ForConditionalGeneration</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.passagereranker.base</span> <span class="kn">import</span> <span class="n">passage_reranker_node</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.passagereranker.base</span> <span class="kn">import</span> <span class="n">BasePassageReranker</span>
+<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span>
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">select_top_k</span><span class="p">,</span> <span class="n">sort_by_scores</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="upr">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.upr.upr">[docs]</a>
-<span class="nd">@passage_reranker_node</span>
-<span class="k">def</span> <span class="nf">upr</span><span class="p">(</span>
-	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
-	<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-	<span class="n">use_bf16</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-	<span class="n">prefix_prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Passage: &quot;</span><span class="p">,</span>
-	<span class="n">suffix_prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Please write a question based on this passage.&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Rerank a list of contents based on their relevance to a query using UPR.</span>
-<span class="sd">	UPR is a reranker based on UPR (https://github.com/DevSinghSachan/unsupervised-passage-reranking).</span>
-<span class="sd">	The language model will make a question based on the passage and rerank the passages by the likelihood of the question.</span>
-<span class="sd">	The default model is t5-large.</span>
+<div class="viewcode-block" id="Upr">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.upr.Upr">[docs]</a>
+<span class="k">class</span> <span class="nc">Upr</span><span class="p">(</span><span class="n">BasePassageReranker</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+		<span class="n">use_bf16</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+		<span class="n">prefix_prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Passage: &quot;</span><span class="p">,</span>
+		<span class="n">suffix_prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Please write a question based on this passage.&quot;</span><span class="p">,</span>
+		<span class="o">*</span><span class="n">args</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+	<span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initialize the UPR reranker node.</span>
 
-<span class="sd">	:param queries: The list of queries to use for reranking</span>
-<span class="sd">	:param contents_list: The list of lists of contents to rerank</span>
-<span class="sd">	:param scores_list: The list of lists of scores retrieved from the initial ranking</span>
-<span class="sd">	:param ids_list: The list of lists of ids retrieved from the initial ranking</span>
-<span class="sd">	:param top_k: The number of passages to be retrieved</span>
-<span class="sd">	:param use_bf16: Whether to use bfloat16 for the model. Default is False.</span>
-<span class="sd">	:param prefix_prompt: The prefix prompt for the language model that generates question for reranking.</span>
-<span class="sd">	    Default is &quot;Passage: &quot;.</span>
-<span class="sd">	    The prefix prompt serves as the initial context or instruction for the language model.</span>
-<span class="sd">	    It sets the stage for what is expected in the output</span>
-<span class="sd">	:param suffix_prompt: The suffix prompt for the language model that generates question for reranking.</span>
-<span class="sd">	    Default is &quot;Please write a question based on this passage.&quot;.</span>
-<span class="sd">	    The suffix prompt provides a cue or a closing instruction to the language model,</span>
-<span class="sd">	        signaling how to conclude the generated text or what format to follow at the end.</span>
-<span class="sd">	:return: tuple of lists containing the reranked contents, ids, and scores</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">tqdm</span><span class="o">.</span><span class="n">pandas</span><span class="p">()</span>
-	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-		<span class="p">{</span>
-			<span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">queries</span><span class="p">,</span>
-			<span class="s2">&quot;contents&quot;</span><span class="p">:</span> <span class="n">contents_list</span><span class="p">,</span>
-			<span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="n">ids_list</span><span class="p">,</span>
-		<span class="p">}</span>
-	<span class="p">)</span>
+<span class="sd">		:param project_dir: The project directory</span>
+<span class="sd">		:param use_bf16: Whether to use bfloat16 for the model. Default is False.</span>
+<span class="sd">		:param prefix_prompt: The prefix prompt for the language model that generates question for reranking.</span>
+<span class="sd">			Default is &quot;Passage: &quot;.</span>
+<span class="sd">			The prefix prompt serves as the initial context or instruction for the language model.</span>
+<span class="sd">			It sets the stage for what is expected in the output</span>
+<span class="sd">		:param suffix_prompt: The suffix prompt for the language model that generates question for reranking.</span>
+<span class="sd">			Default is &quot;Please write a question based on this passage.&quot;.</span>
+<span class="sd">			The suffix prompt provides a cue or a closing instruction to the language model,</span>
+<span class="sd">				signaling how to conclude the generated text or what format to follow at the end.</span>
+<span class="sd">		:param kwargs: Extra arguments</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-	<span class="n">scorer</span> <span class="o">=</span> <span class="n">UPRScorer</span><span class="p">(</span>
-		<span class="n">suffix_prompt</span><span class="o">=</span><span class="n">suffix_prompt</span><span class="p">,</span> <span class="n">prefix_prompt</span><span class="o">=</span><span class="n">prefix_prompt</span><span class="p">,</span> <span class="n">use_bf16</span><span class="o">=</span><span class="n">use_bf16</span>
-	<span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">scorer</span> <span class="o">=</span> <span class="n">UPRScorer</span><span class="p">(</span>
+			<span class="n">suffix_prompt</span><span class="o">=</span><span class="n">suffix_prompt</span><span class="p">,</span> <span class="n">prefix_prompt</span><span class="o">=</span><span class="n">prefix_prompt</span><span class="p">,</span> <span class="n">use_bf16</span><span class="o">=</span><span class="n">use_bf16</span>
+		<span class="p">)</span>
 
-	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">progress_apply</span><span class="p">(</span>
-		<span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">scorer</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">],</span> <span class="n">contents</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-	<span class="p">)</span>
-	<span class="k">del</span> <span class="n">scorer</span>
-	<span class="n">df</span><span class="p">[[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-		<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sort_by_scores</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span>
-	<span class="p">)</span>
-	<span class="n">results</span> <span class="o">=</span> <span class="n">select_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">],</span> <span class="n">top_k</span><span class="p">)</span>
-	<span class="k">return</span> <span class="p">(</span>
-		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-	<span class="p">)</span></div>
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">scorer</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Upr.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.upr.Upr.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="n">top_k</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;top_k&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+		<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Rerank a list of contents based on their relevance to a query using UPR.</span>
+<span class="sd">		UPR is a reranker based on UPR (https://github.com/DevSinghSachan/unsupervised-passage-reranking).</span>
+<span class="sd">		The language model will make a question based on the passage and rerank the passages by the likelihood of the question.</span>
+<span class="sd">		The default model is t5-large.</span>
+
+<span class="sd">		:param queries: The list of queries to use for reranking</span>
+<span class="sd">		:param contents_list: The list of lists of contents to rerank</span>
+<span class="sd">		:param ids_list: The list of lists of ids retrieved from the initial ranking</span>
+<span class="sd">		:param top_k: The number of passages to be retrieved</span>
+
+<span class="sd">		:return: tuple of lists containing the reranked contents, ids, and scores</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">tqdm</span><span class="o">.</span><span class="n">pandas</span><span class="p">()</span>
+		<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+			<span class="p">{</span>
+				<span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">queries</span><span class="p">,</span>
+				<span class="s2">&quot;contents&quot;</span><span class="p">:</span> <span class="n">contents_list</span><span class="p">,</span>
+				<span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="n">ids_list</span><span class="p">,</span>
+			<span class="p">}</span>
+		<span class="p">)</span>
+
+		<span class="n">df</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">progress_apply</span><span class="p">(</span>
+			<span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scorer</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span>
+				<span class="n">query</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">],</span> <span class="n">contents</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span>
+			<span class="p">),</span>
+			<span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+		<span class="p">)</span>
+		<span class="n">df</span><span class="p">[[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sort_by_scores</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span>
+		<span class="p">)</span>
+		<span class="n">results</span> <span class="o">=</span> <span class="n">select_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">],</span> <span class="n">top_k</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">(</span>
+			<span class="n">results</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="n">results</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="n">results</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+		<span class="p">)</span></div>
 
 
 

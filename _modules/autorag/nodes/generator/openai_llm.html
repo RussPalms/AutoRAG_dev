@@ -410,15 +410,20 @@
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.generator.openai_llm</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">tiktoken</span>
 <span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
 <span class="kn">from</span> <span class="nn">tiktoken</span> <span class="kn">import</span> <span class="n">Encoding</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.generator.base</span> <span class="kn">import</span> <span class="n">generator_node</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">get_event_loop</span><span class="p">,</span> <span class="n">process_batch</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.generator.base</span> <span class="kn">import</span> <span class="n">BaseGenerator</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">get_event_loop</span><span class="p">,</span>
+	<span class="n">process_batch</span><span class="p">,</span>
+	<span class="n">pop_params</span><span class="p">,</span>
+	<span class="n">result_to_dataframe</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
@@ -454,144 +459,151 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="openai_llm">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.openai_llm">[docs]</a>
-<span class="nd">@generator_node</span>
-<span class="k">def</span> <span class="nf">openai_llm</span><span class="p">(</span>
-	<span class="n">prompts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span>
-	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-	<span class="n">truncate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-	<span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	OpenAI generator module.</span>
-<span class="sd">	Uses official openai library for generating answer from the given prompt.</span>
-<span class="sd">	It returns real token ids and log probs, so you must use this for using token ids and log probs.</span>
+<div class="viewcode-block" id="OpenAILLM">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM">[docs]</a>
+<span class="k">class</span> <span class="nc">OpenAILLM</span><span class="p">(</span><span class="n">BaseGenerator</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">,</span> <span class="n">llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="k">assert</span> <span class="n">batch</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;batch size must be greater than 0.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="o">=</span> <span class="n">batch</span>
 
-<span class="sd">	:param prompts: A list of prompts.</span>
-<span class="sd">	:param llm: A model name for openai.</span>
-<span class="sd">	    Default is gpt-3.5-turbo.</span>
-<span class="sd">	:param batch: Batch size for openai api call.</span>
-<span class="sd">	    If you get API limit errors, you should lower the batch size.</span>
-<span class="sd">	    Default is 16.</span>
-<span class="sd">	:param truncate: Whether to truncate the input prompt.</span>
-<span class="sd">	    Default is True.</span>
-<span class="sd">	:param api_key: OpenAI API key. You can set this by passing env variable `OPENAI_API_KEY`</span>
-<span class="sd">	:param kwargs: The optional parameter for openai api call `openai.chat.completion`</span>
-<span class="sd">	    See https://platform.openai.com/docs/api-reference/chat/create for more details.</span>
-<span class="sd">	:return: A tuple of three elements.</span>
-<span class="sd">	    The first element is a list of generated text.</span>
-<span class="sd">	    The second element is a list of generated text&#39;s token ids.</span>
-<span class="sd">	    The third element is a list of generated text&#39;s log probs.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">)</span>
-		<span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">client_init_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">AsyncOpenAI</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">(</span><span class="o">**</span><span class="n">client_init_params</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">get_encoding</span><span class="p">(</span><span class="s2">&quot;o200k_base&quot;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">encoding_for_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">max_token_size</span> <span class="o">=</span> <span class="p">(</span>
+			<span class="n">MAX_TOKEN_DICT</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">)</span> <span class="o">-</span> <span class="mi">7</span>
+		<span class="p">)</span>  <span class="c1"># because of chat token usage</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_token_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-				<span class="s2">&quot;OPENAI_API_KEY does not set. &quot;</span>
-				<span class="s2">&quot;Please set env variable OPENAI_API_KEY or pass api_key parameter to openai module.&quot;</span>
-			<span class="p">)</span>
-
-	<span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logprobs&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;logprobs&quot;</span><span class="p">)</span>
-		<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;parameter logprob does not effective. It always set to True.&quot;</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
-		<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;parameter n does not effective. It always set to 1.&quot;</span><span class="p">)</span>
-
-	<span class="c1"># TODO: fix this after updating tiktoken for the o1 model. It is not yet supported yet.</span>
-	<span class="k">if</span> <span class="n">llm</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">):</span>
-		<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">get_encoding</span><span class="p">(</span><span class="s2">&quot;o200k_base&quot;</span><span class="p">)</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">encoding_for_model</span><span class="p">(</span><span class="n">llm</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">truncate</span><span class="p">:</span>
-		<span class="n">max_token_size</span> <span class="o">=</span> <span class="n">MAX_TOKEN_DICT</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">llm</span><span class="p">)</span> <span class="o">-</span> <span class="mi">7</span>  <span class="c1"># because of chat token usage</span>
-		<span class="k">if</span> <span class="n">max_token_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-				<span class="sa">f</span><span class="s2">&quot;Model </span><span class="si">{</span><span class="n">llm</span><span class="si">}</span><span class="s2"> does not supported. &quot;</span>
+				<span class="sa">f</span><span class="s2">&quot;Model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="si">}</span><span class="s2"> does not supported. &quot;</span>
 				<span class="sa">f</span><span class="s2">&quot;Please select the model between </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">MAX_TOKEN_DICT</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
 			<span class="p">)</span>
-		<span class="n">prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+
+<div class="viewcode-block" id="OpenAILLM.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_tokens&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_log_probs&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">prompts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">prompts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">prompts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+		<span class="n">truncate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		OpenAI generator module.</span>
+<span class="sd">		Uses an official openai library for generating answer from the given prompt.</span>
+<span class="sd">		It returns real token ids and log probs, so you must use this for using token ids and log probs.</span>
+
+<span class="sd">		:param prompts: A list of prompts.</span>
+<span class="sd">		:param llm: A model name for openai.</span>
+<span class="sd">		    Default is gpt-3.5-turbo.</span>
+<span class="sd">		:param batch: Batch size for openai api call.</span>
+<span class="sd">		    If you get API limit errors, you should lower the batch size.</span>
+<span class="sd">		    Default is 16.</span>
+<span class="sd">		:param truncate: Whether to truncate the input prompt.</span>
+<span class="sd">		    Default is True.</span>
+<span class="sd">		:param api_key: OpenAI API key. You can set this by passing env variable `OPENAI_API_KEY`</span>
+<span class="sd">		:param kwargs: The optional parameter for openai api call `openai.chat.completion`</span>
+<span class="sd">		    See https://platform.openai.com/docs/api-reference/chat/create for more details.</span>
+<span class="sd">		:return: A tuple of three elements.</span>
+<span class="sd">		    The first element is a list of generated text.</span>
+<span class="sd">		    The second element is a list of generated text&#39;s token ids.</span>
+<span class="sd">		    The third element is a list of generated text&#39;s log probs.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logprobs&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;logprobs&quot;</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+				<span class="s2">&quot;parameter logprob does not effective. It always set to True.&quot;</span>
+			<span class="p">)</span>
+		<span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;parameter n does not effective. It always set to 1.&quot;</span><span class="p">)</span>
+
+		<span class="c1"># TODO: fix this after updating tiktoken for the o1 model. It is not yet supported yet.</span>
+		<span class="k">if</span> <span class="n">truncate</span><span class="p">:</span>
+			<span class="n">prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+				<span class="nb">map</span><span class="p">(</span>
+					<span class="k">lambda</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">truncate_by_token</span><span class="p">(</span>
+						<span class="n">prompt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_token_size</span>
+					<span class="p">),</span>
+					<span class="n">prompts</span><span class="p">,</span>
+				<span class="p">)</span>
+			<span class="p">)</span>
+
+		<span class="n">openai_chat_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+		<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">):</span>
+			<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">get_result_o1</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="o">**</span><span class="n">openai_chat_params</span><span class="p">)</span> <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span>
+			<span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="o">**</span><span class="n">openai_chat_params</span><span class="p">)</span> <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span>
+			<span class="p">]</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="p">))</span>
+		<span class="n">answer_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span>
+		<span class="n">token_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span>
+		<span class="n">logprob_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">answer_result</span><span class="p">,</span> <span class="n">token_result</span><span class="p">,</span> <span class="n">logprob_result</span>
+
+<div class="viewcode-block" id="OpenAILLM.get_result">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM.get_result">[docs]</a>
+	<span class="k">async</span> <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+			<span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">,</span>
+			<span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+				<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">},</span>
+			<span class="p">],</span>
+			<span class="n">logprobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+			<span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+			<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+		<span class="p">)</span>
+		<span class="n">choice</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="n">answer</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+		<span class="n">logprobs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">logprob</span><span class="p">,</span> <span class="n">choice</span><span class="o">.</span><span class="n">logprobs</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+		<span class="n">tokens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
 			<span class="nb">map</span><span class="p">(</span>
-				<span class="k">lambda</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">truncate_by_token</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">max_token_size</span><span class="p">),</span>
-				<span class="n">prompts</span><span class="p">,</span>
+				<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="n">allowed_special</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+				<span class="n">choice</span><span class="o">.</span><span class="n">logprobs</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
 			<span class="p">)</span>
 		<span class="p">)</span>
-
-	<span class="n">client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
-	<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
-	<span class="k">if</span> <span class="n">llm</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">):</span>
-		<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="n">get_result_o1</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-			<span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span>
-		<span class="p">]</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="n">get_result</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">llm</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">prompt</span> <span class="ow">in</span> <span class="n">prompts</span>
-		<span class="p">]</span>
-	<span class="n">result</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
-	<span class="n">answer_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span>
-	<span class="n">token_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span>
-	<span class="n">logprob_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span>
-	<span class="k">return</span> <span class="n">answer_result</span><span class="p">,</span> <span class="n">token_result</span><span class="p">,</span> <span class="n">logprob_result</span></div>
+		<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">logprobs</span><span class="p">),</span> <span class="s2">&quot;tokens and logprobs size is different.&quot;</span>
+		<span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">logprobs</span></div>
 
 
-
-<div class="viewcode-block" id="get_result">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.get_result">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span>
-	<span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">AsyncOpenAI</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Encoding</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-<span class="p">):</span>
-	<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-		<span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-		<span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-			<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">},</span>
-		<span class="p">],</span>
-		<span class="n">logprobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-		<span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-	<span class="p">)</span>
-	<span class="n">choice</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-	<span class="n">answer</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
-	<span class="n">logprobs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">logprob</span><span class="p">,</span> <span class="n">choice</span><span class="o">.</span><span class="n">logprobs</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
-	<span class="n">tokens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="n">allowed_special</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
-			<span class="n">choice</span><span class="o">.</span><span class="n">logprobs</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+<div class="viewcode-block" id="OpenAILLM.get_result_o1">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM.get_result_o1">[docs]</a>
+	<span class="k">async</span> <span class="k">def</span> <span class="nf">get_result_o1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">),</span> <span class="s2">&quot;This function only supports o1 model.&quot;</span>
+		<span class="c1"># The default temperature for the o1 model is 1. 1 is only supported.</span>
+		<span class="c1"># See https://platform.openai.com/docs/guides/reasoning about beta limitation of o1 models.</span>
+		<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+		<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;top_p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+		<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;presence_penalty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;frequency_penalty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+			<span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">,</span>
+			<span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+				<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">},</span>
+			<span class="p">],</span>
+			<span class="n">logprobs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+			<span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+			<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 		<span class="p">)</span>
-	<span class="p">)</span>
-	<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">logprobs</span><span class="p">),</span> <span class="s2">&quot;tokens and logprobs size is different.&quot;</span>
-	<span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">logprobs</span></div>
-
-
-
-<div class="viewcode-block" id="get_result_o1">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.get_result_o1">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">get_result_o1</span><span class="p">(</span>
-	<span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">AsyncOpenAI</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Encoding</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-<span class="p">):</span>
-	<span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">),</span> <span class="s2">&quot;This function only supports o1 model.&quot;</span>
-	<span class="c1"># The default temperature for the o1 model is 1. 1 is only supported.</span>
-	<span class="c1"># See https://platform.openai.com/docs/guides/reasoning about beta limitation of o1 models.</span>
-	<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-	<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;top_p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-	<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;presence_penalty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-	<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;frequency_penalty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-	<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-		<span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-		<span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-			<span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">},</span>
-		<span class="p">],</span>
-		<span class="n">logprobs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-		<span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-	<span class="p">)</span>
-	<span class="n">answer</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
-	<span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">answer</span><span class="p">,</span> <span class="n">allowed_special</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
-	<span class="n">pseudo_log_probs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
-	<span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">pseudo_log_probs</span></div>
+		<span class="n">answer</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+		<span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">answer</span><span class="p">,</span> <span class="n">allowed_special</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+		<span class="n">pseudo_log_probs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">pseudo_log_probs</span></div>
+</div>
 
 
 

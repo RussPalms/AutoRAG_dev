@@ -419,8 +419,13 @@
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">import</span> <span class="nn">autorag</span>
-<span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.vectordb</span> <span class="kn">import</span> <span class="n">vectordb_ingest</span><span class="p">,</span> <span class="n">vectordb</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">save_parquet_safe</span><span class="p">,</span> <span class="n">fetch_contents</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.vectordb</span> <span class="kn">import</span> <span class="n">vectordb_ingest</span><span class="p">,</span> <span class="n">vectordb_pure</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">save_parquet_safe</span><span class="p">,</span>
+	<span class="n">fetch_contents</span><span class="p">,</span>
+	<span class="n">get_event_loop</span><span class="p">,</span>
+	<span class="n">process_batch</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
@@ -587,10 +592,17 @@
 
 	<span class="c1"># embed corpus_df</span>
 	<span class="n">vectordb_ingest</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">corpus_df</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
-	<span class="n">vectordb_func</span> <span class="o">=</span> <span class="n">vectordb</span><span class="o">.</span><span class="n">__wrapped__</span>
-	<span class="n">retrieved_ids</span><span class="p">,</span> <span class="n">retrieve_scores</span> <span class="o">=</span> <span class="n">vectordb_func</span><span class="p">(</span>
-		<span class="n">existing_query_df</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">embeddings</span>
+	<span class="n">query_embeddings</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">get_text_embedding_batch</span><span class="p">(</span>
+		<span class="n">existing_query_df</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 	<span class="p">)</span>
+
+	<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
+	<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+		<span class="n">vectordb_pure</span><span class="p">([</span><span class="n">query_embedding</span><span class="p">],</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">collection</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">query_embedding</span> <span class="ow">in</span> <span class="n">query_embeddings</span>
+	<span class="p">]</span>
+	<span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">cache_batch</span><span class="p">))</span>
+	<span class="n">retrieved_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">results</span><span class="p">))</span>
 
 	<span class="n">retrieved_contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">retrieved_ids</span><span class="p">)</span>
 	<span class="n">input_passage_strs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>

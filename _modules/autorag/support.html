@@ -439,79 +439,145 @@
 		<span class="s2">&quot;llama_index_chunk&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.chunk&quot;</span><span class="p">,</span> <span class="s2">&quot;llama_index_chunk&quot;</span><span class="p">),</span>
 		<span class="s2">&quot;langchain_chunk&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.chunk&quot;</span><span class="p">,</span> <span class="s2">&quot;langchain_chunk&quot;</span><span class="p">),</span>
 		<span class="c1"># query_expansion</span>
-		<span class="s2">&quot;query_decompose&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span> <span class="s2">&quot;query_decompose&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;hyde&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span> <span class="s2">&quot;hyde&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;query_decompose&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span> <span class="s2">&quot;QueryDecompose&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;hyde&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span> <span class="s2">&quot;HyDE&quot;</span><span class="p">),</span>
 		<span class="s2">&quot;pass_query_expansion&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;pass_query_expansion&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;PassQueryExpansion&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
 		<span class="s2">&quot;multi_query_expansion&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;multi_query_expansion&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;MultiQueryExpansion&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;QueryDecompose&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span> <span class="s2">&quot;QueryDecompose&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;HyDE&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span> <span class="s2">&quot;HyDE&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;PassQueryExpansion&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;PassQueryExpansion&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;MultiQueryExpansion&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.queryexpansion&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;MultiQueryExpansion&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
 		<span class="c1"># retrieval</span>
-		<span class="s2">&quot;bm25&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;bm25&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;vectordb&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;vectordb&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;hybrid_rrf&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;hybrid_rrf&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;hybrid_cc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;hybrid_cc&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;bm25&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;BM25&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;BM25&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;BM25&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;vectordb&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;VectorDB&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;VectorDB&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;VectorDB&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;hybrid_rrf&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;HybridRRF&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;HybridRRF&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;HybridRRF&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;hybrid_cc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;HybridCC&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;HybridCC&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.retrieval&quot;</span><span class="p">,</span> <span class="s2">&quot;HybridCC&quot;</span><span class="p">),</span>
 		<span class="c1"># passage_augmenter</span>
 		<span class="s2">&quot;prev_next_augmenter&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.passageaugmenter&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;prev_next_augmenter&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;PrevNextPassageAugmenter&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;PrevNextPassageAugmenter&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.passageaugmenter&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;PrevNextPassageAugmenter&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
 		<span class="s2">&quot;pass_passage_augmenter&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.passageaugmenter&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;pass_passage_augmenter&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;PassPassageAugmenter&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;PassPassageAugmenter&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.passageaugmenter&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;PassPassageAugmenter&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
 		<span class="c1"># passage_reranker</span>
-		<span class="s2">&quot;monot5&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;monot5&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;tart&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;tart&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;upr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;upr&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;koreranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;koreranker&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;pass_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;pass_reranker&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;cohere_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;cohere_reranker&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;rankgpt&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;rankgpt&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;jina_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;jina_reranker&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;colbert_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;colbert_reranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;monot5&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;MonoT5&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;MonoT5&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;MonoT5&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;tart&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;Tart&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;Tart&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;Tart&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;upr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;Upr&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;Upr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;Upr&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;koreranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;KoReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;KoReranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;KoReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;pass_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;PassReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;PassReranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;PassReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;cohere_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;CohereReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;CohereReranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;CohereReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;rankgpt&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;RankGPT&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;RankGPT&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;RankGPT&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;jina_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;JinaReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;JinaReranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;JinaReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;colbert_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;ColbertReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;ColbertReranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;ColbertReranker&quot;</span><span class="p">),</span>
 		<span class="s2">&quot;sentence_transformer_reranker&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;sentence_transformer_reranker&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;SentenceTransformerReranker&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;SentenceTransformerReranker&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;SentenceTransformerReranker&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
 		<span class="s2">&quot;flag_embedding_reranker&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;flag_embedding_reranker&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;FlagEmbeddingReranker&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;FlagEmbeddingReranker&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;FlagEmbeddingReranker&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
 		<span class="s2">&quot;flag_embedding_llm_reranker&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;flag_embedding_llm_reranker&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;FlagEmbeddingLLMReranker&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
-		<span class="s2">&quot;time_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;time_reranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;FlagEmbeddingLLMReranker&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;FlagEmbeddingLLMReranker&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;time_reranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;TimeReranker&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;TimeReranker&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagereranker&quot;</span><span class="p">,</span> <span class="s2">&quot;TimeReranker&quot;</span><span class="p">),</span>
 		<span class="c1"># passage_filter</span>
-		<span class="s2">&quot;pass_passage_filter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;pass_passage_filter&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;pass_passage_filter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;PassPassageFilter&quot;</span><span class="p">),</span>
 		<span class="s2">&quot;similarity_threshold_cutoff&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;similarity_threshold_cutoff&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;SimilarityThresholdCutoff&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
 		<span class="s2">&quot;similarity_percentile_cutoff&quot;</span><span class="p">:</span> <span class="p">(</span>
 			<span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span>
-			<span class="s2">&quot;similarity_percentile_cutoff&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;SimilarityPercentileCutoff&quot;</span><span class="p">,</span>
 		<span class="p">),</span>
-		<span class="s2">&quot;recency_filter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;recency_filter&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;threshold_cutoff&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;threshold_cutoff&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;percentile_cutoff&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;percentile_cutoff&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;recency_filter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;RecencyFilter&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;threshold_cutoff&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;ThresholdCutoff&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;percentile_cutoff&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;PercentileCutoff&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;PassPassageFilter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;PassPassageFilter&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;SimilarityThresholdCutoff&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;SimilarityThresholdCutoff&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;SimilarityPercentileCutoff&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;SimilarityPercentileCutoff&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
+		<span class="s2">&quot;RecencyFilter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;RecencyFilter&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;ThresholdCutoff&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;ThresholdCutoff&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;PercentileCutoff&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagefilter&quot;</span><span class="p">,</span> <span class="s2">&quot;PercentileCutoff&quot;</span><span class="p">),</span>
 		<span class="c1"># passage_compressor</span>
-		<span class="s2">&quot;tree_summarize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;tree_summarize&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;pass_compressor&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;pass_compressor&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;refine&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;refine&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;longllmlingua&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;longllmlingua&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;tree_summarize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;TreeSummarize&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;pass_compressor&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;PassCompressor&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;refine&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;Refine&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;longllmlingua&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;LongLLMLingua&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;TreeSummarize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;TreeSummarize&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;Refine&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;Refine&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;LongLLMLingua&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;LongLLMLingua&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;PassCompressor&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.passagecompressor&quot;</span><span class="p">,</span> <span class="s2">&quot;PassCompressor&quot;</span><span class="p">),</span>
 		<span class="c1"># prompt_maker</span>
-		<span class="s2">&quot;fstring&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;fstring&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;long_context_reorder&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;long_context_reorder&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;window_replacement&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;window_replacement&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;fstring&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;Fstring&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;long_context_reorder&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;LongContextReorder&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;window_replacement&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;WindowReplacement&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;Fstring&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;Fstring&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;LongContextReorder&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;LongContextReorder&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;WindowReplacement&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.promptmaker&quot;</span><span class="p">,</span> <span class="s2">&quot;WindowReplacement&quot;</span><span class="p">),</span>
 		<span class="c1"># generator</span>
-		<span class="s2">&quot;llama_index_llm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;llama_index_llm&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;vllm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;vllm&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;openai_llm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;openai_llm&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;llama_index_llm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;LlamaIndexLLM&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;vllm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;Vllm&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;openai_llm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;OpenAILLM&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;LlamaIndexLLM&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;LlamaIndexLLM&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;Vllm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;Vllm&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;OpenAILLM&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.nodes.generator&quot;</span><span class="p">,</span> <span class="s2">&quot;OpenAILLM&quot;</span><span class="p">),</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="n">dynamically_find_function</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">support_modules</span><span class="p">)</span></div>
 

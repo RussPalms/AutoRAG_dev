@@ -422,101 +422,44 @@
 </section>
 <section id="module-autorag.nodes.promptmaker.base">
 <span id="autorag-nodes-promptmaker-base-module"></span><h2>autorag.nodes.promptmaker.base module<a class="headerlink" href="#module-autorag.nodes.promptmaker.base" title="Link to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="autorag.nodes.promptmaker.base.prompt_maker_node">
-<span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.base.</span></span><span class="sig-name descname"><span class="pre">prompt_maker_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/base.html#prompt_maker_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.base.prompt_maker_node" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.nodes.promptmaker.base.BasePromptMaker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.base.</span></span><span class="sig-name descname"><span class="pre">BasePromptMaker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/base.html#BasePromptMaker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.base.BasePromptMaker" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.nodes.promptmaker.base.BasePromptMaker.cast_to_run">
+<span class="sig-name descname"><span class="pre">cast_to_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/base.html#BasePromptMaker.cast_to_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.base.BasePromptMaker.cast_to_run" title="Link to this definition">¶</a></dt>
+<dd><p>This function is for cast function (a.k.a decorator) only for pure function in the whole node.</p>
+</dd></dl>
+
+</dd></dl>
 
 </section>
 <section id="module-autorag.nodes.promptmaker.fstring">
 <span id="autorag-nodes-promptmaker-fstring-module"></span><h2>autorag.nodes.promptmaker.fstring module<a class="headerlink" href="#module-autorag.nodes.promptmaker.fstring" title="Link to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="autorag.nodes.promptmaker.fstring.fstring">
-<span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.fstring.</span></span><span class="sig-name descname"><span class="pre">fstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrieved_contents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/fstring.html#fstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.fstring.fstring" title="Link to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Make a prompt using f-string from a query and retrieved_contents.
-You must type a prompt or prompt list at config yaml file like this:</p>
-<p>nodes:
-- node_type: prompt_maker</p>
-<blockquote>
-<div><p>modules:
-- module_type: fstring</p>
-<blockquote>
-<div><p>prompt: [Answer this question: {query}</p>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-<dl class="simple">
-<dt>{retrieved_contents},</dt><dd><p>Read the passages carefully and answer this question: {query}</p>
-</dd>
-</dl>
-<p>Passages: {retrieved_contents}]</p>
-<blockquote>
-<div><dl class="field-list simple">
-<dt class="field-odd">param prompt<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A prompt string.</p>
-</dd>
-<dt class="field-even">param queries<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of query strings.</p>
-</dd>
-<dt class="field-odd">param retrieved_contents<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of retrieved contents.</p>
-</dd>
-<dt class="field-even">return<span class="colon">:</span></dt>
-<dd class="field-even"><p>Prompts that made by f-string.</p>
-</dd>
-</dl>
-</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.nodes.promptmaker.fstring.Fstring">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.fstring.</span></span><span class="sig-name descname"><span class="pre">Fstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/fstring.html#Fstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.fstring.Fstring" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#autorag.nodes.promptmaker.base.BasePromptMaker" title="autorag.nodes.promptmaker.base.BasePromptMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePromptMaker</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.nodes.promptmaker.fstring.Fstring.pure">
+<span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/fstring.html#Fstring.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.fstring.Fstring.pure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
 <section id="module-autorag.nodes.promptmaker.long_context_reorder">
 <span id="autorag-nodes-promptmaker-long-context-reorder-module"></span><h2>autorag.nodes.promptmaker.long_context_reorder module<a class="headerlink" href="#module-autorag.nodes.promptmaker.long_context_reorder" title="Link to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="autorag.nodes.promptmaker.long_context_reorder.long_context_reorder">
-<span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.long_context_reorder.</span></span><span class="sig-name descname"><span class="pre">long_context_reorder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrieved_contents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrieve_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/long_context_reorder.html#long_context_reorder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.long_context_reorder.long_context_reorder" title="Link to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Models struggle to access significant details found
-in the center of extended contexts. A study
-(<a class="reference external" href="https://arxiv.org/abs/2307.03172">https://arxiv.org/abs/2307.03172</a>) observed that the best
-performance typically arises when crucial data is positioned
-at the start or conclusion of the input context. Additionally,
-as the input context lengthens, performance drops notably, even
-in models designed for long contexts.”.</p>
-<p>nodes:
-- node_type: prompt_maker</p>
-<blockquote>
-<div><p>modules:
-- module_type: long_context_reorder</p>
-<blockquote>
-<div><p>prompt: [Answer this question: {query}</p>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-<dl class="simple">
-<dt>{retrieved_contents},</dt><dd><p>Read the passages carefully and answer this question: {query}</p>
-</dd>
-</dl>
-<p>Passages: {retrieved_contents}]</p>
-<blockquote>
-<div><dl class="field-list simple">
-<dt class="field-odd">param prompt<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A prompt string.</p>
-</dd>
-<dt class="field-even">param queries<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of query strings.</p>
-</dd>
-<dt class="field-odd">param retrieved_contents<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of retrieved contents.</p>
-</dd>
-<dt class="field-even">param retrieve_scores<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of retrieve scores.</p>
-</dd>
-<dt class="field-odd">return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Prompts that made by long context reorder.</p>
-</dd>
-</dl>
-</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.nodes.promptmaker.long_context_reorder.LongContextReorder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.long_context_reorder.</span></span><span class="sig-name descname"><span class="pre">LongContextReorder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/long_context_reorder.html#LongContextReorder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.long_context_reorder.LongContextReorder" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#autorag.nodes.promptmaker.base.BasePromptMaker" title="autorag.nodes.promptmaker.base.BasePromptMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePromptMaker</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.nodes.promptmaker.long_context_reorder.LongContextReorder.pure">
+<span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/long_context_reorder.html#LongContextReorder.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.long_context_reorder.LongContextReorder.pure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -529,7 +472,7 @@ in models designed for long contexts.”.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.nodes.promptmaker.run.evaluate_one_prompt_maker_node">
-<span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.run.</span></span><span class="sig-name descname"><span class="pre">evaluate_one_prompt_maker_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generator_funcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generator_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="autorag.schema.html#autorag.schema.metricinput.MetricInput" title="autorag.schema.metricinput.MetricInput"><span class="pre">MetricInput</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/run.html#evaluate_one_prompt_maker_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.run.evaluate_one_prompt_maker_node" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.run.</span></span><span class="sig-name descname"><span class="pre">evaluate_one_prompt_maker_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generator_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generator_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="autorag.schema.html#autorag.schema.metricinput.MetricInput" title="autorag.schema.metricinput.MetricInput"><span class="pre">MetricInput</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/run.html#evaluate_one_prompt_maker_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.run.evaluate_one_prompt_maker_node" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -539,7 +482,7 @@ in models designed for long contexts.”.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.nodes.promptmaker.run.run_prompt_maker_node">
-<span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.run.</span></span><span class="sig-name descname"><span class="pre">run_prompt_maker_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_line_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/run.html#run_prompt_maker_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.run.run_prompt_maker_node" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.run.</span></span><span class="sig-name descname"><span class="pre">run_prompt_maker_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_line_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/run.html#run_prompt_maker_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.run.run_prompt_maker_node" title="Link to this definition">¶</a></dt>
 <dd><p>Run prompt maker node.
 With this function, you can select the best prompt maker module.
 As default, when you can use only one module, the evaluation will be skipped.
@@ -553,7 +496,7 @@ The default generator module is llama_index_llm with openai gpt-3.5-turbo model.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>modules</strong> – Prompt maker modules to run.</p></li>
+<li><p><strong>modules</strong> – Prompt maker module classes to run.</p></li>
 <li><p><strong>module_params</strong> – Prompt maker module parameters.</p></li>
 <li><p><strong>previous_result</strong> – Previous result dataframe.
 Could be query expansion’s best result or qa data.</p></li>
@@ -571,47 +514,15 @@ It contains previous result columns and prompt maker’s result columns which is
 </section>
 <section id="module-autorag.nodes.promptmaker.window_replacement">
 <span id="autorag-nodes-promptmaker-window-replacement-module"></span><h2>autorag.nodes.promptmaker.window_replacement module<a class="headerlink" href="#module-autorag.nodes.promptmaker.window_replacement" title="Link to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="autorag.nodes.promptmaker.window_replacement.window_replacement">
-<span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.window_replacement.</span></span><span class="sig-name descname"><span class="pre">window_replacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrieved_contents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrieved_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/window_replacement.html#window_replacement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.window_replacement.window_replacement" title="Link to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Replace retrieved_contents with window to create a Prompt
-(only available for corpus chunked with Sentence window method)
-You must type a prompt or prompt list at config yaml file like this:</p>
-<p>nodes:
-- node_type: prompt_maker</p>
-<blockquote>
-<div><p>modules:
-- module_type: window_replacement</p>
-<blockquote>
-<div><p>prompt: [Answer this question: {query}</p>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-<dl class="simple">
-<dt>{retrieved_contents},</dt><dd><p>Read the passages carefully and answer this question: {query}</p>
-</dd>
-</dl>
-<p>Passages: {retrieved_contents}]</p>
-<blockquote>
-<div><dl class="field-list simple">
-<dt class="field-odd">param prompt<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A prompt string.</p>
-</dd>
-<dt class="field-even">param queries<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of query strings.</p>
-</dd>
-<dt class="field-odd">param retrieved_contents<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of retrieved contents.</p>
-</dd>
-<dt class="field-even">param retrieved_metadata<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of retrieved metadata.</p>
-</dd>
-<dt class="field-odd">return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Prompts that made by window_replacement.</p>
-</dd>
-</dl>
-</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.nodes.promptmaker.window_replacement.WindowReplacement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.nodes.promptmaker.window_replacement.</span></span><span class="sig-name descname"><span class="pre">WindowReplacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/window_replacement.html#WindowReplacement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.window_replacement.WindowReplacement" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#autorag.nodes.promptmaker.base.BasePromptMaker" title="autorag.nodes.promptmaker.base.BasePromptMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePromptMaker</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.nodes.promptmaker.window_replacement.WindowReplacement.pure">
+<span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/promptmaker/window_replacement.html#WindowReplacement.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.promptmaker.window_replacement.WindowReplacement.pure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -678,15 +589,24 @@ You must type a prompt or prompt list at config yaml file like this:</p>
 <li><a class="reference internal" href="#">autorag.nodes.promptmaker package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-autorag.nodes.promptmaker.base">autorag.nodes.promptmaker.base module</a><ul>
-<li><a class="reference internal" href="#autorag.nodes.promptmaker.base.prompt_maker_node"><code class="docutils literal notranslate"><span class="pre">prompt_maker_node()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.nodes.promptmaker.base.BasePromptMaker"><code class="docutils literal notranslate"><span class="pre">BasePromptMaker</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.nodes.promptmaker.base.BasePromptMaker.cast_to_run"><code class="docutils literal notranslate"><span class="pre">BasePromptMaker.cast_to_run()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.nodes.promptmaker.fstring">autorag.nodes.promptmaker.fstring module</a><ul>
-<li><a class="reference internal" href="#autorag.nodes.promptmaker.fstring.fstring"><code class="docutils literal notranslate"><span class="pre">fstring()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.nodes.promptmaker.fstring.Fstring"><code class="docutils literal notranslate"><span class="pre">Fstring</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.nodes.promptmaker.fstring.Fstring.pure"><code class="docutils literal notranslate"><span class="pre">Fstring.pure()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.nodes.promptmaker.long_context_reorder">autorag.nodes.promptmaker.long_context_reorder module</a><ul>
-<li><a class="reference internal" href="#autorag.nodes.promptmaker.long_context_reorder.long_context_reorder"><code class="docutils literal notranslate"><span class="pre">long_context_reorder()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.nodes.promptmaker.long_context_reorder.LongContextReorder"><code class="docutils literal notranslate"><span class="pre">LongContextReorder</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.nodes.promptmaker.long_context_reorder.LongContextReorder.pure"><code class="docutils literal notranslate"><span class="pre">LongContextReorder.pure()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.nodes.promptmaker.run">autorag.nodes.promptmaker.run module</a><ul>
@@ -697,7 +617,10 @@ You must type a prompt or prompt list at config yaml file like this:</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.nodes.promptmaker.window_replacement">autorag.nodes.promptmaker.window_replacement module</a><ul>
-<li><a class="reference internal" href="#autorag.nodes.promptmaker.window_replacement.window_replacement"><code class="docutils literal notranslate"><span class="pre">window_replacement()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.nodes.promptmaker.window_replacement.WindowReplacement"><code class="docutils literal notranslate"><span class="pre">WindowReplacement</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.nodes.promptmaker.window_replacement.WindowReplacement.pure"><code class="docutils literal notranslate"><span class="pre">WindowReplacement.pure()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.nodes.promptmaker">Module contents</a></li>

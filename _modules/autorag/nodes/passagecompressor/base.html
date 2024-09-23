@@ -409,37 +409,45 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.passagecompressor.base</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">functools</span>
+<span></span><span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">llama_index.core.llms</span> <span class="kn">import</span> <span class="n">LLM</span>
 
 <span class="kn">from</span> <span class="nn">autorag</span> <span class="kn">import</span> <span class="n">generator_models</span>
+<span class="kn">from</span> <span class="nn">autorag.schema</span> <span class="kn">import</span> <span class="n">BaseModule</span>
 <span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="passage_compressor_node">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.base.passage_compressor_node">[docs]</a>
-<span class="k">def</span> <span class="nf">passage_compressor_node</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">])</span>
-	<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-		<span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running generator node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="BasePassageCompressor">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.base.BasePassageCompressor">[docs]</a>
+<span class="k">class</span> <span class="nc">BasePassageCompressor</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;Initialize passage compressor node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span>
+		<span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;Deleting passage compressor node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span>
+		<span class="p">)</span>
+
+<div class="viewcode-block" id="BasePassageCompressor.cast_to_run">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.base.BasePassageCompressor.cast_to_run">[docs]</a>
+	<span class="k">def</span> <span class="nf">cast_to_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;Running passage compressor node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span>
+		<span class="p">)</span>
 		<span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
 			<span class="p">[</span>
 				<span class="n">column</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
 				<span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">[</span>
 					<span class="s2">&quot;query&quot;</span><span class="p">,</span>
 					<span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span>
-					<span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span>
-					<span class="s2">&quot;retrieve_scores&quot;</span><span class="p">,</span>
 				<span class="p">]</span>
 			<span class="p">]</span>
 		<span class="p">),</span> <span class="s2">&quot;previous_result must have retrieved_contents, retrieved_ids, and retrieve_scores columns.&quot;</span>
@@ -447,50 +455,45 @@
 
 		<span class="n">queries</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 		<span class="n">retrieved_contents</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-		<span class="n">retrieved_ids</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-		<span class="n">retrieve_scores</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_contents</span></div>
+</div>
 
-		<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;tree_summarize&quot;</span><span class="p">,</span> <span class="s2">&quot;refine&quot;</span><span class="p">]:</span>
-			<span class="n">param_list</span> <span class="o">=</span> <span class="p">[</span>
-				<span class="s2">&quot;prompt&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;chat_prompt&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;context_window&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;num_output&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;batch&quot;</span><span class="p">,</span>
-			<span class="p">]</span>
-			<span class="n">param_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
-			<span class="n">kwargs_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
-			<span class="n">llm_name</span> <span class="o">=</span> <span class="n">kwargs_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">)</span>
-			<span class="n">llm</span> <span class="o">=</span> <span class="n">make_llm</span><span class="p">(</span><span class="n">llm_name</span><span class="p">,</span> <span class="n">kwargs_dict</span><span class="p">)</span>
-			<span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span>
-				<span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
-				<span class="n">contents</span><span class="o">=</span><span class="n">retrieved_contents</span><span class="p">,</span>
-				<span class="n">scores</span><span class="o">=</span><span class="n">retrieve_scores</span><span class="p">,</span>
-				<span class="n">ids</span><span class="o">=</span><span class="n">retrieved_ids</span><span class="p">,</span>
-				<span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span>
-				<span class="o">**</span><span class="n">param_dict</span><span class="p">,</span>
-			<span class="p">)</span>
-			<span class="k">del</span> <span class="n">llm</span>
-			<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span>
-		<span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;longllmlingua&quot;</span><span class="p">:</span>
-			<span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span>
-				<span class="n">queries</span><span class="o">=</span><span class="n">queries</span><span class="p">,</span>
-				<span class="n">contents</span><span class="o">=</span><span class="n">retrieved_contents</span><span class="p">,</span>
-				<span class="n">scores</span><span class="o">=</span><span class="n">retrieve_scores</span><span class="p">,</span>
-				<span class="n">ids</span><span class="o">=</span><span class="n">retrieved_ids</span><span class="p">,</span>
-				<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-			<span class="p">)</span>
-			<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span>
-		<span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;pass_compressor&quot;</span><span class="p">:</span>
-			<span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">contents</span><span class="o">=</span><span class="n">retrieved_contents</span><span class="p">)</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-				<span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not supported in passage compressor node.&quot;</span>
-			<span class="p">)</span>
 
-		<span class="k">return</span> <span class="n">result</span>
 
-	<span class="k">return</span> <span class="n">wrapper</span></div>
+<div class="viewcode-block" id="LlamaIndexCompressor">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.base.LlamaIndexCompressor">[docs]</a>
+<span class="k">class</span> <span class="nc">LlamaIndexCompressor</span><span class="p">(</span><span class="n">BasePassageCompressor</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+	<span class="n">param_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">,</span> <span class="s2">&quot;chat_prompt&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initialize passage compressor module.</span>
+
+<span class="sd">		:param project_dir: The project directory</span>
+<span class="sd">		:param llm: The llm name that will be used to summarize.</span>
+<span class="sd">			The LlamaIndex LLM model can be used in here.</span>
+<span class="sd">		:param kwargs: Extra parameter for init llm</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+		<span class="n">kwargs_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+			<span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_list</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+		<span class="p">)</span>
+		<span class="n">llm_name</span> <span class="o">=</span> <span class="n">kwargs_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;llm&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">:</span> <span class="n">LLM</span> <span class="o">=</span> <span class="n">make_llm</span><span class="p">(</span><span class="n">llm_name</span><span class="p">,</span> <span class="n">kwargs_dict</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LlamaIndexCompressor.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.base.LlamaIndexCompressor.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_contents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="n">param_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_list</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="o">**</span><span class="n">param_dict</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">result</span><span class="p">))</span></div>
+</div>
 
 
 

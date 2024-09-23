@@ -414,6 +414,7 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -1104,6 +1105,30 @@
 				<span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">find_key_values</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target_key</span><span class="p">))</span>
 
 	<span class="k">return</span> <span class="n">values</span></div>
+
+
+
+<div class="viewcode-block" id="pop_params">
+<a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.pop_params">[docs]</a>
+<span class="k">def</span> <span class="nf">pop_params</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Pop parameters from the given func and return them.</span>
+<span class="sd">	It automatically deletes the parameters like &quot;self&quot; or &quot;cls&quot;.</span>
+
+<span class="sd">	:param func: The function to pop parameters.</span>
+<span class="sd">	:param kwargs: kwargs to pop parameters.</span>
+<span class="sd">	:return: The popped parameters.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">ignore_params</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;cls&quot;</span><span class="p">]</span>
+	<span class="n">target_params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+	<span class="n">target_params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_params</span><span class="p">,</span> <span class="n">target_params</span><span class="p">))</span>
+
+	<span class="n">init_params</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="n">kwargs_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+	<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs_keys</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">target_params</span><span class="p">:</span>
+			<span class="n">init_params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">init_params</span></div>
 
 </pre></div>
         </article>

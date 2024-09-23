@@ -411,23 +411,52 @@
           <h1>Source code for autorag.nodes.passageaugmenter.pass_passage_augmenter</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.passageaugmenter.base</span> <span class="kn">import</span> <span class="n">passage_augmenter_node</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">autorag.nodes.passageaugmenter.base</span> <span class="kn">import</span> <span class="n">BasePassageAugmenter</span>
+<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span>
 
 
-<div class="viewcode-block" id="pass_passage_augmenter">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passageaugmenter.html#autorag.nodes.passageaugmenter.pass_passage_augmenter.pass_passage_augmenter">[docs]</a>
-<span class="nd">@passage_augmenter_node</span>
-<span class="k">def</span> <span class="nf">pass_passage_augmenter</span><span class="p">(</span>
-	<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
-	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Do not perform augmentation.</span>
-<span class="sd">	Return given passages, scores, and ids as is.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="n">ids_list</span><span class="p">,</span> <span class="n">contents_list</span><span class="p">,</span> <span class="n">scores_list</span></div>
+<div class="viewcode-block" id="PassPassageAugmenter">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passageaugmenter.html#autorag.nodes.passageaugmenter.pass_passage_augmenter.PassPassageAugmenter">[docs]</a>
+<span class="k">class</span> <span class="nc">PassPassageAugmenter</span><span class="p">(</span><span class="n">BasePassageAugmenter</span><span class="p">):</span>
+<div class="viewcode-block" id="PassPassageAugmenter.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passageaugmenter.html#autorag.nodes.passageaugmenter.pass_passage_augmenter.PassPassageAugmenter.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Run the passage augmenter node - PassPassageAugmenter module.</span>
+
+<span class="sd">		:param previous_result: The previous result Dataframe.</span>
+<span class="sd">		:param top_k: You must input the top_k value to get the top k results.</span>
+<span class="sd">		:param kwargs: Not affected.</span>
+<span class="sd">		:return: DataFrame with retrieved_contents, retrieved_ids, and retrieve_scores columns</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">top_k</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;top_k&quot;</span><span class="p">)</span>
+
+		<span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="n">contents</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="n">scores</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+		<span class="n">augmented_ids</span><span class="p">,</span> <span class="n">augmented_contents</span><span class="p">,</span> <span class="n">augmented_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span>
+			<span class="n">ids</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">scores</span>
+		<span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sort_by_scores</span><span class="p">(</span>
+			<span class="n">augmented_contents</span><span class="p">,</span> <span class="n">augmented_ids</span><span class="p">,</span> <span class="n">augmented_scores</span><span class="p">,</span> <span class="n">top_k</span>
+		<span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+	<span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Do not perform augmentation.</span>
+<span class="sd">		Return given passages, scores, and ids as is.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">ids_list</span><span class="p">,</span> <span class="n">contents_list</span><span class="p">,</span> <span class="n">scores_list</span></div>
 
 </pre></div>
         </article>

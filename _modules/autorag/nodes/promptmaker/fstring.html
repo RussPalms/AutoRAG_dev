@@ -411,40 +411,58 @@
           <h1>Source code for autorag.nodes.promptmaker.fstring</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.promptmaker.base</span> <span class="kn">import</span> <span class="n">prompt_maker_node</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">autorag.nodes.promptmaker.base</span> <span class="kn">import</span> <span class="n">BasePromptMaker</span>
+<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span>
 
 
-<div class="viewcode-block" id="fstring">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.fstring.fstring">[docs]</a>
-<span class="nd">@prompt_maker_node</span>
-<span class="k">def</span> <span class="nf">fstring</span><span class="p">(</span>
-	<span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">retrieved_contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Make a prompt using f-string from a query and retrieved_contents.</span>
-<span class="sd">	You must type a prompt or prompt list at config yaml file like this:</span>
+<div class="viewcode-block" id="Fstring">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.fstring.Fstring">[docs]</a>
+<span class="k">class</span> <span class="nc">Fstring</span><span class="p">(</span><span class="n">BasePromptMaker</span><span class="p">):</span>
+<div class="viewcode-block" id="Fstring.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.fstring.Fstring.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;prompts&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="n">prompt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span>
+			<span class="n">previous_result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+		<span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">)</span></div>
 
-<span class="sd">	.. Code:: yaml</span>
-<span class="sd">	nodes:</span>
-<span class="sd">	- node_type: prompt_maker</span>
-<span class="sd">	  modules:</span>
-<span class="sd">	  - module_type: fstring</span>
-<span class="sd">	    prompt: [Answer this question: {query} \n\n {retrieved_contents},</span>
-<span class="sd">	    Read the passages carefully and answer this question: {query} \n\n Passages: {retrieved_contents}]</span>
 
-<span class="sd">	:param prompt: A prompt string.</span>
-<span class="sd">	:param queries: List of query strings.</span>
-<span class="sd">	:param retrieved_contents: List of retrieved contents.</span>
-<span class="sd">	:return: Prompts that made by f-string.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">retrieved_contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Make a prompt using f-string from a query and retrieved_contents.</span>
+<span class="sd">		You must type a prompt or prompt list at a config YAML file like this:</span>
 
-	<span class="k">def</span> <span class="nf">fstring_row</span><span class="p">(</span><span class="n">_prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_retrieved_contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-		<span class="n">contents_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_retrieved_contents</span><span class="p">)</span>
-		<span class="k">return</span> <span class="n">_prompt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">_query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="o">=</span><span class="n">contents_str</span><span class="p">)</span>
+<span class="sd">		.. Code:: yaml</span>
+<span class="sd">		nodes:</span>
+<span class="sd">		- node_type: prompt_maker</span>
+<span class="sd">		  modules:</span>
+<span class="sd">		  - module_type: fstring</span>
+<span class="sd">			prompt: [Answer this question: {query} \n\n {retrieved_contents},</span>
+<span class="sd">			Read the passages carefully and answer this question: {query} \n\n Passages: {retrieved_contents}]</span>
 
-	<span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fstring_row</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">))</span>
-	<span class="p">)</span></div>
+<span class="sd">		:param prompt: A prompt string.</span>
+<span class="sd">		:param queries: List of query strings.</span>
+<span class="sd">		:param retrieved_contents: List of retrieved contents.</span>
+<span class="sd">		:return: Prompts that are made by f-string.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="k">def</span> <span class="nf">fstring_row</span><span class="p">(</span>
+			<span class="n">_prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_retrieved_contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+		<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+			<span class="n">contents_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_retrieved_contents</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">_prompt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">_query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="o">=</span><span class="n">contents_str</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span>
+				<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fstring_row</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+				<span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">),</span>
+			<span class="p">)</span>
+		<span class="p">)</span></div>
 
 </pre></div>
         </article>

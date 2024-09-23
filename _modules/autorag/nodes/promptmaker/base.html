@@ -409,28 +409,33 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.promptmaker.base</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span><span class="p">,</span> <span class="n">fetch_contents</span>
+<span class="kn">from</span> <span class="nn">autorag.schema.base</span> <span class="kn">import</span> <span class="n">BaseModule</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="prompt_maker_node">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.base.prompt_maker_node">[docs]</a>
-<span class="k">def</span> <span class="nf">prompt_maker_node</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-	<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;prompts&quot;</span><span class="p">])</span>
-	<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-		<span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running prompt maker node - </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="BasePromptMaker">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.base.BasePromptMaker">[docs]</a>
+<span class="k">class</span> <span class="nc">BasePromptMaker</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+			<span class="sa">f</span><span class="s2">&quot;Initialize prompt maker node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span>
+		<span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Prompt maker node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module is deleted.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BasePromptMaker.cast_to_run">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.base.BasePromptMaker.cast_to_run">[docs]</a>
+	<span class="k">def</span> <span class="nf">cast_to_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running prompt maker node - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> module...&quot;</span><span class="p">)</span>
 		<span class="c1"># get query and retrieved contents from previous_result</span>
 		<span class="k">assert</span> <span class="p">(</span>
 			<span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
@@ -441,33 +446,8 @@
 		<span class="n">query</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 		<span class="n">retrieved_contents</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 		<span class="n">prompt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;prompt&quot;</span><span class="p">)</span>
-
-		<span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;fstring&quot;</span><span class="p">:</span>
-			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;long_context_reorder&quot;</span><span class="p">:</span>
-			<span class="k">assert</span> <span class="p">(</span>
-				<span class="s2">&quot;retrieve_scores&quot;</span> <span class="ow">in</span> <span class="n">previous_result</span><span class="o">.</span><span class="n">columns</span>
-			<span class="p">),</span> <span class="s2">&quot;previous_result must have retrieve_scores column.&quot;</span>
-			<span class="n">retrieve_scores</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieve_scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="n">retrieve_scores</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;window_replacement&quot;</span><span class="p">:</span>
-			<span class="n">retrieved_ids</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;retrieved_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-			<span class="c1"># load corpus</span>
-			<span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
-			<span class="n">corpus_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
-				<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;corpus.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
-			<span class="p">)</span>
-			<span class="c1"># get metadata from corpus</span>
-			<span class="n">retrieved_metadata</span> <span class="o">=</span> <span class="n">fetch_contents</span><span class="p">(</span>
-				<span class="n">corpus_data</span><span class="p">,</span> <span class="n">retrieved_ids</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;metadata&quot;</span>
-			<span class="p">)</span>
-			<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="n">retrieved_metadata</span><span class="p">)</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-				<span class="sa">f</span><span class="s2">&quot;Module </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not implemented or not supported.&quot;</span>
-			<span class="p">)</span>
-
-	<span class="k">return</span> <span class="n">wrapper</span></div>
+		<span class="k">return</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved_contents</span><span class="p">,</span> <span class="n">prompt</span></div>
+</div>
 
 </pre></div>
         </article>

@@ -409,11 +409,12 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.nodes.queryexpansion.multi_query_expansion</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.queryexpansion.base</span> <span class="kn">import</span> <span class="n">query_expansion_node</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.queryexpansion.base</span> <span class="kn">import</span> <span class="n">BaseQueryExpansion</span>
+<span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span>
 
 <span class="n">multi_query_expansion_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are an AI language model assistant.</span>
 <span class="s2">    Your task is to generate 3 different versions of the given user</span>
@@ -421,45 +422,46 @@
 <span class="s2">    By generating multiple perspectives on the user question,</span>
 <span class="s2">    your goal is to help the user overcome some of the limitations</span>
 <span class="s2">    of distance-based similarity search. Provide these alternative</span>
-<span class="s2">    questions separated by newlines. Original question: </span><span class="si">{question}</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    questions separated by newlines. Original question: </span><span class="si">{query}</span><span class="s2">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="multi_query_expansion">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.multi_query_expansion.multi_query_expansion">[docs]</a>
-<span class="nd">@query_expansion_node</span>
-<span class="k">def</span> <span class="nf">multi_query_expansion</span><span class="p">(</span>
-	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">generator_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-	<span class="n">generator_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
-	<span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">multi_query_expansion_prompt</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Expand a list of queries using a multi-query expansion approach.</span>
-<span class="sd">	LLM model generate 3 different versions queries for each input query.</span>
+<div class="viewcode-block" id="MultiQueryExpansion">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.multi_query_expansion.MultiQueryExpansion">[docs]</a>
+<span class="k">class</span> <span class="nc">MultiQueryExpansion</span><span class="p">(</span><span class="n">BaseQueryExpansion</span><span class="p">):</span>
+<div class="viewcode-block" id="MultiQueryExpansion.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.multi_query_expansion.MultiQueryExpansion.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;queries&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">queries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<span class="sd">	:param queries: List[str], queries to decompose.</span>
-<span class="sd">	:param generator_func: Callable, generator functions.</span>
-<span class="sd">	:param generator_params: Dict, generator parameters.</span>
-<span class="sd">	:param prompt: str, prompt to use for multi-query expansion.</span>
-<span class="sd">	    default prompt comes from langchain MultiQueryRetriever default query prompt.</span>
-<span class="sd">	:return: List[List[str]], list of expansion query.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">full_prompts</span> <span class="o">=</span> <span class="p">[]</span>
-	<span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
-		<span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
-			<span class="n">full_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;prompt: </span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="se">\n\n</span><span class="s2"> question: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="n">full_prompt</span> <span class="o">=</span> <span class="n">multi_query_expansion_prompt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
-		<span class="n">full_prompts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_prompt</span><span class="p">)</span>
-	<span class="n">input_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;prompts&quot;</span><span class="p">:</span> <span class="n">full_prompts</span><span class="p">})</span>
-	<span class="n">result_df</span> <span class="o">=</span> <span class="n">generator_func</span><span class="p">(</span>
-		<span class="n">project_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">previous_result</span><span class="o">=</span><span class="n">input_df</span><span class="p">,</span> <span class="o">**</span><span class="n">generator_params</span>
-	<span class="p">)</span>
-	<span class="n">answers</span> <span class="o">=</span> <span class="n">result_df</span><span class="p">[</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-	<span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_multi_query_expansion</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">answers</span><span class="p">))</span>
-	<span class="p">)</span>
-	<span class="k">return</span> <span class="n">results</span></div>
+		<span class="c1"># pop prompt from kwargs</span>
+		<span class="n">prompt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;prompt&quot;</span><span class="p">,</span> <span class="n">multi_query_expansion_prompt</span><span class="p">)</span>
+		<span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;generator_module_type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+		<span class="n">expanded_queries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_expanded_query</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">expanded_queries</span><span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">multi_query_expansion_prompt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Expand a list of queries using a multi-query expansion approach.</span>
+<span class="sd">		LLM model generate 3 different versions queries for each input query.</span>
+
+<span class="sd">		:param queries: List[str], queries to decompose.</span>
+<span class="sd">		:param prompt: str, prompt to use for multi-query expansion.</span>
+<span class="sd">			default prompt comes from langchain MultiQueryRetriever default query prompt.</span>
+<span class="sd">		:return: List[List[str]], list of expansion query.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">full_prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">prompt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">x</span><span class="p">),</span> <span class="n">queries</span><span class="p">))</span>
+		<span class="n">input_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;prompts&quot;</span><span class="p">:</span> <span class="n">full_prompts</span><span class="p">})</span>
+		<span class="n">result_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">pure</span><span class="p">(</span><span class="n">previous_result</span><span class="o">=</span><span class="n">input_df</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="n">answers</span> <span class="o">=</span> <span class="n">result_df</span><span class="p">[</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_multi_query_expansion</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">answers</span><span class="p">))</span>
+		<span class="p">)</span>
+		<span class="k">return</span> <span class="n">results</span></div>
 
 
 

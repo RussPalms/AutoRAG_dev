@@ -411,82 +411,87 @@
           <h1>Source code for autorag.nodes.passagefilter.threshold_cutoff</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.passagefilter.base</span> <span class="kn">import</span> <span class="n">passage_filter_node</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">convert_inputs_to_list</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">autorag.nodes.passagefilter.base</span> <span class="kn">import</span> <span class="n">BasePassageFilter</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">convert_inputs_to_list</span><span class="p">,</span> <span class="n">result_to_dataframe</span>
 
 
-<div class="viewcode-block" id="threshold_cutoff">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagefilter.html#autorag.nodes.passagefilter.threshold_cutoff.threshold_cutoff">[docs]</a>
-<span class="nd">@passage_filter_node</span>
-<span class="k">def</span> <span class="nf">threshold_cutoff</span><span class="p">(</span>
-	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
-	<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-	<span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Filters the contents, scores, and ids based on a previous result&#39;s score.</span>
-<span class="sd">	Keeps at least one item per query if all scores are below the threshold.</span>
-
-<span class="sd">	:param queries: List of query strings (not used in the current implementation).</span>
-<span class="sd">	:param contents_list: List of content strings for each query.</span>
-<span class="sd">	:param scores_list: List of scores for each content.</span>
-<span class="sd">	:param ids_list: List of ids for each content.</span>
-<span class="sd">	:param threshold: The minimum score to keep an item.</span>
-<span class="sd">	:param reverse: If True, the lower the score, the better.</span>
-<span class="sd">	    Default is False.</span>
-<span class="sd">	:return: Filtered lists of contents, ids, and scores.</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">remain_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">threshold_cutoff_pure</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">reverse</span><span class="p">),</span> <span class="n">scores_list</span><span class="p">)</span>
-	<span class="p">)</span>
-
-	<span class="n">remain_content_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">],</span> <span class="n">contents_list</span><span class="p">,</span> <span class="n">remain_indices</span><span class="p">)</span>
-	<span class="p">)</span>
-	<span class="n">remain_scores_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">],</span> <span class="n">scores_list</span><span class="p">,</span> <span class="n">remain_indices</span><span class="p">)</span>
-	<span class="p">)</span>
-	<span class="n">remain_ids_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_id</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="p">[</span><span class="n">_id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">],</span> <span class="n">ids_list</span><span class="p">,</span> <span class="n">remain_indices</span><span class="p">)</span>
-	<span class="p">)</span>
-
-	<span class="k">return</span> <span class="n">remain_content_list</span><span class="p">,</span> <span class="n">remain_ids_list</span><span class="p">,</span> <span class="n">remain_scores_list</span></div>
+<div class="viewcode-block" id="ThresholdCutoff">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagefilter.html#autorag.nodes.passagefilter.threshold_cutoff.ThresholdCutoff">[docs]</a>
+<span class="k">class</span> <span class="nc">ThresholdCutoff</span><span class="p">(</span><span class="n">BasePassageFilter</span><span class="p">):</span>
+<div class="viewcode-block" id="ThresholdCutoff.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagefilter.html#autorag.nodes.passagefilter.threshold_cutoff.ThresholdCutoff.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">_</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+		<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+		<span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Filters the contents, scores, and ids based on a previous result&#39;s score.</span>
+<span class="sd">		Keeps at least one item per query if all scores are below the threshold.</span>
 
-<div class="viewcode-block" id="threshold_cutoff_pure">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagefilter.html#autorag.nodes.passagefilter.threshold_cutoff.threshold_cutoff_pure">[docs]</a>
-<span class="nd">@convert_inputs_to_list</span>
-<span class="k">def</span> <span class="nf">threshold_cutoff_pure</span><span class="p">(</span>
-	<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Return indices that have to remain.</span>
-<span class="sd">	Return at least one index if there is nothing to remain.</span>
+<span class="sd">		:param contents_list: List of content strings for each query.</span>
+<span class="sd">		:param scores_list: List of scores for each content.</span>
+<span class="sd">		:param ids_list: List of ids for each content.</span>
+<span class="sd">		:param threshold: The minimum score to keep an item.</span>
+<span class="sd">		:param reverse: If True, the lower the score, the better.</span>
+<span class="sd">		    Default is False.</span>
+<span class="sd">		:return: Filtered lists of contents, ids, and scores.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">remain_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__row_pure</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">reverse</span><span class="p">),</span> <span class="n">scores_list</span><span class="p">)</span>
+		<span class="p">)</span>
 
-<span class="sd">	:param scores_list: Each score</span>
-<span class="sd">	:param threshold: The threshold to cut off</span>
-<span class="sd">	:param reverse: If True, the lower the score, the better</span>
-<span class="sd">	    Default is False.</span>
-<span class="sd">	:return: Indices to remain at the contents</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scores_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;scores_list must be a list.&quot;</span>
+		<span class="n">remain_content_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">],</span> <span class="n">contents_list</span><span class="p">,</span> <span class="n">remain_indices</span><span class="p">)</span>
+		<span class="p">)</span>
+		<span class="n">remain_scores_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">],</span> <span class="n">scores_list</span><span class="p">,</span> <span class="n">remain_indices</span><span class="p">)</span>
+		<span class="p">)</span>
+		<span class="n">remain_ids_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_id</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="p">[</span><span class="n">_id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">],</span> <span class="n">ids_list</span><span class="p">,</span> <span class="n">remain_indices</span><span class="p">)</span>
+		<span class="p">)</span>
 
-	<span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
-		<span class="n">remain_indices</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scores_list</span><span class="p">)</span> <span class="k">if</span> <span class="n">score</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
-		<span class="p">]</span>
-		<span class="n">default_index</span> <span class="o">=</span> <span class="n">scores_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">scores_list</span><span class="p">))</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">remain_indices</span> <span class="o">=</span> <span class="p">[</span>
-			<span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scores_list</span><span class="p">)</span> <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="n">threshold</span>
-		<span class="p">]</span>
-		<span class="n">default_index</span> <span class="o">=</span> <span class="n">scores_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">scores_list</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">remain_content_list</span><span class="p">,</span> <span class="n">remain_ids_list</span><span class="p">,</span> <span class="n">remain_scores_list</span>
 
-	<span class="k">return</span> <span class="n">remain_indices</span> <span class="k">if</span> <span class="n">remain_indices</span> <span class="k">else</span> <span class="p">[</span><span class="n">default_index</span><span class="p">]</span></div>
+	<span class="nd">@convert_inputs_to_list</span>
+	<span class="k">def</span> <span class="nf">__row_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span> <span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Return indices that have to remain.</span>
+<span class="sd">		Return at least one index if there is nothing to remain.</span>
+
+<span class="sd">		:param scores_list: Each score</span>
+<span class="sd">		:param threshold: The threshold to cut off</span>
+<span class="sd">		:param reverse: If True, the lower the score, the better</span>
+<span class="sd">			Default is False.</span>
+<span class="sd">		:return: Indices to remain at the contents</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scores_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;scores_list must be a list.&quot;</span>
+
+		<span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+			<span class="n">remain_indices</span> <span class="o">=</span> <span class="p">[</span>
+				<span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scores_list</span><span class="p">)</span> <span class="k">if</span> <span class="n">score</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
+			<span class="p">]</span>
+			<span class="n">default_index</span> <span class="o">=</span> <span class="n">scores_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">scores_list</span><span class="p">))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">remain_indices</span> <span class="o">=</span> <span class="p">[</span>
+				<span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scores_list</span><span class="p">)</span> <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="n">threshold</span>
+			<span class="p">]</span>
+			<span class="n">default_index</span> <span class="o">=</span> <span class="n">scores_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">scores_list</span><span class="p">))</span>
+
+		<span class="k">return</span> <span class="n">remain_indices</span> <span class="k">if</span> <span class="n">remain_indices</span> <span class="k">else</span> <span class="p">[</span><span class="n">default_index</span><span class="p">]</span></div>
 
 </pre></div>
         </article>

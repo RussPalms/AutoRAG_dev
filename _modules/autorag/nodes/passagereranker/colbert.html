@@ -417,81 +417,119 @@
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoModel</span><span class="p">,</span> <span class="n">AutoTokenizer</span>
 
-<span class="kn">from</span> <span class="nn">autorag.nodes.passagereranker.base</span> <span class="kn">import</span> <span class="n">passage_reranker_node</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">flatten_apply</span><span class="p">,</span> <span class="n">sort_by_scores</span><span class="p">,</span> <span class="n">select_top_k</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.passagereranker.base</span> <span class="kn">import</span> <span class="n">BasePassageReranker</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">flatten_apply</span><span class="p">,</span>
+	<span class="n">sort_by_scores</span><span class="p">,</span>
+	<span class="n">select_top_k</span><span class="p">,</span>
+	<span class="n">pop_params</span><span class="p">,</span>
+	<span class="n">result_to_dataframe</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="colbert_reranker">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.colbert.colbert_reranker">[docs]</a>
-<span class="nd">@passage_reranker_node</span>
-<span class="k">def</span> <span class="nf">colbert_reranker</span><span class="p">(</span>
-	<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">scores_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
-	<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-	<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
-	<span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;colbert-ir/colbertv2.0&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Rerank a list of contents with Colbert rerank models.</span>
-<span class="sd">	You can get more information about a Colbert model at https://huggingface.co/colbert-ir/colbertv2.0.</span>
-<span class="sd">	It uses BERT-based model, so recommend using CUDA gpu for faster reranking.</span>
+<div class="viewcode-block" id="ColbertReranker">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.colbert.ColbertReranker">[docs]</a>
+<span class="k">class</span> <span class="nc">ColbertReranker</span><span class="p">(</span><span class="n">BasePassageReranker</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+		<span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;colbert-ir/colbertv2.0&quot;</span><span class="p">,</span>
+		<span class="o">*</span><span class="n">args</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+	<span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initialize a colbert rerank model for reranking.</span>
 
-<span class="sd">	:param queries: The list of queries to use for reranking</span>
-<span class="sd">	:param contents_list: The list of lists of contents to rerank</span>
-<span class="sd">	:param scores_list: The list of lists of scores retrieved from the initial ranking</span>
-<span class="sd">	:param ids_list: The list of lists of ids retrieved from the initial ranking</span>
-<span class="sd">	:param top_k: The number of passages to be retrieved</span>
-<span class="sd">	:param batch: The number of queries to be processed in a batch</span>
-<span class="sd">	    Default is 64.</span>
-<span class="sd">	:param model_name: The model name for Colbert rerank.</span>
-<span class="sd">	    You can choose colbert model for reranking.</span>
-<span class="sd">	    Default is &quot;colbert-ir/colbertv2.0&quot;.</span>
-<span class="sd">	:return: Tuple of lists containing the reranked contents, ids, and scores</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
-	<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-	<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+<span class="sd">		:param project_dir: The project directory</span>
+<span class="sd">		:param model_name: The model name for Colbert rerank.</span>
+<span class="sd">			You can choose a colbert model for reranking.</span>
+<span class="sd">			The default is &quot;colbert-ir/colbertv2.0&quot;.</span>
+<span class="sd">		:param kwargs: Extra parameter for the model.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+		<span class="n">model_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="o">**</span><span class="n">model_params</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">device</span>
+		<span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
 
-	<span class="c1"># get query and content embeddings</span>
-	<span class="n">query_embedding_list</span> <span class="o">=</span> <span class="n">get_colbert_embedding_batch</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
-	<span class="n">content_embedding_list</span> <span class="o">=</span> <span class="n">flatten_apply</span><span class="p">(</span>
-		<span class="n">get_colbert_embedding_batch</span><span class="p">,</span>
-		<span class="n">contents_list</span><span class="p">,</span>
-		<span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-		<span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
-		<span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span>
-	<span class="p">)</span>
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+		<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+			<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
 
-	<span class="k">del</span> <span class="n">model</span>
-	<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-		<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+<div class="viewcode-block" id="ColbertReranker.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.colbert.ColbertReranker.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="n">top_k</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;top_k&quot;</span><span class="p">)</span>
+		<span class="n">batch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span></div>
 
-	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-		<span class="p">{</span>
-			<span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="n">ids_list</span><span class="p">,</span>
-			<span class="s2">&quot;query_embedding&quot;</span><span class="p">:</span> <span class="n">query_embedding_list</span><span class="p">,</span>
-			<span class="s2">&quot;contents&quot;</span><span class="p">:</span> <span class="n">contents_list</span><span class="p">,</span>
-			<span class="s2">&quot;content_embedding&quot;</span><span class="p">:</span> <span class="n">content_embedding_list</span><span class="p">,</span>
-		<span class="p">}</span>
-	<span class="p">)</span>
-	<span class="n">temp_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;content_embedding&quot;</span><span class="p">)</span>
-	<span class="n">temp_df</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-		<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_colbert_score</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;query_embedding&quot;</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;content_embedding&quot;</span><span class="p">]),</span>
-		<span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-	<span class="p">)</span>
-	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-	<span class="n">df</span><span class="p">[[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-		<span class="n">sort_by_scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span>
-	<span class="p">)</span>
-	<span class="n">results</span> <span class="o">=</span> <span class="n">select_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">],</span> <span class="n">top_k</span><span class="p">)</span>
 
-	<span class="k">return</span> <span class="p">(</span>
-		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-		<span class="n">results</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-	<span class="p">)</span></div>
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+		<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+		<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Rerank a list of contents with Colbert rerank models.</span>
+<span class="sd">		You can get more information about a Colbert model at https://huggingface.co/colbert-ir/colbertv2.0.</span>
+<span class="sd">		It uses BERT-based model, so recommend using CUDA gpu for faster reranking.</span>
+
+<span class="sd">		:param queries: The list of queries to use for reranking</span>
+<span class="sd">		:param contents_list: The list of lists of contents to rerank</span>
+<span class="sd">		:param ids_list: The list of lists of ids retrieved from the initial ranking</span>
+<span class="sd">		:param top_k: The number of passages to be retrieved</span>
+<span class="sd">		:param batch: The number of queries to be processed in a batch</span>
+<span class="sd">			Default is 64.</span>
+
+<span class="sd">		:return: Tuple of lists containing the reranked contents, ids, and scores</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="c1"># get query and content embeddings</span>
+		<span class="n">query_embedding_list</span> <span class="o">=</span> <span class="n">get_colbert_embedding_batch</span><span class="p">(</span>
+			<span class="n">queries</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">batch</span>
+		<span class="p">)</span>
+		<span class="n">content_embedding_list</span> <span class="o">=</span> <span class="n">flatten_apply</span><span class="p">(</span>
+			<span class="n">get_colbert_embedding_batch</span><span class="p">,</span>
+			<span class="n">contents_list</span><span class="p">,</span>
+			<span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+			<span class="n">tokenizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+			<span class="n">batch_size</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span>
+		<span class="p">)</span>
+		<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+			<span class="p">{</span>
+				<span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="n">ids_list</span><span class="p">,</span>
+				<span class="s2">&quot;query_embedding&quot;</span><span class="p">:</span> <span class="n">query_embedding_list</span><span class="p">,</span>
+				<span class="s2">&quot;contents&quot;</span><span class="p">:</span> <span class="n">contents_list</span><span class="p">,</span>
+				<span class="s2">&quot;content_embedding&quot;</span><span class="p">:</span> <span class="n">content_embedding_list</span><span class="p">,</span>
+			<span class="p">}</span>
+		<span class="p">)</span>
+		<span class="n">temp_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;content_embedding&quot;</span><span class="p">)</span>
+		<span class="n">temp_df</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_colbert_score</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;query_embedding&quot;</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;content_embedding&quot;</span><span class="p">]),</span>
+			<span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+		<span class="p">)</span>
+		<span class="n">df</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+			<span class="n">temp_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="p">)</span>
+		<span class="n">df</span><span class="p">[[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+			<span class="n">sort_by_scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span>
+		<span class="p">)</span>
+		<span class="n">results</span> <span class="o">=</span> <span class="n">select_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;ids&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">],</span> <span class="n">top_k</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="p">(</span>
+			<span class="n">results</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="n">results</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+			<span class="n">results</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+		<span class="p">)</span></div>
 
 
 
