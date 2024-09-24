@@ -418,7 +418,7 @@
 
 <span class="kn">from</span> <span class="nn">autorag.nodes.generator.base</span> <span class="kn">import</span> <span class="n">BaseGenerator</span>
 <span class="kn">from</span> <span class="nn">autorag.utils</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">pop_params</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">pop_params</span><span class="p">,</span> <span class="n">to_list</span>
 
 
 <div class="viewcode-block" id="Vllm">
@@ -470,7 +470,7 @@
 	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_tokens&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_log_probs&quot;</span><span class="p">])</span>
 	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 		<span class="n">prompts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">prompts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">prompts</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
@@ -501,7 +501,8 @@
 		<span class="k">if</span> <span class="s2">&quot;logprobs&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
 			<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;logprobs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-		<span class="n">generate_params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="n">sampling_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">SamplingParams</span><span class="o">.</span><span class="n">from_optional</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+		<span class="n">generate_params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span><span class="o">**</span><span class="n">sampling_params</span><span class="p">)</span>
 		<span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RequestOutput</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vllm_model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
 			<span class="n">prompts</span><span class="p">,</span> <span class="n">generate_params</span>
 		<span class="p">)</span>
@@ -516,7 +517,11 @@
 				<span class="nb">zip</span><span class="p">(</span><span class="n">log_probs</span><span class="p">,</span> <span class="n">generated_token_ids</span><span class="p">),</span>
 			<span class="p">)</span>
 		<span class="p">)</span>
-		<span class="k">return</span> <span class="n">generated_texts</span><span class="p">,</span> <span class="n">generated_token_ids</span><span class="p">,</span> <span class="n">generated_log_probs</span></div>
+		<span class="k">return</span> <span class="p">(</span>
+			<span class="n">to_list</span><span class="p">(</span><span class="n">generated_texts</span><span class="p">),</span>
+			<span class="n">to_list</span><span class="p">(</span><span class="n">generated_token_ids</span><span class="p">),</span>
+			<span class="n">to_list</span><span class="p">(</span><span class="n">generated_log_probs</span><span class="p">),</span>
+		<span class="p">)</span></div>
 
 </pre></div>
         </article>
