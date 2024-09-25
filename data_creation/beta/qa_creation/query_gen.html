@@ -456,8 +456,8 @@ They typically require a yes or no answer or a brief explanation and often inqui
 <li><p>OpenAI</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">factoid_query_gen</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">factoid_query_gen</span>
 
 <span class="n">openai_client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
@@ -468,8 +468,8 @@ They typically require a yes or no answer or a brief explanation and often inqui
 <li><p>LlamaIndex</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.query.llama_gen_query</span> <span class="kn">import</span> <span class="n">factoid_query_gen</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.query.llama_gen_query</span> <span class="kn">import</span> <span class="n">factoid_query_gen</span>
 
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
@@ -488,8 +488,8 @@ They typically require a yes or no answer or a brief explanation and often inqui
 <li><p>OpenAI</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">concept_completion_query_gen</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">concept_completion_query_gen</span>
 
 <span class="n">openai_client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
@@ -500,8 +500,8 @@ They typically require a yes or no answer or a brief explanation and often inqui
 <li><p>LlamaIndex</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.query.llama_gen_query</span> <span class="kn">import</span> <span class="n">concept_completion_query_gen</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.query.llama_gen_query</span> <span class="kn">import</span> <span class="n">concept_completion_query_gen</span>
 
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
@@ -532,8 +532,8 @@ After that, it evolves a question from the second document to the multi-hop ques
 <li><p>OpenAI</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">two_hop_incremental</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">two_hop_incremental</span>
 
 <span class="n">openai_client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
@@ -544,8 +544,8 @@ After that, it evolves a question from the second document to the multi-hop ques
 <li><p>LlamaIndex</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.query.llama_gen_query</span> <span class="kn">import</span> <span class="n">two_hop_incremental</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.query.llama_gen_query</span> <span class="kn">import</span> <span class="n">two_hop_incremental</span>
 
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>

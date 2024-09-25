@@ -430,8 +430,8 @@ It uses the LLM to generate the answer for the question and the given context (r
 It does not have specific constraints on how it generates the answer.</p>
 <section id="openai">
 <h3>OpenAI<a class="headerlink" href="#openai" title="Link to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.generation_gt.openai_gen_gt</span> <span class="kn">import</span> <span class="n">make_basic_gen_gt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.generation_gt.openai_gen_gt</span> <span class="kn">import</span> <span class="n">make_basic_gen_gt</span>
 <span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
@@ -442,8 +442,8 @@ It does not have specific constraints on how it generates the answer.</p>
 </section>
 <section id="llamaindex">
 <h3>LlamaIndex<a class="headerlink" href="#llamaindex" title="Link to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.generation_gt.llama_index_gen_gt</span> <span class="kn">import</span> <span class="n">make_basic_gen_gt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.generation_gt.llama_index_gen_gt</span> <span class="kn">import</span> <span class="n">make_basic_gen_gt</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
 
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
@@ -460,8 +460,8 @@ Concise means that the answer is short and clear, just like a summary.
 It is usually just a word that is the answer to the question.</p>
 <section id="id1">
 <h3>OpenAI<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.generation_gt.openai_gen_gt</span> <span class="kn">import</span> <span class="n">make_concise_gen_gt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.generation_gt.openai_gen_gt</span> <span class="kn">import</span> <span class="n">make_concise_gen_gt</span>
 <span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
@@ -472,8 +472,8 @@ It is usually just a word that is the answer to the question.</p>
 </section>
 <section id="id2">
 <h3>LlamaIndex<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.generation_gt.llama_index_gen_gt</span> <span class="kn">import</span> <span class="n">make_concise_gen_gt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.generation_gt.llama_index_gen_gt</span> <span class="kn">import</span> <span class="n">make_concise_gen_gt</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
 
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>

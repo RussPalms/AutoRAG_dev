@@ -455,7 +455,7 @@ which is <code class="docutils literal notranslate"><span class="pre">llama_docu
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">llama_index.core</span> <span class="kn">import</span> <span class="n">SimpleDirectoryReader</span>
 <span class="kn">from</span> <span class="nn">llama_index.core.node_parser</span> <span class="kn">import</span> <span class="n">TokenTextSplitter</span>
-<span class="kn">from</span> <span class="nn">autorag.data.corpus</span> <span class="kn">import</span> <span class="n">llama_text_node_to_parquet</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.corpus</span> <span class="kn">import</span> <span class="n">llama_text_node_to_parquet</span>
 
 <span class="n">documents</span> <span class="o">=</span> <span class="n">SimpleDirectoryReader</span><span class="p">(</span><span class="s1">&#39;your_dir_path&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
 <span class="n">nodes</span> <span class="o">=</span> <span class="n">TokenTextSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span><span class="o">.</span><span class="n">get_nodes_from_documents</span><span class="p">(</span><span class="n">documents</span><span class="o">=</span><span class="n">documents</span><span class="p">)</span>
@@ -467,7 +467,7 @@ which is <code class="docutils literal notranslate"><span class="pre">llama_docu
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">langchain_community.document_loaders</span> <span class="kn">import</span> <span class="n">DirectoryLoader</span>
 <span class="kn">from</span> <span class="nn">langchain_text_splitters</span> <span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
-<span class="kn">from</span> <span class="nn">autorag.data.corpus</span> <span class="kn">import</span> <span class="n">langchain_documents_to_parquet</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.corpus</span> <span class="kn">import</span> <span class="n">langchain_documents_to_parquet</span>
 
 <span class="n">documents</span> <span class="o">=</span> <span class="n">DirectoryLoader</span><span class="p">(</span><span class="s1">&#39;your_dir_path&#39;</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="s1">&#39;**/*.md&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 <span class="n">documents</span> <span class="o">=</span> <span class="n">RecursiveCharacterTextSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span><span class="o">.</span><span class="n">split_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
@@ -487,7 +487,7 @@ which is <code class="docutils literal notranslate"><span class="pre">llama_docu
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">generate_qa_llama_index</span><span class="p">,</span> <span class="n">make_single_content_qa</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.qacreation</span> <span class="kn">import</span> <span class="n">generate_qa_llama_index</span><span class="p">,</span> <span class="n">make_single_content_qa</span>
 
 <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
@@ -524,7 +524,7 @@ The prompt must contains two placeholders:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">generate_qa_llama_index</span><span class="p">,</span> <span class="n">make_single_content_qa</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.qacreation</span> <span class="kn">import</span> <span class="n">generate_qa_llama_index</span><span class="p">,</span> <span class="n">make_single_content_qa</span>
 
 <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Generate question and answer pairs for the given passage.</span>
@@ -557,7 +557,7 @@ It means that the prompt will be selected by a ratio per passage.</p>
 The dictionary must have the key, which is the prompt text file path, and the value which is the ratio of the prompt.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">generate_qa_llama_index_by_ratio</span><span class="p">,</span> <span class="n">make_single_content_qa</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.qacreation</span> <span class="kn">import</span> <span class="n">generate_qa_llama_index_by_ratio</span><span class="p">,</span> <span class="n">make_single_content_qa</span>
 
 <span class="n">ratio_dict</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;prompt1.txt&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -595,22 +595,22 @@ If retrieval_gt is not relevant, you have to remove it from the dataset.</p>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span><span class="p">,</span> <span class="n">generate_answers</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span><span class="p">,</span> <span class="n">generate_answers</span>
 
 <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
 <span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; column</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-                                      <span class="n">answer_creation_func</span><span class="o">=</span><span class="n">generate_answers</span><span class="p">,</span>
-                                      <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">output_filepath</span><span class="o">=</span><span class="s1">&#39;path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">cache_batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-                                      <span class="n">embedding_model</span><span class="o">=</span><span class="s1">&#39;openai_embed_3_large&#39;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                                 <span class="n">answer_creation_func</span><span class="o">=</span><span class="n">generate_answers</span><span class="p">,</span>
+                                 <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">output_filepath</span><span class="o">=</span><span class="s1">&#39;path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">cache_batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                                 <span class="n">embedding_model</span><span class="o">=</span><span class="s1">&#39;openai_embed_3_large&#39;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can use <code class="docutils literal notranslate"><span class="pre">PersistentClient</span></code> for saving corpus embeddings locally as well.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">chromadb</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span><span class="p">,</span> <span class="n">generate_answers</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span><span class="p">,</span> <span class="n">generate_answers</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="s1">&#39;path/to/chromadb&#39;</span><span class="p">)</span>
 <span class="n">collection</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span><span class="s1">&#39;auto-rag&#39;</span><span class="p">)</span>
@@ -619,9 +619,9 @@ If retrieval_gt is not relevant, you have to remove it from the dataset.</p>
 <span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; column</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-                                      <span class="n">answer_creation_func</span><span class="o">=</span><span class="n">generate_answers</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>
-                                      <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">output_filepath</span><span class="o">=</span><span class="s1">&#39;path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">cache_batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-                                      <span class="n">embedding_model</span><span class="o">=</span><span class="s1">&#39;openai_embed_3_large&#39;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                                 <span class="n">answer_creation_func</span><span class="o">=</span><span class="n">generate_answers</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>
+                                 <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">output_filepath</span><span class="o">=</span><span class="s1">&#39;path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">cache_batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                                 <span class="n">embedding_model</span><span class="o">=</span><span class="s1">&#39;openai_embed_3_large&#39;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -639,11 +639,11 @@ If retrieval_gt is not relevant, you have to remove it from the dataset.</p>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span>
 
 <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
 <span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
-   <span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; and &#39;generation_gt&#39; columns.</span>
+    <span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; and &#39;generation_gt&#39; columns.</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">exist_gen_gt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                  <span class="n">output_filepath</span><span class="o">=</span><span class="s1">&#39;path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">cache_batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
@@ -654,14 +654,14 @@ If retrieval_gt is not relevant, you have to remove it from the dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">chromadb</span>
 <span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span>
+<span class="kn">from</span> <span class="nn">autorag.data.legacy.qacreation</span> <span class="kn">import</span> <span class="n">make_qa_with_existing_qa</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="s1">&#39;path/to/chromadb&#39;</span><span class="p">)</span>
 <span class="n">collection</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span><span class="s1">&#39;auto-rag&#39;</span><span class="p">)</span>
 
 <span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;path/to/corpus.parquet&#39;</span><span class="p">)</span>
 <span class="n">existing_qa_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
-   <span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; and &#39;generation_gt&#39; columns.</span>
+    <span class="s1">&#39;path/to/existing_qa.parquet&#39;</span><span class="p">)</span>  <span class="c1"># It has to contain &#39;query&#39; and &#39;generation_gt&#39; columns.</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">qa_df</span> <span class="o">=</span> <span class="n">make_qa_with_existing_qa</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">existing_qa_df</span><span class="p">,</span> <span class="n">content_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
                                  <span class="n">exist_gen_gt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>

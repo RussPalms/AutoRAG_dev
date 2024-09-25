@@ -440,13 +440,13 @@ If the question is unanswerable, the generation_gt will be ‘Don’t know.’</
 <p>We can use the rule-based don’t know filter to filter unanswerable questions.
 This will just use the pre-made don’t know sentences and filter the questions.</p>
 <p>This is not perfect, but it is a simple and fast way to filter unanswerable questions.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.filter.dontknow</span> <span class="kn">import</span> <span class="n">dontknow_filter_rule_based</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.filter.dontknow</span> <span class="kn">import</span> <span class="n">dontknow_filter_rule_based</span>
 
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">,</span> <span class="n">corpus</span><span class="p">)</span>
 <span class="n">filtered_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">dontknow_filter_rule_based</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-		<span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># reset index</span>
-	<span class="p">)</span>
+    <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># reset index</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>You can use “en” and “ko” language.</p>
@@ -460,28 +460,28 @@ But since it uses the LLM, it is much slower and expensive than the rule-based d
 <li><p>OpenAI</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.filter.dontknow</span> <span class="kn">import</span> <span class="n">dontknow_filter_openai</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.filter.dontknow</span> <span class="kn">import</span> <span class="n">dontknow_filter_openai</span>
 
 <span class="n">openai_client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">,</span> <span class="n">corpus</span><span class="p">)</span>
 <span class="n">filtered_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_filter</span><span class="p">(</span><span class="n">dontknow_filter_openai</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">openai_client</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># reset index</span>
-    <span class="p">)</span>
+    <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># reset index</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>Llama Index</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">llama_index.llms.ollama</span> <span class="kn">import</span> <span class="n">Ollama</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.schema</span> <span class="kn">import</span> <span class="n">QA</span>
-<span class="kn">from</span> <span class="nn">autorag.data.beta.filter.dontknow</span> <span class="kn">import</span> <span class="n">dontknow_filter_llama_index</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.filter.dontknow</span> <span class="kn">import</span> <span class="n">dontknow_filter_llama_index</span>
 
 <span class="n">llm</span> <span class="o">=</span> <span class="n">Ollama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">)</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">,</span> <span class="n">corpus</span><span class="p">)</span>
 <span class="n">filtered_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_filter</span><span class="p">(</span><span class="n">dontknow_filter_llama_index</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># reset index</span>
-    <span class="p">)</span>
+    <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># reset index</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
