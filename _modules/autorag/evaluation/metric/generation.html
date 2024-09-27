@@ -486,6 +486,7 @@
 	<span class="n">smooth_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 	<span class="n">max_ngram_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
 	<span class="n">trg_lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+	<span class="n">effective_order</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
@@ -497,6 +498,8 @@
 <span class="sd">	:param smooth_value: The smoothing value for `floor` and `add-k` methods. `None` falls back to default value.</span>
 <span class="sd">	:param max_ngram_order: If given, it overrides the maximum n-gram order (default: 4) when computing precisions.</span>
 <span class="sd">	:param trg_lang: An optional language code to raise potential tokenizer warnings.</span>
+<span class="sd">	:param effective_order: If `True`, stop including n-gram orders for which precision is 0. This should be</span>
+<span class="sd">	`True`, if sentence-level BLEU will be computed.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">bleu_instance</span> <span class="o">=</span> <span class="n">BLEU</span><span class="p">(</span>
 		<span class="n">tokenize</span><span class="o">=</span><span class="n">tokenize</span><span class="p">,</span>
@@ -504,6 +507,7 @@
 		<span class="n">smooth_value</span><span class="o">=</span><span class="n">smooth_value</span><span class="p">,</span>
 		<span class="n">max_ngram_order</span><span class="o">=</span><span class="n">max_ngram_order</span><span class="p">,</span>
 		<span class="n">trg_lang</span><span class="o">=</span><span class="n">trg_lang</span><span class="p">,</span>
+		<span class="n">effective_order</span><span class="o">=</span><span class="n">effective_order</span><span class="p">,</span>
 		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 	<span class="p">)</span>
 
