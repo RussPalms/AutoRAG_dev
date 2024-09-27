@@ -506,6 +506,101 @@ You have to use gpt-4o-2024-08-06 or gpt-4o-mini-2024-07-18.</p></li>
 <dd></dd></dl>
 
 </section>
+<section id="module-autorag.data.qa.filter.passage_dependency">
+<span id="autorag-data-qa-filter-passage-dependency-module"></span><h2>autorag.data.qa.filter.passage_dependency module<a class="headerlink" href="#module-autorag.data.qa.filter.passage_dependency" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.data.qa.filter.passage_dependency.Response">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.data.qa.filter.passage_dependency.</span></span><span class="sig-name descname"><span class="pre">Response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_passage_dependent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/data/qa/filter/passage_dependency.html#Response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.data.qa.filter.passage_dependency.Response" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.data.qa.filter.passage_dependency.Response.is_passage_dependent">
+<span class="sig-name descname"><span class="pre">is_passage_dependent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#autorag.data.qa.filter.passage_dependency.Response.is_passage_dependent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.data.qa.filter.passage_dependency.Response.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#autorag.data.qa.filter.passage_dependency.Response.model_computed_fields" title="Link to this definition">¶</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.data.qa.filter.passage_dependency.Response.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#autorag.data.qa.filter.passage_dependency.Response.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.data.qa.filter.passage_dependency.Response.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'is_passage_dependent':</span> <span class="pre">FieldInfo(annotation=bool,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#autorag.data.qa.filter.passage_dependency.Response.model_fields" title="Link to this definition">¶</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.data.qa.filter.passage_dependency.passage_dependency_filter_llama_index">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.data.qa.filter.passage_dependency.</span></span><span class="sig-name descname"><span class="pre">passage_dependency_filter_llama_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseLLM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/autorag/data/qa/filter/passage_dependency.html#passage_dependency_filter_llama_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.data.qa.filter.passage_dependency.passage_dependency_filter_llama_index" title="Link to this definition">¶</a></dt>
+<dd><p>This will drop passage-dependent question rows.
+Passage-dependent questions are questions that the answer will change depending on what passage you choose.
+The passage-dependent questions will not be good for RAG evaluation, because any retrieval system can’t find the right passage with passage-dependent question.
+For example, when someone asks “What is the highest score according to the table?” the answer will be different depending on the table.
+And what is the table? The retrieval system can’t find the right passage with this question.
+You can use this filter with the ` batch_filter ` function at <cite>QA</cite> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> – The row dict from QA dataset.</p></li>
+<li><p><strong>llm</strong> – <dl class="simple">
+<dt>The Llama index llm instance.</dt><dd><p>It will be good if you set max tokens to low for saving tokens.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">param lang<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The supported language is en or ko.</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>False if the row question is a passage-dependent question (to be filtered).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.data.qa.filter.passage_dependency.passage_dependency_filter_openai">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.data.qa.filter.passage_dependency.</span></span><span class="sig-name descname"><span class="pre">passage_dependency_filter_openai</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncOpenAI</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gpt-4o-mini-2024-07-18'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/autorag/data/qa/filter/passage_dependency.html#passage_dependency_filter_openai"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.data.qa.filter.passage_dependency.passage_dependency_filter_openai" title="Link to this definition">¶</a></dt>
+<dd><p>This will drop passage-dependent question rows.
+Passage-dependent questions are questions that the answer will change depending on what passage you choose.
+The passage-dependent questions will not be good for RAG evaluation, because any retrieval system can’t find the right passage with passage-dependent question.
+For example, when someone asks “What is the highest score according to the table?” the answer will be different depending on the table.
+And what is the table? The retrieval system can’t find the right passage with this question.
+You can use this filter with the ` batch_filter ` function at <cite>QA</cite> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>row</strong> – <p>The row dict from QA dataset.
+:param client: The OpenAI client.
+:param model_name: The model name.</p>
+<blockquote>
+<div><p>You have to use gpt-4o-2024-08-06 or gpt-4o-mini-2024-07-18.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">param lang<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The supported language is en or ko.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>False if the row question is a passage-dependent question (to be filtered).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-autorag.data.qa.filter.prompt">
 <span id="autorag-data-qa-filter-prompt-module"></span><h2>autorag.data.qa.filter.prompt module<a class="headerlink" href="#module-autorag.data.qa.filter.prompt" title="Link to this heading">¶</a></h2>
 </section>
@@ -582,6 +677,18 @@ You have to use gpt-4o-2024-08-06 or gpt-4o-mini-2024-07-18.</p></li>
 <li><a class="reference internal" href="#autorag.data.qa.filter.dontknow.dontknow_filter_llama_index"><code class="docutils literal notranslate"><span class="pre">dontknow_filter_llama_index()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.data.qa.filter.dontknow.dontknow_filter_openai"><code class="docutils literal notranslate"><span class="pre">dontknow_filter_openai()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.data.qa.filter.dontknow.dontknow_filter_rule_based"><code class="docutils literal notranslate"><span class="pre">dontknow_filter_rule_based()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-autorag.data.qa.filter.passage_dependency">autorag.data.qa.filter.passage_dependency module</a><ul>
+<li><a class="reference internal" href="#autorag.data.qa.filter.passage_dependency.Response"><code class="docutils literal notranslate"><span class="pre">Response</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.data.qa.filter.passage_dependency.Response.is_passage_dependent"><code class="docutils literal notranslate"><span class="pre">Response.is_passage_dependent</span></code></a></li>
+<li><a class="reference internal" href="#autorag.data.qa.filter.passage_dependency.Response.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">Response.model_computed_fields</span></code></a></li>
+<li><a class="reference internal" href="#autorag.data.qa.filter.passage_dependency.Response.model_config"><code class="docutils literal notranslate"><span class="pre">Response.model_config</span></code></a></li>
+<li><a class="reference internal" href="#autorag.data.qa.filter.passage_dependency.Response.model_fields"><code class="docutils literal notranslate"><span class="pre">Response.model_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#autorag.data.qa.filter.passage_dependency.passage_dependency_filter_llama_index"><code class="docutils literal notranslate"><span class="pre">passage_dependency_filter_llama_index()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.data.qa.filter.passage_dependency.passage_dependency_filter_openai"><code class="docutils literal notranslate"><span class="pre">passage_dependency_filter_openai()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.data.qa.filter.prompt">autorag.data.qa.filter.prompt module</a></li>
