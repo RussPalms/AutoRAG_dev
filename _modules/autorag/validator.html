@@ -484,9 +484,9 @@
 
 		<span class="c1"># start Evaluate at temp project directory</span>
 		<span class="k">with</span> <span class="p">(</span>
-			<span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.parquet&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">qa_path</span><span class="p">,</span>
-			<span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.parquet&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">corpus_path</span><span class="p">,</span>
-			<span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_project_dir</span><span class="p">,</span>
+			<span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.parquet&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">qa_path</span><span class="p">,</span>
+			<span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.parquet&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">corpus_path</span><span class="p">,</span>
+			<span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">ignore_cleanup_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_project_dir</span><span class="p">,</span>
 		<span class="p">):</span>
 			<span class="n">sample_qa_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">qa_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 			<span class="n">sample_corpus_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">corpus_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -497,6 +497,10 @@
 				<span class="n">project_dir</span><span class="o">=</span><span class="n">temp_project_dir</span><span class="p">,</span>
 			<span class="p">)</span>
 			<span class="n">evaluator</span><span class="o">.</span><span class="n">start_trial</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
+			<span class="n">qa_path</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="n">corpus_path</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+			<span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">qa_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+			<span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">corpus_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
 		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validation complete.&quot;</span><span class="p">)</span></div>
 </div>

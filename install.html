@@ -428,11 +428,39 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>AutoRAG
 </pre></div>
 </div>
+<p>Plus, it is recommended to install PyOpenSSL and nltk libraries for full features.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pyOpenSSL
+pip<span class="w"> </span>install<span class="w"> </span>nltk
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import nltk; nltk.download(&#39;punkt_tab&#39;)&quot;</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import nltk; nltk.download(&#39;averaged_perceptron_tagger_eng&#39;)&quot;</span>
+</pre></div>
+</div>
 <div class="admonition-trouble-with-installation admonition">
 <p class="admonition-title">Trouble with installation?</p>
 <p>Do you have any trouble with installation?
 First, you can check out the <a class="reference internal" href="troubleshooting.html"><span class="std std-doc">troubleshooting</span></a> page.</p>
 </div>
+<section id="note-for-windows-users">
+<h2>Note for Windows Users<a class="headerlink" href="#note-for-windows-users" title="Link to this heading">¶</a></h2>
+<p>AutoRAG is not fully supported on Windows yet. There are several constraints for Windows users.</p>
+<ol class="arabic simple">
+<li><p>TART, UPR, and MonoT5 passage rerankers does not support Windows.</p></li>
+<li><p>Parsing might be not working properly in the Windows environment.</p></li>
+<li><p>Cannot use FlagEmbedding passage reranker with <code class="docutils literal notranslate"><span class="pre">batch</span></code> setting with 1. The default batch is 64.</p></li>
+</ol>
+<p>Due to the constraints, we recommend using Docker images for running AutoRAG on Windows.</p>
+<p>Plus, you MAKE SURE UPGRADE UP TO v0.3.1 for Windows users.</p>
+</section>
+<section id="installation-for-parsing">
+<h2>Installation for Parsing 🌲<a class="headerlink" href="#installation-for-parsing" title="Link to this heading">¶</a></h2>
+<p>For parsing you need to install some local packages like <a class="reference external" href="https://man7.org/linux/man-pages/man3/libmagic.3.html">libmagic</a>,
+<a class="reference external" href="https://github.com/tesseract-ocr/tesseract">tesseract</a>, and <a class="reference external" href="https://poppler.freedesktop.org/">poppler</a>.
+The installation method depends upon your OS.</p>
+<p>After installing this, you can install AutoRAG with parsing like below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>AutoRAG<span class="o">[</span>parse<span class="o">]</span>
+</pre></div>
+</div>
+</section>
 <section id="installation-for-korean">
 <h2>Installation for Korean 🇰🇷<a class="headerlink" href="#installation-for-korean" title="Link to this heading">¶</a></h2>
 <p>You can install optional dependencies for the Korean language.</p>
@@ -560,6 +588,8 @@ We are writing this documentation for contributors, so please wait for a while.<
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Installation and Setup</a><ul>
+<li><a class="reference internal" href="#note-for-windows-users">Note for Windows Users</a></li>
+<li><a class="reference internal" href="#installation-for-parsing">Installation for Parsing 🌲</a></li>
 <li><a class="reference internal" href="#installation-for-korean">Installation for Korean 🇰🇷</a></li>
 <li><a class="reference internal" href="#setup-openai-api-key">Setup OPENAI API KEY</a></li>
 <li><a class="reference internal" href="#build-from-source">Build from source</a></li>
