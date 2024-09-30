@@ -590,12 +590,19 @@ Running evaluation with another dataset in same folder can cause serious malfunc
 </section>
 <section id="deploy-your-optimal-rag-pipeline">
 <h2>Deploy your optimal RAG pipeline<a class="headerlink" href="#deploy-your-optimal-rag-pipeline" title="Link to this heading">¶</a></h2>
-<section id="run-as-a-cli">
-<h3>1. Run as a CLI<a class="headerlink" href="#run-as-a-cli" title="Link to this heading">¶</a></h3>
+<section id="run-as-a-code">
+<h3>1. Run as a Code<a class="headerlink" href="#run-as-a-code" title="Link to this heading">¶</a></h3>
 <p>You can use a found optimal RAG pipeline right away with an extracted YAML file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
 
 <span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">)</span>
+<span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;your question&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or you can use the trial folder to run the pipeline without extracted YAML file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_trial_folder</span><span class="p">(</span><span class="s1">&#39;/your/path/to/trial_dir&#39;</span><span class="p">)</span>
 <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;your question&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -607,6 +614,13 @@ Running evaluation with another dataset in same folder can cause serious malfunc
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
 
 <span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">)</span>
+<span class="n">runner</span><span class="o">.</span><span class="n">run_api_server</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_trial_folder</span><span class="p">(</span><span class="s1">&#39;/your/path/to/trial_dir&#39;</span><span class="p">)</span>
 <span class="n">runner</span><span class="o">.</span><span class="n">run_api_server</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -628,7 +642,17 @@ Running evaluation with another dataset in same folder can cause serious malfunc
 <span class="n">runner</span><span class="o">.</span><span class="n">run_web</span><span class="p">()</span>
 </pre></div>
 </div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_trial_folder</span><span class="p">(</span><span class="s1">&#39;/your/path/to/trial_dir&#39;</span><span class="p">)</span>
+<span class="n">runner</span><span class="o">.</span><span class="n">run_web</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The cli will run the streamlit web interface, but the code is gradio version.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>run_web<span class="w"> </span>--yaml_path<span class="w"> </span>your/path/to/pipeline.yaml
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>run_web<span class="w"> </span>--trial_path<span class="w"> </span>your/path/to/trial_dir
 </pre></div>
 </div>
 <div class="admonition-want-to-specify-project-folder admonition">
@@ -726,7 +750,7 @@ and evaluate it again and again for the better result.</p>
 <li><a class="reference internal" href="#run-dashboard-to-see-your-trial-result">Run Dashboard to see your trial result!</a></li>
 <li><a class="reference internal" href="#extract-pipeline-and-evaluate-test-dataset">Extract pipeline and evaluate test dataset</a></li>
 <li><a class="reference internal" href="#deploy-your-optimal-rag-pipeline">Deploy your optimal RAG pipeline</a><ul>
-<li><a class="reference internal" href="#run-as-a-cli">1. Run as a CLI</a></li>
+<li><a class="reference internal" href="#run-as-a-code">1. Run as a Code</a></li>
 <li><a class="reference internal" href="#run-as-an-api-server">2. Run as an API server</a></li>
 <li><a class="reference internal" href="#run-as-a-web-interface">3. Run as a Web Interface</a></li>
 </ul>
