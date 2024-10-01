@@ -347,6 +347,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api_spec/autorag.data.parse.html">autorag.data.parse package</a></li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../../../api_spec/autorag.data.qa.html">autorag.data.qa package</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of autorag.data.qa package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api_spec/autorag.data.qa.evolve.html">autorag.data.qa.evolve package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../api_spec/autorag.data.qa.filter.html">autorag.data.qa.filter package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../api_spec/autorag.data.qa.generation_gt.html">autorag.data.qa.generation_gt package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../api_spec/autorag.data.qa.query.html">autorag.data.qa.query package</a></li>
@@ -428,7 +429,7 @@
 <span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
 <span class="kn">from</span> <span class="nn">autorag.strategy</span> <span class="kn">import</span> <span class="n">measure_speed</span><span class="p">,</span> <span class="n">filter_by_threshold</span><span class="p">,</span> <span class="n">select_best</span>
 <span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">get_best_row</span><span class="p">,</span> <span class="n">to_list</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">get_best_row</span><span class="p">,</span> <span class="n">to_list</span><span class="p">,</span> <span class="n">apply_recursive</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
@@ -465,13 +466,7 @@
 		<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;qa.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
 	<span class="p">)</span>
 	<span class="n">retrieval_gt</span> <span class="o">=</span> <span class="n">qa_df</span><span class="p">[</span><span class="s2">&quot;retrieval_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-	<span class="n">retrieval_gt</span> <span class="o">=</span> <span class="p">[</span>
-		<span class="p">[</span>
-			<span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">sub_array</span><span class="p">]</span> <span class="k">if</span> <span class="n">sub_array</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[]</span>
-			<span class="k">for</span> <span class="n">sub_array</span> <span class="ow">in</span> <span class="n">inner_array</span>
-		<span class="p">]</span>
-		<span class="k">for</span> <span class="n">inner_array</span> <span class="ow">in</span> <span class="n">retrieval_gt</span>
-	<span class="p">]</span>
+	<span class="n">retrieval_gt</span> <span class="o">=</span> <span class="n">apply_recursive</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">to_list</span><span class="p">(</span><span class="n">retrieval_gt</span><span class="p">))</span>
 	<span class="c1"># make rows to metric_inputs</span>
 	<span class="n">metric_inputs</span> <span class="o">=</span> <span class="p">[</span>
 		<span class="n">MetricInput</span><span class="p">(</span><span class="n">retrieval_gt</span><span class="o">=</span><span class="n">ret_gt</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">generation_gt</span><span class="o">=</span><span class="n">gen_gt</span><span class="p">)</span>

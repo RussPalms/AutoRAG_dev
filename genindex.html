@@ -346,6 +346,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="api_spec/autorag.data.parse.html">autorag.data.parse package</a></li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="api_spec/autorag.data.qa.html">autorag.data.qa package</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of autorag.data.qa package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="api_spec/autorag.data.qa.evolve.html">autorag.data.qa.evolve package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api_spec/autorag.data.qa.filter.html">autorag.data.qa.filter package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api_spec/autorag.data.qa.generation_gt.html">autorag.data.qa.generation_gt package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api_spec/autorag.data.qa.query.html">autorag.data.qa.query package</a></li>
@@ -435,6 +436,8 @@
           <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse.answer">(autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse attribute)</a>
 </li>
         </ul></li>
+        <li><a href="api_spec/autorag.utils.html#autorag.utils.util.apply_recursive">apply_recursive() (in module autorag.utils.util)</a>
+</li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.async_g_eval">async_g_eval() (in module autorag.evaluation.metric.generation)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank.async_postprocess_nodes">async_postprocess_nodes() (autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank method)</a>
@@ -618,6 +621,34 @@
 
         <ul>
           <li><a href="api_spec/autorag.data.qa.html#module-autorag.data.qa">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.data.qa.evolve
+
+        <ul>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#module-autorag.data.qa.evolve">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.data.qa.evolve.llama_index_query_evolve
+
+        <ul>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#module-autorag.data.qa.evolve.llama_index_query_evolve">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.data.qa.evolve.openai_query_evolve
+
+        <ul>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#module-autorag.data.qa.evolve.openai_query_evolve">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.data.qa.evolve.prompt
+
+        <ul>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#module-autorag.data.qa.evolve.prompt">module</a>
 </li>
         </ul></li>
         <li>
@@ -893,6 +924,8 @@
           <li><a href="api_spec/autorag.nodes.passageaugmenter.html#module-autorag.nodes.passageaugmenter">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     autorag.nodes.passageaugmenter.base
 
@@ -914,8 +947,6 @@
           <li><a href="api_spec/autorag.nodes.passageaugmenter.html#module-autorag.nodes.passageaugmenter.prev_next_augmenter">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     autorag.nodes.passageaugmenter.run
 
@@ -1504,12 +1535,12 @@
         </ul></li>
         <li><a href="api_spec/autorag.html#autorag.web.chat_box">chat_box() (in module autorag.web)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.base.check_expanded_query">check_expanded_query() (in module autorag.nodes.queryexpansion.base)</a>
 </li>
         <li><a href="api_spec/autorag.data.qa.html#autorag.data.qa.schema.Raw.chunk">chunk() (autorag.data.qa.schema.Raw method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.html#autorag.chunker.Chunker">Chunker (class in autorag.chunker)</a>
 </li>
         <li><a href="api_spec/autorag.data.chunk.html#autorag.data.chunk.base.chunker_node">chunker_node() (in module autorag.data.chunk.base)</a>
@@ -1520,12 +1551,24 @@
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.colbert.ColbertReranker">ColbertReranker (class in autorag.nodes.passagereranker.colbert)</a>
 </li>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.llama_index_query_evolve.compress_ragas">compress_ragas() (in module autorag.data.qa.evolve.llama_index_query_evolve)</a>
+
+        <ul>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.compress_ragas">(in module autorag.data.qa.evolve.openai_query_evolve)</a>
+</li>
+        </ul></li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.upr.UPRScorer.compute">compute() (autorag.nodes.passagereranker.upr.UPRScorer method)</a>
 </li>
         <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.llama_gen_query.concept_completion_query_gen">concept_completion_query_gen() (in module autorag.data.qa.query.llama_gen_query)</a>
 
         <ul>
           <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.concept_completion_query_gen">(in module autorag.data.qa.query.openai_gen_query)</a>
+</li>
+        </ul></li>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.llama_index_query_evolve.conditional_evolve_ragas">conditional_evolve_ragas() (in module autorag.data.qa.evolve.llama_index_query_evolve)</a>
+
+        <ul>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.conditional_evolve_ragas">(in module autorag.data.qa.evolve.openai_query_evolve)</a>
 </li>
         </ul></li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.convert_datetime_string">convert_datetime_string() (in module autorag.utils.util)</a>
@@ -1609,6 +1652,8 @@
         <li><a href="api_spec/autorag.html#autorag.evaluator.Evaluator">Evaluator (class in autorag.evaluator)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.base.evenly_distribute_passages">evenly_distribute_passages() (in module autorag.nodes.retrieval.base)</a>
+</li>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.Response.evolved_query">evolved_query (autorag.data.qa.evolve.openai_query_evolve.Response attribute)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.koreranker.exp_normalize">exp_normalize() (in module autorag.nodes.passagereranker.koreranker)</a>
 </li>
@@ -1878,8 +1923,12 @@
 </li>
         <li><a href="api_spec/autorag.data.chunk.html#autorag.data.chunk.llama_index_chunk.llama_index_chunk_pure">llama_index_chunk_pure() (in module autorag.data.chunk.llama_index_chunk)</a>
 </li>
-        <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.llama_gen_query.llama_index_generate_base">llama_index_generate_base() (in module autorag.data.qa.query.llama_gen_query)</a>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.llama_index_query_evolve.llama_index_generate_base">llama_index_generate_base() (in module autorag.data.qa.evolve.llama_index_query_evolve)</a>
+
+        <ul>
+          <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.llama_gen_query.llama_index_generate_base">(in module autorag.data.qa.query.llama_gen_query)</a>
 </li>
+        </ul></li>
         <li><a href="api_spec/autorag.data.parse.html#autorag.data.parse.llamaparse.llama_parse">llama_parse() (in module autorag.data.parse.llamaparse)</a>
 </li>
     </ul></td>
@@ -1978,9 +2027,11 @@
 </li>
         <li><a href="api_spec/autorag.html#autorag.MockEmbeddingRandom">MockEmbeddingRandom (class in autorag)</a>
 </li>
-        <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.Response.model_computed_fields">model_computed_fields (autorag.data.qa.filter.dontknow.Response attribute)</a>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.Response.model_computed_fields">model_computed_fields (autorag.data.qa.evolve.openai_query_evolve.Response attribute)</a>
 
         <ul>
+          <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.Response.model_computed_fields">(autorag.data.qa.filter.dontknow.Response attribute)</a>
+</li>
           <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.passage_dependency.Response.model_computed_fields">(autorag.data.qa.filter.passage_dependency.Response attribute)</a>
 </li>
           <li><a href="api_spec/autorag.data.qa.generation_gt.html#autorag.data.qa.generation_gt.openai_gen_gt.Response.model_computed_fields">(autorag.data.qa.generation_gt.openai_gen_gt.Response attribute)</a>
@@ -1996,9 +2047,11 @@
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank.model_computed_fields">(autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank attribute)</a>
 </li>
         </ul></li>
-        <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.Response.model_config">model_config (autorag.data.qa.filter.dontknow.Response attribute)</a>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.Response.model_config">model_config (autorag.data.qa.evolve.openai_query_evolve.Response attribute)</a>
 
         <ul>
+          <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.Response.model_config">(autorag.data.qa.filter.dontknow.Response attribute)</a>
+</li>
           <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.passage_dependency.Response.model_config">(autorag.data.qa.filter.passage_dependency.Response attribute)</a>
 </li>
           <li><a href="api_spec/autorag.data.qa.generation_gt.html#autorag.data.qa.generation_gt.openai_gen_gt.Response.model_config">(autorag.data.qa.generation_gt.openai_gen_gt.Response attribute)</a>
@@ -2014,9 +2067,11 @@
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank.model_config">(autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank attribute)</a>
 </li>
         </ul></li>
-        <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.Response.model_fields">model_fields (autorag.data.qa.filter.dontknow.Response attribute)</a>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.Response.model_fields">model_fields (autorag.data.qa.evolve.openai_query_evolve.Response attribute)</a>
 
         <ul>
+          <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.Response.model_fields">(autorag.data.qa.filter.dontknow.Response attribute)</a>
+</li>
           <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.passage_dependency.Response.model_fields">(autorag.data.qa.filter.passage_dependency.Response attribute)</a>
 </li>
           <li><a href="api_spec/autorag.data.qa.generation_gt.html#autorag.data.qa.generation_gt.openai_gen_gt.Response.model_fields">(autorag.data.qa.generation_gt.openai_gen_gt.Response attribute)</a>
@@ -2085,6 +2140,14 @@
           <li><a href="api_spec/autorag.data.parse.html#module-autorag.data.parse.run">autorag.data.parse.run</a>
 </li>
           <li><a href="api_spec/autorag.data.qa.html#module-autorag.data.qa">autorag.data.qa</a>
+</li>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#module-autorag.data.qa.evolve">autorag.data.qa.evolve</a>
+</li>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#module-autorag.data.qa.evolve.llama_index_query_evolve">autorag.data.qa.evolve.llama_index_query_evolve</a>
+</li>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#module-autorag.data.qa.evolve.openai_query_evolve">autorag.data.qa.evolve.openai_query_evolve</a>
+</li>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#module-autorag.data.qa.evolve.prompt">autorag.data.qa.evolve.prompt</a>
 </li>
           <li><a href="api_spec/autorag.data.qa.html#module-autorag.data.qa.extract_evidence">autorag.data.qa.extract_evidence</a>
 </li>
@@ -2527,6 +2590,8 @@
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.query_evolve_openai_base">query_evolve_openai_base() (in module autorag.data.qa.evolve.openai_query_evolve)</a>
+</li>
         <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.query_gen_openai_base">query_gen_openai_base() (in module autorag.data.qa.query.openai_gen_query)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.query_decompose.QueryDecompose">QueryDecompose (class in autorag.nodes.queryexpansion.query_decompose)</a>
@@ -2551,6 +2616,12 @@
 </li>
         <li><a href="api_spec/autorag.data.qa.html#autorag.data.qa.schema.Raw">Raw (class in autorag.data.qa.schema)</a>
 </li>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.llama_index_query_evolve.reasoning_evolve_ragas">reasoning_evolve_ragas() (in module autorag.data.qa.evolve.llama_index_query_evolve)</a>
+
+        <ul>
+          <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.reasoning_evolve_ragas">(in module autorag.data.qa.evolve.openai_query_evolve)</a>
+</li>
+        </ul></li>
         <li><a href="api_spec/autorag.nodes.passagefilter.html#autorag.nodes.passagefilter.recency.RecencyFilter">RecencyFilter (class in autorag.nodes.passagefilter.recency)</a>
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.reconstruct_list">reconstruct_list() (in module autorag.utils.util)</a>
@@ -2559,9 +2630,11 @@
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.replace_value_in_dict">replace_value_in_dict() (in module autorag.utils.util)</a>
 </li>
-        <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.Response">Response (class in autorag.data.qa.filter.dontknow)</a>
+        <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.Response">Response (class in autorag.data.qa.evolve.openai_query_evolve)</a>
 
         <ul>
+          <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.Response">(class in autorag.data.qa.filter.dontknow)</a>
+</li>
           <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.passage_dependency.Response">(class in autorag.data.qa.filter.passage_dependency)</a>
 </li>
           <li><a href="api_spec/autorag.data.qa.generation_gt.html#autorag.data.qa.generation_gt.openai_gen_gt.Response">(class in autorag.data.qa.generation_gt.openai_gen_gt)</a>
@@ -2593,12 +2666,12 @@
 </li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_f1">retrieval_token_f1() (in module autorag.evaluation.metric.retrieval_contents)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_precision">retrieval_token_precision() (in module autorag.evaluation.metric.retrieval_contents)</a>
 </li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_recall">retrieval_token_recall() (in module autorag.evaluation.metric.retrieval_contents)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput.retrieved_contents">retrieved_contents (autorag.schema.metricinput.MetricInput attribute)</a>
 </li>
         <li><a href="api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput.retrieved_ids">retrieved_ids (autorag.schema.metricinput.MetricInput attribute)</a>

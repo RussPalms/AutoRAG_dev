@@ -348,6 +348,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.data.parse.html">autorag.data.parse package</a></li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="autorag.data.qa.html">autorag.data.qa package</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of autorag.data.qa package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="autorag.data.qa.evolve.html">autorag.data.qa.evolve package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="autorag.data.qa.filter.html">autorag.data.qa.filter package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="autorag.data.qa.generation_gt.html">autorag.data.qa.generation_gt package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="autorag.data.qa.query.html">autorag.data.qa.query package</a></li>
@@ -455,6 +456,23 @@
 </section>
 <section id="module-autorag.utils.util">
 <span id="autorag-utils-util-module"></span><h2>autorag.utils.util module<a class="headerlink" href="#module-autorag.utils.util" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.utils.util.apply_recursive">
+<span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">apply_recursive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/utils/util.html#apply_recursive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.apply_recursive" title="Link to this definition">¶</a></dt>
+<dd><p>Recursively apply a function to all elements in a list, tuple, set, np.ndarray, or pd.Series and return as List.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> – Function to apply to each element.</p></li>
+<li><p><strong>data</strong> – List or nested list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List with the function applied to each element.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.utils.util.convert_datetime_string">
 <span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">convert_datetime_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/utils/util.html#convert_datetime_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.convert_datetime_string" title="Link to this definition">¶</a></dt>
@@ -838,6 +856,7 @@ And its elements must be list type.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.utils.util">autorag.utils.util module</a><ul>
+<li><a class="reference internal" href="#autorag.utils.util.apply_recursive"><code class="docutils literal notranslate"><span class="pre">apply_recursive()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.convert_datetime_string"><code class="docutils literal notranslate"><span class="pre">convert_datetime_string()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.convert_env_in_dict"><code class="docutils literal notranslate"><span class="pre">convert_env_in_dict()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.convert_inputs_to_list"><code class="docutils literal notranslate"><span class="pre">convert_inputs_to_list()</span></code></a></li>

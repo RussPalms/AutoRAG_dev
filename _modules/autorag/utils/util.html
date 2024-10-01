@@ -347,6 +347,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_spec/autorag.data.parse.html">autorag.data.parse package</a></li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../../api_spec/autorag.data.qa.html">autorag.data.qa package</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of autorag.data.qa package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_spec/autorag.data.qa.evolve.html">autorag.data.qa.evolve package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../api_spec/autorag.data.qa.filter.html">autorag.data.qa.filter package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../api_spec/autorag.data.qa.generation_gt.html">autorag.data.qa.generation_gt package</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../api_spec/autorag.data.qa.query.html">autorag.data.qa.query package</a></li>
@@ -1134,6 +1135,29 @@
 		<span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">target_params</span><span class="p">:</span>
 			<span class="n">init_params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">init_params</span></div>
+
+
+
+<div class="viewcode-block" id="apply_recursive">
+<a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.apply_recursive">[docs]</a>
+<span class="k">def</span> <span class="nf">apply_recursive</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Recursively apply a function to all elements in a list, tuple, set, np.ndarray, or pd.Series and return as List.</span>
+
+<span class="sd">	:param func: Function to apply to each element.</span>
+<span class="sd">	:param data: List or nested list.</span>
+<span class="sd">	:return: List with the function applied to each element.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="p">(</span>
+		<span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+		<span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
+		<span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span>
+		<span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+		<span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+	<span class="p">):</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">apply_recursive</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
