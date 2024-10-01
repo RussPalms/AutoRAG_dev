@@ -3,9 +3,6 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="AutoRAG - Window Replacement" name="title" />
-<meta content="Learn about Window Replacement module in AutoRAG" name="description" />
-<meta content="AutoRAG,RAG,Advanced RAG,prompt" name="keywords" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8ZKQM6RT9"></script>
@@ -15,11 +12,11 @@
         gtag('js', new Date());
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
-    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="8. Generator" href="../generator/generator.html" /><link rel="prev" title="Long Context Reorder" href="long_context_reorder.html" />
-        <link rel="canonical" href="https://docs.auto-rag.com/nodes/prompt_maker/window_replacement.html" />
+    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Chunk" href="../chunk/chunk.html" /><link rel="prev" title="Filtering" href="filter.html" />
+        <link rel="canonical" href="https://docs.auto-rag.com/data_creation/qa_creation/evolve.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>Window Replacement - AutoRAG documentation</title>
+        <title>Query Evolving - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -223,32 +220,32 @@
 <li class="toctree-l1"><a class="reference internal" href="../../local_model.html">Configure LLM &amp; Embedding models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../data_creation/tutorial.html">Evaluation data creation tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../data_creation/data_format.html">Dataset Format</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../data_creation/data_creation.html">Data Creation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Data Creation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_creation/qa_creation/qa_creation.html">QA creation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of QA creation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/qa_creation/query_gen.html">Query Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/qa_creation/answer_gen.html">Answer Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/qa_creation/filter.html">Filtering</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/qa_creation/evolve.html">Query Evolving</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Evaluation data creation tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_format.html">Dataset Format</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../data_creation.html">Data Creation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Data Creation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="qa_creation.html">QA creation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of QA creation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="query_gen.html">Query Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="answer_gen.html">Answer Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="filter.html">Filtering</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Query Evolving</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_creation/chunk/chunk.html">Chunk</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Chunk</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/chunk/langchain_chunk.html">Langchain Chunk</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/chunk/llama_index_chunk.html">Llama Index Chunk</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../chunk/chunk.html">Chunk</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Chunk</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../chunk/langchain_chunk.html">Langchain Chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../chunk/llama_index_chunk.html">Llama Index Chunk</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_creation/parse/parse.html">Parse</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Parse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/parse/langchain_parse.html">Langchain Parse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/parse/llama_parse.html">Llama Parse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/parse/clova.html">Clova</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/parse/table_hybrid_parse.html">Table Hybrid Parse</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../parse/parse.html">Parse</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Parse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../parse/langchain_parse.html">Langchain Parse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parse/llama_parse.html">Llama Parse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parse/clova.html">Clova</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parse/table_hybrid_parse.html">Table Hybrid Parse</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_creation/legacy/legacy.html">Legacy</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Legacy</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/legacy/ragas.html">RAGAS evaluation data generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../data_creation/legacy/tutorial.html">Start creating your own evaluation data</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../legacy/legacy.html">Legacy</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Legacy</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../legacy/ragas.html">RAGAS evaluation data generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../legacy/tutorial.html">Start creating your own evaluation data</a></li>
 </ul>
 </li>
 </ul>
@@ -268,64 +265,64 @@
 <li class="toctree-l1"><a class="reference internal" href="../../evaluate_metrics/generation.html">Generation Metrics</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Nodes &amp; Modules</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Available List</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../query_expansion/query_expansion.html"><strong>1. Query Expansion</strong></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of 1. Query Expansion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../query_expansion/query_decompose.html">Query Decompose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../query_expansion/hyde.html">HyDE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../query_expansion/multi_query_expansion.html">Multi Query Expansion</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../nodes/index.html">Available List</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/query_expansion/query_expansion.html"><strong>1. Query Expansion</strong></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of 1. Query Expansion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/query_decompose.html">Query Decompose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/hyde.html">HyDE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/multi_query_expansion.html">Multi Query Expansion</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../retrieval/retrieval.html">2. Retrieval</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of 2. Retrieval</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../retrieval/bm25.html">BM25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../retrieval/vectordb.html">Vectordb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../retrieval/hybrid_rrf.html">Hybrid - rrf</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../retrieval/hybrid_cc.html">Hybrid - cc</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/retrieval/retrieval.html">2. Retrieval</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of 2. Retrieval</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/bm25.html">BM25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/vectordb.html">Vectordb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/hybrid_rrf.html">Hybrid - rrf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/hybrid_cc.html">Hybrid - cc</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_augmenter/passage_augmenter.html">3. Passage Augmenter</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of 3. Passage Augmenter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../passage_augmenter/prev_next_augmenter.html">Prev Next Augmenter</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_augmenter/passage_augmenter.html">3. Passage Augmenter</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of 3. Passage Augmenter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_augmenter/prev_next_augmenter.html">Prev Next Augmenter</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_reranker/passage_reranker.html">4. Passage_Reranker</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 4. Passage_Reranker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/upr.html">UPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/tart.html">TART</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/monot5.html">MonoT5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/koreranker.html">Ko-reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/cohere.html">cohere_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/rankgpt.html">RankGPT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/jina_reranker.html">jina_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/colbert.html">Colbert Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/sentence_transformer_reranker.html">Sentence Transformer Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/time_reranker.html">Time Reranker</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_reranker/passage_reranker.html">4. Passage_Reranker</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 4. Passage_Reranker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/upr.html">UPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/tart.html">TART</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/monot5.html">MonoT5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/koreranker.html">Ko-reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/cohere.html">cohere_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/rankgpt.html">RankGPT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/jina_reranker.html">jina_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/colbert.html">Colbert Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/sentence_transformer_reranker.html">Sentence Transformer Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/time_reranker.html">Time Reranker</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../passage_filter/similarity_threshold_cutoff.html">Similarity Threshold Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_filter/similarity_percentile_cutoff.html">Similarity Percentile Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_filter/recency_filter.html">Recency Filter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_filter/threshold_cutoff.html">Threshold Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_filter/percentile_cutoff.html">Percentile Cutoff</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/similarity_threshold_cutoff.html">Similarity Threshold Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/similarity_percentile_cutoff.html">Similarity Percentile Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/recency_filter.html">Recency Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/threshold_cutoff.html">Threshold Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/percentile_cutoff.html">Percentile Cutoff</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_compressor/passage_compressor.html">6. Passage_Compressor</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 6. Passage_Compressor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/tree_summarize.html">Tree Summarize</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/refine.html">Refine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/longllmlingua.html">Long LLM Lingua</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_compressor/passage_compressor.html">6. Passage_Compressor</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 6. Passage_Compressor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/tree_summarize.html">Tree Summarize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/refine.html">Refine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/longllmlingua.html">Long LLM Lingua</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="prompt_maker.html">7. Prompt Maker</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of 7. Prompt Maker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="fstring.html">F-String</a></li>
-<li class="toctree-l2"><a class="reference internal" href="long_context_reorder.html">Long Context Reorder</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Window Replacement</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/prompt_maker/prompt_maker.html">7. Prompt Maker</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of 7. Prompt Maker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/fstring.html">F-String</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/long_context_reorder.html">Long Context Reorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/window_replacement.html">Window Replacement</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../generator/generator.html">8. Generator</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of 8. Generator</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../generator/llama_index_llm.html">llama_index LLM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generator/vllm.html">vllm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generator/openai_llm.html">OpenAI LLM</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/generator/generator.html">8. Generator</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of 8. Generator</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/llama_index_llm.html">llama_index LLM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/vllm.html">vllm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/openai_llm.html">OpenAI LLM</a></li>
 </ul>
 </li>
 </ul>
@@ -403,7 +400,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../../_sources/nodes/prompt_maker/window_replacement.md.txt" title="View this page">
+  <a class="muted-link" href="../../_sources/data_creation/qa_creation/evolve.md.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -423,26 +420,79 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="window-replacement">
-<h1>Window Replacement<a class="headerlink" href="#window-replacement" title="Link to this heading">¶</a></h1>
-<p>📌Only available for corpus chunked with <code class="docutils literal notranslate"><span class="pre">sentence</span> <span class="pre">window</span></code> method</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">window_replacement</span></code> module is prompt maker based on <a class="reference external" href="https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/MetadataReplacementDemo/">llama_index</a>.</p>
-<p>Replace retrieved_contents with window to create a Prompt. This is most useful for large documents/indexes, as it helps
-to retrieve more fine-grained details.</p>
-<p>Make a prompt using <code class="docutils literal notranslate"><span class="pre">window_replacement</span></code> from a query and retrieved_contents.</p>
-<section id="module-parameters">
-<h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
-<p><strong>prompt</strong>: This is the prompt that will be input to llm. Since it is created using an fstring, it must
-contain <code class="docutils literal notranslate"><span class="pre">{query}</span></code> and <code class="docutils literal notranslate"><span class="pre">{retreived_contents}</span></code>.</p>
-</section>
-<section id="example-config-yaml">
-<h2><strong>Example config.yaml</strong><a class="headerlink" href="#example-config-yaml" title="Link to this heading">¶</a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">window_replacement</span>
-<span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;Tell</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">something</span><span class="nv"> </span><span class="s">about</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">question:</span><span class="nv"> </span><span class="s">{query}</span><span class="nv"> </span><span class="s">\n\n</span><span class="nv"> </span><span class="s">{retrieved_contents}&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">              </span><span class="s">&quot;Question:</span><span class="nv"> </span><span class="s">{query}</span><span class="nv"> </span><span class="s">\n</span><span class="nv"> </span><span class="s">Something</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">read:</span><span class="nv"> </span><span class="s">{retrieved_contents}</span><span class="nv"> </span><span class="s">\n</span><span class="nv"> </span><span class="s">What&#39;s</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">answer?&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span>
+          <section id="query-evolving">
+<h1>Query Evolving<a class="headerlink" href="#query-evolving" title="Link to this heading">¶</a></h1>
+<p>When you generate a query once, but you can evolve it in certain ways.
+There are many ways to evolve your query to a new query.
+It is common to get a naive, not specific, or realistic query at the first time.
+So, you can evolve your query to a more specific, realistic, or better query.</p>
+<p>There are so many ways to evolve, so it is hard to cover it all. So, we highly recommend you to write your own prompt for evolving.</p>
+<p>Here, we provide some examples for query evolving with your custom promts.
+After that, I will introduce query evolving functions.</p>
+<section id="make-a-custom-evolving-function">
+<h2>Make a Custom Evolving function<a class="headerlink" href="#make-a-custom-evolving-function" title="Link to this heading">¶</a></h2>
+<p>All you have to do is to write a function that calls LLM to evolving question with certain parameters.</p>
+<p>We use <code class="docutils literal notranslate"><span class="pre">row</span></code> as a parameter, which is a row of a DataFrame with a Dict type.
+So, you can use any value in the row of the QA dataframe.
+And for using it on the <code class="docutils literal notranslate"><span class="pre">batch_apply</span></code> with async, you have to use <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span></code> for the function.</p>
+<p>Here is an example of a custom-evolving function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.base.llms.base</span> <span class="kn">import</span> <span class="n">BaseLLM</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.base.llms.types</span> <span class="kn">import</span> <span class="n">ChatResponse</span><span class="p">,</span> <span class="n">ChatMessage</span><span class="p">,</span> <span class="n">MessageRole</span>
+<span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">evolve_to_rude</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">llm</span><span class="p">:</span> <span class="n">BaseLLM</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+	<span class="n">original_query</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span>
+	<span class="n">system_prompt</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Evolve the query to a rude question. Contain the original query&#39;s content, but make it super rude. Curse is okay to use.&quot;</span><span class="p">)</span>
+	<span class="n">user_prompt</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Original question: </span><span class="si">{</span><span class="n">original_query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+	<span class="n">response</span><span class="p">:</span> <span class="n">ChatResponse</span> <span class="o">=</span> <span class="k">await</span> <span class="n">llm</span><span class="o">.</span><span class="n">achat</span><span class="p">([</span><span class="n">system_prompt</span><span class="p">,</span> <span class="n">user_prompt</span><span class="p">])</span>
+	<span class="n">row</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+	<span class="k">return</span> <span class="n">row</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+<span class="n">qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span> <span class="c1"># qa is a QA instance with &quot;query&quot; column</span>
+    <span class="n">evolve_to_rude</span><span class="p">,</span>
+    <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="provided-query-evolving-functions">
+<h2>Provided Query Evolving Functions<a class="headerlink" href="#provided-query-evolving-functions" title="Link to this heading">¶</a></h2>
+<p>You can replace the function to the provided functions and use pre-made evolving functions.</p>
+<section id="reasoning-evolving">
+<h3>1. Reasoning Evolving<a class="headerlink" href="#reasoning-evolving" title="Link to this heading">¶</a></h3>
+<p>You can evolve the query to a reasoning question.
+These questions are complicated, need complex reasoning, and hard to guess the answer.</p>
+<p>This method is using RAGAS prompt.</p>
+<ul class="simple">
+<li><p>OpenAI : <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">autorag.data.qa.evolve.openai_query_evolve</span> <span class="pre">import</span> <span class="pre">reasoning_evolve_ragas</span></code></p></li>
+<li><p>LlamaIndex : <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">autorag.data.qa.evolve.llama_index_query_evolve</span> <span class="pre">import</span> <span class="pre">reasoning_evolve_ragas</span></code></p></li>
+</ul>
+</section>
+<section id="conditional-evolving">
+<h3>2. Conditional Evolving<a class="headerlink" href="#conditional-evolving" title="Link to this heading">¶</a></h3>
+<p>You can evolve the query to a conditional question.
+It gives a condition and increases the complexity of the question.</p>
+<p>This method is using RAGAS prompt.</p>
+<ul class="simple">
+<li><p>OpenAI : <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">autorag.data.qa.evolve.openai_query_evolve</span> <span class="pre">import</span> <span class="pre">conditional_evolve_ragas</span></code></p></li>
+<li><p>LlamaIndex : <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">autorag.data.qa.evolve.llama_index_query_evolve</span> <span class="pre">import</span> <span class="pre">conditional_evolve_ragas</span></code></p></li>
+</ul>
+</section>
+<section id="compress-query">
+<h3>3. Compress Query<a class="headerlink" href="#compress-query" title="Link to this heading">¶</a></h3>
+<p>This is a little bit different from other evolving functions. Usually, evolving functions make the question more complex.
+But this function compresses the question to a simpler question.</p>
+<p>Sometimes, the LLM generates a too complex or direct question with so much detailed information in the passages.
+It can feel too much for a people. Because people really can’t know too much information about their question.
+So, you can compress the question to a simpler question with the same meaning. It can be effective to increase difficulties.</p>
+<p>This method is using RAGAS prompt.</p>
+<ul class="simple">
+<li><p>OpenAI : <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">autorag.data.qa.evolve.openai_query_evolve</span> <span class="pre">import</span> <span class="pre">compress_ragas</span></code></p></li>
+<li><p>LlamaIndex : <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">autorag.data.qa.evolve.llama_index_query_evolve</span> <span class="pre">import</span> <span class="pre">compress_ragas</span></code></p></li>
+</ul>
+</section>
 </section>
 </section>
 
@@ -451,23 +501,23 @@ contain <code class="docutils literal notranslate"><span class="pre">{query}</sp
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../generator/generator.html">
+          <a class="next-page" href="../chunk/chunk.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">8. Generator</div>
+                <div class="title">Chunk</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="long_context_reorder.html">
+          <a class="prev-page" href="filter.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Long Context Reorder</div>
+                <div class="title">Filtering</div>
                 
               </div>
             </a>
@@ -501,9 +551,14 @@ contain <code class="docutils literal notranslate"><span class="pre">{query}</sp
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Window Replacement</a><ul>
-<li><a class="reference internal" href="#module-parameters"><strong>Module Parameters</strong></a></li>
-<li><a class="reference internal" href="#example-config-yaml"><strong>Example config.yaml</strong></a></li>
+<li><a class="reference internal" href="#">Query Evolving</a><ul>
+<li><a class="reference internal" href="#make-a-custom-evolving-function">Make a Custom Evolving function</a></li>
+<li><a class="reference internal" href="#provided-query-evolving-functions">Provided Query Evolving Functions</a><ul>
+<li><a class="reference internal" href="#reasoning-evolving">1. Reasoning Evolving</a></li>
+<li><a class="reference internal" href="#conditional-evolving">2. Conditional Evolving</a></li>
+<li><a class="reference internal" href="#compress-query">3. Compress Query</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
