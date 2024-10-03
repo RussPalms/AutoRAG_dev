@@ -438,9 +438,12 @@
 	<span class="n">support_modules</span> <span class="o">=</span> <span class="p">{</span>
 		<span class="c1"># parse</span>
 		<span class="s2">&quot;langchain_parse&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.parse&quot;</span><span class="p">,</span> <span class="s2">&quot;langchain_parse&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;clova&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.parse&quot;</span><span class="p">,</span> <span class="s2">&quot;clova_ocr&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;llamaparse&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.parse&quot;</span><span class="p">,</span> <span class="s2">&quot;llama_parse&quot;</span><span class="p">),</span>
-		<span class="s2">&quot;table_hybrid_parse&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.parse&quot;</span><span class="p">,</span> <span class="s2">&quot;table_hybrid_parse&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;clova&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.parse.clova&quot;</span><span class="p">,</span> <span class="s2">&quot;clova_ocr&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;llamaparse&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.parse.llamaparse&quot;</span><span class="p">,</span> <span class="s2">&quot;llama_parse&quot;</span><span class="p">),</span>
+		<span class="s2">&quot;table_hybrid_parse&quot;</span><span class="p">:</span> <span class="p">(</span>
+			<span class="s2">&quot;autorag.data.parse.table_hybrid_parse&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;table_hybrid_parse&quot;</span><span class="p">,</span>
+		<span class="p">),</span>
 		<span class="c1"># chunk</span>
 		<span class="s2">&quot;llama_index_chunk&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.chunk&quot;</span><span class="p">,</span> <span class="s2">&quot;llama_index_chunk&quot;</span><span class="p">),</span>
 		<span class="s2">&quot;langchain_chunk&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;autorag.data.chunk&quot;</span><span class="p">,</span> <span class="s2">&quot;langchain_chunk&quot;</span><span class="p">),</span>
