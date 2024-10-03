@@ -416,6 +416,7 @@
         <article role="main" id="furo-main-content">
           <h1>Source code for autorag.data.parse.llamaparse</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 <span class="kn">from</span> <span class="nn">llama_parse</span> <span class="kn">import</span> <span class="n">LlamaParse</span>
 
@@ -449,21 +450,24 @@
 
 	<span class="k">del</span> <span class="n">parse_instance</span>
 
-	<span class="n">texts</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
-	<span class="n">pages</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+	<span class="n">texts</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pages</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">item</span><span class="p">))</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">))</span>
 
-	<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">texts</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">pages</span></div>
+	<span class="k">return</span> <span class="n">texts</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pages</span></div>
 
 
 
 <div class="viewcode-block" id="llama_parse_pure">
 <a class="viewcode-back" href="../../../../api_spec/autorag.data.parse.html#autorag.data.parse.llamaparse.llama_parse_pure">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">llama_parse_pure</span><span class="p">(</span><span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parse_instance</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">llama_parse_pure</span><span class="p">(</span>
+	<span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parse_instance</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 	<span class="n">documents</span> <span class="o">=</span> <span class="k">await</span> <span class="n">parse_instance</span><span class="o">.</span><span class="n">aload_data</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
 
-	<span class="n">text</span> <span class="o">=</span> <span class="n">documents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+	<span class="n">texts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">documents</span><span class="p">))</span>
+	<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_path</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+	<span class="n">pages</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
-	<span class="k">return</span> <span class="n">text</span><span class="p">,</span> <span class="n">data_path</span></div>
+	<span class="k">return</span> <span class="n">texts</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pages</span></div>
 
 </pre></div>
         </article>
