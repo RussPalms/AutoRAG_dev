@@ -440,9 +440,8 @@ It does not have specific constraints on how it generates the answer.</p>
 <span class="kn">from</span> <span class="nn">autorag.data.qa.generation_gt.openai_gen_gt</span> <span class="kn">import</span> <span class="n">make_basic_gen_gt</span>
 <span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
-<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">make_basic_gen_gt</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
+<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">make_basic_gen_gt</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">AsyncOpenAI</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
@@ -470,9 +469,8 @@ It is usually just a word that is the answer to the question.</p>
 <span class="kn">from</span> <span class="nn">autorag.data.qa.generation_gt.openai_gen_gt</span> <span class="kn">import</span> <span class="n">make_concise_gen_gt</span>
 <span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
-<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">make_concise_gen_gt</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
+<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">make_concise_gen_gt</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">AsyncOpenAI</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>

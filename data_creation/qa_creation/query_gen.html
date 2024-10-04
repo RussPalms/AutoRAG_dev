@@ -465,9 +465,8 @@ They typically require a yes or no answer or a brief explanation and often inqui
 <span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
 <span class="kn">from</span> <span class="nn">autorag.data.qa.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">factoid_query_gen</span>
 
-<span class="n">openai_client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
-<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">factoid_query_gen</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">openai_client</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">)</span>
+<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">factoid_query_gen</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">AsyncOpenAI</span><span class="p">(),</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -497,9 +496,8 @@ They typically require a yes or no answer or a brief explanation and often inqui
 <span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
 <span class="kn">from</span> <span class="nn">autorag.data.qa.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">concept_completion_query_gen</span>
 
-<span class="n">openai_client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
-<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">concept_completion_query_gen</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">openai_client</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">)</span>
+<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">concept_completion_query_gen</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">AsyncOpenAI</span><span class="p">(),</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -541,9 +539,8 @@ After that, it evolves a question from the second document to the multi-hop ques
 <span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
 <span class="kn">from</span> <span class="nn">autorag.data.qa.query.openai_gen_query</span> <span class="kn">import</span> <span class="n">two_hop_incremental</span>
 
-<span class="n">openai_client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
-<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">two_hop_incremental</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">openai_client</span><span class="p">)</span>
+<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">two_hop_incremental</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">AsyncOpenAI</span><span class="p">())</span>
 </pre></div>
 </div>
 <ul class="simple">
