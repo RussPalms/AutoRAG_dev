@@ -465,9 +465,7 @@
 				<span class="k">else</span><span class="p">:</span>
 					<span class="n">metric_func</span> <span class="o">=</span> <span class="n">metric_funcs</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
 					<span class="c1"># Extract each required field from all payloads</span>
-					<span class="n">metric_scores</span> <span class="o">=</span> <span class="n">metric_func</span><span class="p">(</span>
-						<span class="n">metric_inputs</span><span class="o">=</span><span class="n">metric_inputs</span>
-					<span class="p">)</span>
+					<span class="n">metric_scores</span> <span class="o">=</span> <span class="n">metric_func</span><span class="p">(</span><span class="n">metric_inputs</span><span class="o">=</span><span class="n">metric_inputs</span><span class="p">)</span>
 					<span class="n">metrics_scores</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric_scores</span>
 
 			<span class="n">metric_result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metrics_scores</span><span class="p">)</span>

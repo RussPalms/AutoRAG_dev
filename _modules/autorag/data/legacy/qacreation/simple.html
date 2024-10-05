@@ -420,14 +420,12 @@
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 
-<span class="kn">import</span> <span class="nn">guidance</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">guidance</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">gen</span>
 
 
 <div class="viewcode-block" id="generate_qa_row">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.data.legacy.qacreation.html#autorag.data.legacy.qacreation.simple.generate_qa_row">[docs]</a>
-<span class="k">def</span> <span class="nf">generate_qa_row</span><span class="p">(</span><span class="n">llm</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">corpus_data_row</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">generate_qa_row</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="n">corpus_data_row</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	this sample code to generate rag dataset using OpenAI chat model</span>
 
@@ -435,6 +433,9 @@
 <span class="sd">	:param corpus_data_row: need &quot;contents&quot; column</span>
 <span class="sd">	:return: should to be dict which has &quot;query&quot;, &quot;generation_gt&quot; columns at least.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
+	<span class="kn">from</span> <span class="nn">guidance</span> <span class="kn">import</span> <span class="n">gen</span>
+	<span class="kn">import</span> <span class="nn">guidance</span>
+
 	<span class="n">temp_llm</span> <span class="o">=</span> <span class="n">llm</span>
 	<span class="k">with</span> <span class="n">guidance</span><span class="o">.</span><span class="n">user</span><span class="p">():</span>
 		<span class="n">temp_llm</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
@@ -470,7 +471,7 @@
 <div class="viewcode-block" id="generate_simple_qa_dataset">
 <a class="viewcode-back" href="../../../../../api_spec/autorag.data.legacy.qacreation.html#autorag.data.legacy.qacreation.simple.generate_simple_qa_dataset">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_simple_qa_dataset</span><span class="p">(</span>
-	<span class="n">llm</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">,</span>
 	<span class="n">corpus_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
 	<span class="n">output_filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 	<span class="n">generate_row_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>

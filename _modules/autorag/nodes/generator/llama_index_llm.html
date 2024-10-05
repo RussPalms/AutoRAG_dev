@@ -418,6 +418,7 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.base.llms.base</span> <span class="kn">import</span> <span class="n">BaseLLM</span>
 <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
 
 <span class="kn">from</span> <span class="nn">autorag</span> <span class="kn">import</span> <span class="n">generator_models</span>
@@ -451,7 +452,13 @@
 				<span class="s2">&quot;You can check valid llm names from autorag.generator_models.&quot;</span>
 			<span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="o">=</span> <span class="n">batch</span>
-		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span> <span class="o">==</span> <span class="s2">&quot;huggingfacellm&quot;</span><span class="p">:</span>
+		<span class="n">llm_class</span> <span class="o">=</span> <span class="n">generator_models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">]</span>
+
+		<span class="k">if</span> <span class="n">llm_class</span><span class="o">.</span><span class="n">class_name</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span>
+			<span class="s2">&quot;HuggingFace_LLM&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;HuggingFaceInferenceAPI&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;TextGenerationInference&quot;</span><span class="p">,</span>
+		<span class="p">]:</span>
 			<span class="n">model_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 				<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;model_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_name</span>
@@ -461,8 +468,7 @@
 						<span class="s2">&quot;`model` or `model_name` parameter must be provided for using huggingfacellm.&quot;</span>
 					<span class="p">)</span>
 			<span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;tokenizer_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;model_name&quot;</span><span class="p">]</span>
-		<span class="n">llm_class</span> <span class="o">=</span> <span class="n">generator_models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="p">]</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">llm_instance</span> <span class="o">=</span> <span class="n">llm_class</span><span class="p">(</span><span class="o">**</span><span class="n">pop_params</span><span class="p">(</span><span class="n">llm_class</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">llm_instance</span><span class="p">:</span> <span class="n">BaseLLM</span> <span class="o">=</span> <span class="n">llm_class</span><span class="p">(</span><span class="o">**</span><span class="n">pop_params</span><span class="p">(</span><span class="n">llm_class</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
 
 	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>

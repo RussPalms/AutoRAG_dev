@@ -427,19 +427,27 @@
 <span class="kn">from</span> <span class="nn">llama_index.core.embeddings</span> <span class="kn">import</span> <span class="n">BaseEmbedding</span>
 <span class="kn">from</span> <span class="nn">llama_index.embeddings.openai</span> <span class="kn">import</span> <span class="n">OpenAIEmbedding</span>
 <span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">AsyncOpenAI</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">rouge_score</span> <span class="kn">import</span> <span class="n">tokenizers</span>
 <span class="kn">from</span> <span class="nn">rouge_score.rouge_scorer</span> <span class="kn">import</span> <span class="n">RougeScorer</span>
 <span class="kn">from</span> <span class="nn">sacrebleu.metrics.bleu</span> <span class="kn">import</span> <span class="n">BLEU</span>
 
 <span class="kn">from</span> <span class="nn">autorag</span> <span class="kn">import</span> <span class="n">embedding_models</span>
-<span class="kn">from</span> <span class="nn">autorag.evaluation.metric.util</span> <span class="kn">import</span> <span class="n">autorag_metric_loop</span>
-<span class="kn">from</span> <span class="nn">autorag.evaluation.metric.util</span> <span class="kn">import</span> <span class="n">calculate_cosine_similarity</span>
+<span class="kn">from</span> <span class="nn">autorag.evaluation.metric.deepeval_prompt</span> <span class="kn">import</span> <span class="n">FaithfulnessTemplate</span>
+<span class="kn">from</span> <span class="nn">autorag.evaluation.metric.util</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">autorag_metric_loop</span><span class="p">,</span>
+	<span class="n">calculate_cosine_similarity</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.generator</span> <span class="kn">import</span> <span class="n">OpenAILLM</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.generator.base</span> <span class="kn">import</span> <span class="n">BaseGenerator</span>
 <span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
+<span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
 	<span class="n">get_event_loop</span><span class="p">,</span>
 	<span class="n">process_batch</span><span class="p">,</span>
 	<span class="n">openai_truncate_by_token</span><span class="p">,</span>
 	<span class="n">convert_inputs_to_list</span><span class="p">,</span>
+	<span class="n">pop_params</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -474,6 +482,126 @@
 	<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
 		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">compute_score</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">generation_gt</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">generated_texts</span><span class="p">),</span> <span class="n">metric_inputs</span><span class="p">)</span>
 	<span class="p">)</span>
+	<span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="make_generator_instance">
+<a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.make_generator_instance">[docs]</a>
+<span class="k">def</span> <span class="nf">make_generator_instance</span><span class="p">(</span><span class="n">generator_module_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+	<span class="n">llm_class</span> <span class="o">=</span> <span class="n">get_support_modules</span><span class="p">(</span><span class="n">generator_module_type</span><span class="p">)</span>
+	<span class="n">init_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">llm_class</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">llm_class</span><span class="p">(</span><span class="n">project_dir</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="o">**</span><span class="n">init_params</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="deepeval_faithfulness">
+<a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.deepeval_faithfulness">[docs]</a>
+<span class="nd">@autorag_metric_loop</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;retrieval_gt_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;generated_texts&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">deepeval_faithfulness</span><span class="p">(</span>
+	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
+	<span class="n">generator_module_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;openai_llm&quot;</span><span class="p">,</span>
+	<span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+	<span class="n">llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4o-2024-08-06&quot;</span><span class="p">,</span>
+	<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Compute deepeval faithfulness metric.</span>
+<span class="sd">	Its default model is gpt-4o-2024-08-06.</span>
+<span class="sd">	Since it uses OpenAI model, please be aware of the expensive cost.</span>
+
+<span class="sd">	:param metric_inputs: The list of MetricInput schema (Required Field -&gt; &quot;generation_gt&quot;, &quot;generated_texts&quot;)</span>
+<span class="sd">	:param generator_module_type: Generator module type.</span>
+<span class="sd">	The default is &quot;openai_llm&quot;.</span>
+<span class="sd">		You can use like &quot;llama_index_llm&quot; or &quot;vllm&quot;.</span>
+<span class="sd">	:param lang: The prompt language that you want to use.</span>
+<span class="sd">	&quot;en&quot; and &quot;ko&quot; are supported.</span>
+<span class="sd">	Korean prompt is not officially supported by DeepEval, but it can be translated by AutoRAG developers.</span>
+<span class="sd">		Default is &quot;en&quot;.</span>
+<span class="sd">	:param llm: The model name to use for generation.</span>
+<span class="sd">		Or llm if using llama_index_llm.</span>
+<span class="sd">		The default is &quot;gpt-4o-2024-08-06&quot;.</span>
+<span class="sd">	:param batch: The batch size for processing.</span>
+<span class="sd">		Default is 16.</span>
+<span class="sd">	:param kwargs: The extra parameters for initializing the llm instance.</span>
+<span class="sd">	:return: The metric scores.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">class</span> <span class="nc">Truth</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+		<span class="n">truths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+	<span class="k">class</span> <span class="nc">Claim</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+		<span class="n">claims</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+	<span class="k">class</span> <span class="nc">Verdict</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+		<span class="n">verdict</span><span class="p">:</span> <span class="nb">str</span>
+		<span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+	<span class="k">class</span> <span class="nc">FaithfulnessVerdicts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+		<span class="n">verdicts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Verdict</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">calculate_score</span><span class="p">(</span><span class="n">verdicts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Verdict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+		<span class="n">number_of_verdicts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">verdicts</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">number_of_verdicts</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="mi">1</span>
+
+		<span class="n">faithfulness_count</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">verdict</span> <span class="ow">in</span> <span class="n">verdicts</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">verdict</span><span class="o">.</span><span class="n">verdict</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
+				<span class="n">faithfulness_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="n">score</span> <span class="o">=</span> <span class="n">faithfulness_count</span> <span class="o">/</span> <span class="n">number_of_verdicts</span>
+		<span class="k">return</span> <span class="n">score</span>
+
+	<span class="n">retrieval_contexts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">retrieval_gt_contents</span><span class="p">,</span> <span class="n">metric_inputs</span><span class="p">))</span>
+	<span class="n">truth_prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">FaithfulnessTemplate</span><span class="o">.</span><span class="n">generate_truths</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lang</span><span class="p">),</span> <span class="n">retrieval_contexts</span><span class="p">)</span>
+	<span class="p">)</span>
+
+	<span class="n">generated_texts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">generated_texts</span><span class="p">,</span> <span class="n">metric_inputs</span><span class="p">))</span>
+	<span class="n">claim_prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">FaithfulnessTemplate</span><span class="o">.</span><span class="n">generate_claims</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lang</span><span class="p">),</span> <span class="n">generated_texts</span><span class="p">)</span>
+	<span class="p">)</span>
+
+	<span class="n">generator</span><span class="p">:</span> <span class="n">BaseGenerator</span> <span class="o">=</span> <span class="n">make_generator_instance</span><span class="p">(</span>
+		<span class="n">generator_module_type</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="p">)</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">OpenAILLM</span><span class="p">):</span>  <span class="c1"># Because of the event loop error at the httpx</span>
+		<span class="c1"># TODO: Fix the httpx APIConnectionError at the many repetitive request to the OpenAILLM on the same instance</span>
+		<span class="n">truth_responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Truth</span><span class="p">]</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span><span class="n">truth_prompts</span><span class="p">,</span> <span class="n">Truth</span><span class="p">)</span>
+		<span class="n">claim_responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Claim</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_generator_instance</span><span class="p">(</span>
+			<span class="n">generator_module_type</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span><span class="n">claim_prompts</span><span class="p">,</span> <span class="n">Claim</span><span class="p">)</span>
+		<span class="n">verdict_prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span>
+				<span class="k">lambda</span> <span class="n">claim</span><span class="p">,</span> <span class="n">truth</span><span class="p">:</span> <span class="n">FaithfulnessTemplate</span><span class="o">.</span><span class="n">generate_verdicts</span><span class="p">(</span>
+					<span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">claim</span><span class="o">.</span><span class="n">claims</span><span class="p">),</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">truth</span><span class="o">.</span><span class="n">truths</span><span class="p">),</span> <span class="n">lang</span>
+				<span class="p">),</span>
+				<span class="n">claim_responses</span><span class="p">,</span>
+				<span class="n">truth_responses</span><span class="p">,</span>
+			<span class="p">)</span>
+		<span class="p">)</span>
+		<span class="n">verdict_responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FaithfulnessVerdicts</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_generator_instance</span><span class="p">(</span>
+			<span class="n">generator_module_type</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span><span class="n">verdict_prompts</span><span class="p">,</span> <span class="n">FaithfulnessVerdicts</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">truth_responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Truth</span><span class="p">]</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span><span class="n">truth_prompts</span><span class="p">,</span> <span class="n">Truth</span><span class="p">)</span>
+		<span class="n">claim_responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Claim</span><span class="p">]</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span><span class="n">claim_prompts</span><span class="p">,</span> <span class="n">Claim</span><span class="p">)</span>
+		<span class="n">verdict_prompts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span>
+				<span class="k">lambda</span> <span class="n">claim</span><span class="p">,</span> <span class="n">truth</span><span class="p">:</span> <span class="n">FaithfulnessTemplate</span><span class="o">.</span><span class="n">generate_verdicts</span><span class="p">(</span>
+					<span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">claim</span><span class="o">.</span><span class="n">claims</span><span class="p">),</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">truth</span><span class="o">.</span><span class="n">truths</span><span class="p">),</span> <span class="n">lang</span>
+				<span class="p">),</span>
+				<span class="n">claim_responses</span><span class="p">,</span>
+				<span class="n">truth_responses</span><span class="p">,</span>
+			<span class="p">)</span>
+		<span class="p">)</span>
+		<span class="n">verdict_responses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FaithfulnessVerdicts</span><span class="p">]</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span>
+			<span class="n">verdict_prompts</span><span class="p">,</span> <span class="n">FaithfulnessVerdicts</span>
+		<span class="p">)</span>
+
+	<span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">calculate_score</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">verdicts</span><span class="p">),</span> <span class="n">verdict_responses</span><span class="p">))</span>
 	<span class="k">return</span> <span class="n">result</span></div>
 
 

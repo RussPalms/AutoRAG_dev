@@ -426,96 +426,102 @@
 <a class="viewcode-back" href="../../../api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">MetricInput</span><span class="p">:</span>
-    <span class="n">query</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">queries</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">retrieval_gt_contents</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">retrieved_contents</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">retrieval_gt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">retrieved_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">generated_texts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">generation_gt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">generated_log_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">query</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">queries</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">retrieval_gt_contents</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">retrieved_contents</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">retrieval_gt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">retrieved_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">generated_texts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">generation_gt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">generated_log_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="MetricInput.is_fields_notnone">
 <a class="viewcode-back" href="../../../api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput.is_fields_notnone">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_fields_notnone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_to_check</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields_to_check</span><span class="p">:</span>
-            <span class="n">actual_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">is_fields_notnone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_to_check</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields_to_check</span><span class="p">:</span>
+			<span class="n">actual_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">actual_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span>
+			<span class="k">if</span> <span class="n">actual_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="k">return</span> <span class="kc">False</span>
 
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">type_checks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">actual_value</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">False</span><span class="p">)(</span><span class="n">actual_value</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="kc">False</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="k">if</span> <span class="ow">not</span> <span class="n">type_checks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">actual_value</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">False</span><span class="p">)(</span>
+					<span class="n">actual_value</span>
+				<span class="p">):</span>
+					<span class="k">return</span> <span class="kc">False</span>
+			<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+				<span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+		<span class="k">return</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="MetricInput.from_dataframe">
 <a class="viewcode-back" href="../../../api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput.from_dataframe">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dataframe</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">qa_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;MetricInput&#39;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convert a pandas DataFrame into a list of MetricInput instances.</span>
-<span class="sd">        qa_data: pd.DataFrame: qa_data DataFrame containing metric data.</span>
+	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">from_dataframe</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">qa_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;MetricInput&quot;</span><span class="p">]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Convert a pandas DataFrame into a list of MetricInput instances.</span>
+<span class="sd">		qa_data: pd.DataFrame: qa_data DataFrame containing metric data.</span>
 
-<span class="sd">        :returns: List[MetricInput]: List of MetricInput objects created from DataFrame rows.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="sd">		:returns: List[MetricInput]: List of MetricInput objects created from DataFrame rows.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">qa_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">qa_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+			<span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
 
-            <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__annotations__</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">attr_name</span><span class="p">]</span>
+			<span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__annotations__</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+					<span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">attr_name</span><span class="p">]</span>
 
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+					<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+						<span class="nb">setattr</span><span class="p">(</span>
+							<span class="n">instance</span><span class="p">,</span>
+							<span class="n">attr_name</span><span class="p">,</span>
+							<span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+						<span class="p">)</span>
+					<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+						<span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-            <span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+			<span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">instances</span></div>
+		<span class="k">return</span> <span class="n">instances</span></div>
 
 
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_check_list</span><span class="p">(</span><span class="n">lst_or_arr</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lst_or_arr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-            <span class="n">lst_or_arr</span> <span class="o">=</span> <span class="n">lst_or_arr</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">_check_list</span><span class="p">(</span><span class="n">lst_or_arr</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lst_or_arr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+			<span class="n">lst_or_arr</span> <span class="o">=</span> <span class="n">lst_or_arr</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst_or_arr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst_or_arr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lst_or_arr</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span>
+		<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lst_or_arr</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="k">return</span> <span class="kc">False</span>
 
-            <span class="n">item_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+			<span class="n">item_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">item_type</span> <span class="ow">in</span> <span class="n">type_checks</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">type_checks</span><span class="p">[</span><span class="n">item_type</span><span class="p">](</span><span class="n">item</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="kc">False</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span>
+			<span class="k">if</span> <span class="n">item_type</span> <span class="ow">in</span> <span class="n">type_checks</span><span class="p">:</span>
+				<span class="k">if</span> <span class="ow">not</span> <span class="n">type_checks</span><span class="p">[</span><span class="n">item_type</span><span class="p">](</span><span class="n">item</span><span class="p">):</span>
+					<span class="k">return</span> <span class="kc">False</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+		<span class="k">return</span> <span class="kc">True</span></div>
 
 
 
 <span class="n">type_checks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">type</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nb">str</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nb">list</span><span class="p">:</span> <span class="n">MetricInput</span><span class="o">.</span><span class="n">_check_list</span><span class="p">,</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span> <span class="n">MetricInput</span><span class="o">.</span><span class="n">_check_list</span><span class="p">,</span>
-    <span class="nb">int</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="nb">float</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+	<span class="nb">str</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+	<span class="nb">list</span><span class="p">:</span> <span class="n">MetricInput</span><span class="o">.</span><span class="n">_check_list</span><span class="p">,</span>
+	<span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span> <span class="n">MetricInput</span><span class="o">.</span><span class="n">_check_list</span><span class="p">,</span>
+	<span class="nb">int</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+	<span class="nb">float</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
         </article>

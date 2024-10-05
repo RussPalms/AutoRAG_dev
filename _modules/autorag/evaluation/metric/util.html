@@ -427,75 +427,82 @@
 <div class="viewcode-block" id="calculate_cosine_similarity">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.util.calculate_cosine_similarity">[docs]</a>
 <span class="k">def</span> <span class="nf">calculate_cosine_similarity</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="n">dot_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">norm_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-    <span class="n">norm_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-    <span class="n">similarity</span> <span class="o">=</span> <span class="n">dot_product</span> <span class="o">/</span> <span class="p">(</span><span class="n">norm_a</span> <span class="o">*</span> <span class="n">norm_b</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">similarity</span></div>
+	<span class="n">dot_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+	<span class="n">norm_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+	<span class="n">norm_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+	<span class="n">similarity</span> <span class="o">=</span> <span class="n">dot_product</span> <span class="o">/</span> <span class="p">(</span><span class="n">norm_a</span> <span class="o">*</span> <span class="n">norm_b</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">similarity</span></div>
 
 
 
 <div class="viewcode-block" id="autorag_metric">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.util.autorag_metric">[docs]</a>
 <span class="k">def</span> <span class="nf">autorag_metric</span><span class="p">(</span><span class="n">fields_to_check</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-    <span class="k">def</span> <span class="nf">decorator_autorag_metric</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="nd">@convert_inputs_to_list</span>
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-                <span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
-        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            :param metric_inputs: A list MetricInput schema for AutoRAG metric.</span>
-<span class="sd">            :param kwargs: The additional arguments for metric function.</span>
-<span class="sd">            :return: A list of computed metric scores.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">metric_input</span><span class="o">.</span><span class="n">is_fields_notnone</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="n">fields_to_check</span><span class="p">):</span>
-                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">metric_input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">results</span>
+	<span class="k">def</span> <span class="nf">decorator_autorag_metric</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+		<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+		<span class="nd">@convert_inputs_to_list</span>
+		<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">			</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">			Use &#39;for loop&#39; to run each metric input.</span>
+<span class="sd">			Put the single metric input into the metric function.</span>
 
-        <span class="k">return</span> <span class="n">wrapper</span>
+<span class="sd">			:param metric_inputs: A list MetricInput schema for AutoRAG metric.</span>
+<span class="sd">			:param kwargs: The additional arguments for metric function.</span>
+<span class="sd">			:return: A list of computed metric scores.</span>
+<span class="sd">			&quot;&quot;&quot;</span>
+			<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">metric_input</span><span class="o">.</span><span class="n">is_fields_notnone</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="n">fields_to_check</span><span class="p">):</span>
+					<span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">metric_input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">results</span>
 
-    <span class="k">return</span> <span class="n">decorator_autorag_metric</span></div>
+		<span class="k">return</span> <span class="n">wrapper</span>
+
+	<span class="k">return</span> <span class="n">decorator_autorag_metric</span></div>
 
 
 
 <div class="viewcode-block" id="autorag_metric_loop">
 <a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.util.autorag_metric_loop">[docs]</a>
 <span class="k">def</span> <span class="nf">autorag_metric_loop</span><span class="p">(</span><span class="n">fields_to_check</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-    <span class="k">def</span> <span class="nf">decorator_autorag_generation_metric</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="nd">@convert_inputs_to_list</span>
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
-                <span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span>
-        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            :param metric_inputs: A list MetricInput schema for AutoRAG metric.</span>
-<span class="sd">            :param kwargs: The additional arguments for metric function.</span>
-<span class="sd">            :return: A list of computed metric scores.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">bool_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">is_fields_notnone</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="n">fields_to_check</span><span class="p">)</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span>
-                         <span class="n">metric_inputs</span><span class="p">]</span>
-            <span class="n">valid_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span> <span class="k">for</span> <span class="n">metric_input</span><span class="p">,</span> <span class="n">is_valid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">,</span> <span class="n">bool_list</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_valid</span><span class="p">]</span>
+	<span class="k">def</span> <span class="nf">decorator_autorag_generation_metric</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+		<span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+		<span class="nd">@convert_inputs_to_list</span>
+		<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">			</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">			Put the list of metric inputs into the metric function.</span>
 
-            <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">valid_inputs</span><span class="p">:</span>
-                <span class="n">processed_valid</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">valid_inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="sd">			:param metric_inputs: A list MetricInput schema for AutoRAG metric.</span>
+<span class="sd">			:param kwargs: The additional arguments for metric function.</span>
+<span class="sd">			:return: A list of computed metric scores.</span>
+<span class="sd">			&quot;&quot;&quot;</span>
+			<span class="n">bool_list</span> <span class="o">=</span> <span class="p">[</span>
+				<span class="n">metric_input</span><span class="o">.</span><span class="n">is_fields_notnone</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="n">fields_to_check</span><span class="p">)</span>
+				<span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span>
+			<span class="p">]</span>
+			<span class="n">valid_inputs</span> <span class="o">=</span> <span class="p">[</span>
+				<span class="n">metric_input</span>
+				<span class="k">for</span> <span class="n">metric_input</span><span class="p">,</span> <span class="n">is_valid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">,</span> <span class="n">bool_list</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">is_valid</span>
+			<span class="p">]</span>
 
-                <span class="n">valid_index</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">is_valid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bool_list</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
-                        <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">processed_valid</span><span class="p">[</span><span class="n">valid_index</span><span class="p">]</span>
-                        <span class="n">valid_index</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">metric_inputs</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">valid_inputs</span><span class="p">:</span>
+				<span class="n">processed_valid</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">valid_inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="n">results</span>
+				<span class="n">valid_index</span> <span class="o">=</span> <span class="mi">0</span>
+				<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">is_valid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bool_list</span><span class="p">):</span>
+					<span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
+						<span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">processed_valid</span><span class="p">[</span><span class="n">valid_index</span><span class="p">]</span>
+						<span class="n">valid_index</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">return</span> <span class="n">wrapper</span>
+			<span class="k">return</span> <span class="n">results</span>
 
-    <span class="k">return</span> <span class="n">decorator_autorag_generation_metric</span></div>
+		<span class="k">return</span> <span class="n">wrapper</span>
+
+	<span class="k">return</span> <span class="n">decorator_autorag_generation_metric</span></div>
 
 </pre></div>
         </article>
