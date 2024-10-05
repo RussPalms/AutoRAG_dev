@@ -426,6 +426,30 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
+<section id="module-autorag.evaluation.metric.deepeval_prompt">
+<span id="autorag-evaluation-metric-deepeval-prompt-module"></span><h2>autorag.evaluation.metric.deepeval_prompt module<a class="headerlink" href="#module-autorag.evaluation.metric.deepeval_prompt" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.evaluation.metric.deepeval_prompt.</span></span><span class="sig-name descname"><span class="pre">FaithfulnessTemplate</span></span><a class="reference internal" href="../_modules/autorag/evaluation/metric/deepeval_prompt.html#FaithfulnessTemplate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_claims">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_claims</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/evaluation/metric/deepeval_prompt.html#FaithfulnessTemplate.generate_claims"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_claims" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_truths">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_truths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/evaluation/metric/deepeval_prompt.html#FaithfulnessTemplate.generate_truths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_truths" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_verdicts">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_verdicts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">claims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrieval_context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/evaluation/metric/deepeval_prompt.html#FaithfulnessTemplate.generate_verdicts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_verdicts" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-autorag.evaluation.metric.generation">
 <span id="autorag-evaluation-metric-generation-module"></span><h2>autorag.evaluation.metric.generation module<a class="headerlink" href="#module-autorag.evaluation.metric.generation" title="Link to this heading">¶</a></h2>
 <dl class="py function">
@@ -791,6 +815,15 @@ which means calculate the metric based on the contents of the retrieved items.</
             <ul>
 <li><a class="reference internal" href="#">autorag.evaluation.metric package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-autorag.evaluation.metric.deepeval_prompt">autorag.evaluation.metric.deepeval_prompt module</a><ul>
+<li><a class="reference internal" href="#autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate"><code class="docutils literal notranslate"><span class="pre">FaithfulnessTemplate</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_claims"><code class="docutils literal notranslate"><span class="pre">FaithfulnessTemplate.generate_claims()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_truths"><code class="docutils literal notranslate"><span class="pre">FaithfulnessTemplate.generate_truths()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.evaluation.metric.deepeval_prompt.FaithfulnessTemplate.generate_verdicts"><code class="docutils literal notranslate"><span class="pre">FaithfulnessTemplate.generate_verdicts()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-autorag.evaluation.metric.generation">autorag.evaluation.metric.generation module</a><ul>
 <li><a class="reference internal" href="#autorag.evaluation.metric.generation.async_g_eval"><code class="docutils literal notranslate"><span class="pre">async_g_eval()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.evaluation.metric.generation.bert_score"><code class="docutils literal notranslate"><span class="pre">bert_score()</span></code></a></li>
