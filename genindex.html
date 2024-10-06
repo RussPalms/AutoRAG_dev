@@ -295,6 +295,7 @@
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/time_reranker.html">Time Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -1134,6 +1135,13 @@
 
         <ul>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.monot5">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.nodes.passagereranker.openvino
+
+        <ul>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.openvino">module</a>
 </li>
         </ul></li>
         <li>
@@ -2308,6 +2316,8 @@
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.monot5">autorag.nodes.passagereranker.monot5</a>
 </li>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.openvino">autorag.nodes.passagereranker.openvino</a>
+</li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.pass_reranker">autorag.nodes.passagereranker.pass_reranker</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.rankgpt">autorag.nodes.passagereranker.rankgpt</a>
@@ -2459,9 +2469,13 @@
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.openai_truncate_by_token">openai_truncate_by_token() (in module autorag.utils.util)</a>
 </li>
+        <li><a href="api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM">OpenAILLM (class in autorag.nodes.generator.openai_llm)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM">OpenAILLM (class in autorag.nodes.generator.openai_llm)</a>
+        <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.openvino.openvino_run_model">openvino_run_model() (in module autorag.nodes.passagereranker.openvino)</a>
+</li>
+        <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.openvino.OpenVINOReranker">OpenVINOReranker (class in autorag.nodes.passagereranker.openvino)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.run.optimize_hybrid">optimize_hybrid() (in module autorag.nodes.retrieval.run)</a>
 </li>
@@ -2555,6 +2569,8 @@
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.koreranker.KoReranker.pure">(autorag.nodes.passagereranker.koreranker.KoReranker method)</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.monot5.MonoT5.pure">(autorag.nodes.passagereranker.monot5.MonoT5 method)</a>
+</li>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.openvino.OpenVINOReranker.pure">(autorag.nodes.passagereranker.openvino.OpenVINOReranker method)</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.pass_reranker.PassReranker.pure">(autorag.nodes.passagereranker.pass_reranker.PassReranker method)</a>
 </li>

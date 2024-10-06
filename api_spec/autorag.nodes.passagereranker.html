@@ -297,6 +297,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/time_reranker.html">Time Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -646,6 +647,25 @@
 <dd></dd></dl>
 
 </section>
+<section id="module-autorag.nodes.passagereranker.openvino">
+<span id="autorag-nodes-passagereranker-openvino-module"></span><h2>autorag.nodes.passagereranker.openvino module<a class="headerlink" href="#module-autorag.nodes.passagereranker.openvino" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.nodes.passagereranker.openvino.OpenVINOReranker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.nodes.passagereranker.openvino.</span></span><span class="sig-name descname"><span class="pre">OpenVINOReranker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'BAAI/bge-reranker-large'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/openvino.html#OpenVINOReranker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.openvino.OpenVINOReranker" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#autorag.nodes.passagereranker.base.BasePassageReranker" title="autorag.nodes.passagereranker.base.BasePassageReranker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePassageReranker</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.nodes.passagereranker.openvino.OpenVINOReranker.pure">
+<span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/openvino.html#OpenVINOReranker.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.openvino.OpenVINOReranker.pure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.nodes.passagereranker.openvino.openvino_run_model">
+<span class="sig-prename descclassname"><span class="pre">autorag.nodes.passagereranker.openvino.</span></span><span class="sig-name descname"><span class="pre">openvino_run_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_texts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/openvino.html#openvino_run_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.openvino.openvino_run_model" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
 <section id="module-autorag.nodes.passagereranker.pass_reranker">
 <span id="autorag-nodes-passagereranker-pass-reranker-module"></span><h2>autorag.nodes.passagereranker.pass_reranker module<a class="headerlink" href="#module-autorag.nodes.passagereranker.pass_reranker" title="Link to this heading">¶</a></h2>
 <dl class="py class">
@@ -955,6 +975,14 @@ You can skip evaluation when you use only one module and a module parameter.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#autorag.nodes.passagereranker.monot5.monot5_run_model"><code class="docutils literal notranslate"><span class="pre">monot5_run_model()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-autorag.nodes.passagereranker.openvino">autorag.nodes.passagereranker.openvino module</a><ul>
+<li><a class="reference internal" href="#autorag.nodes.passagereranker.openvino.OpenVINOReranker"><code class="docutils literal notranslate"><span class="pre">OpenVINOReranker</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.nodes.passagereranker.openvino.OpenVINOReranker.pure"><code class="docutils literal notranslate"><span class="pre">OpenVINOReranker.pure()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#autorag.nodes.passagereranker.openvino.openvino_run_model"><code class="docutils literal notranslate"><span class="pre">openvino_run_model()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.nodes.passagereranker.pass_reranker">autorag.nodes.passagereranker.pass_reranker module</a><ul>

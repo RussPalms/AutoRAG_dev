@@ -3,9 +3,9 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="AutoRAG - Similarity Threshold Cutoff" name="title" />
-<meta content="Learn about similarity threshold cutoff passage filter module in AutoRAG" name="description" />
-<meta content="AutoRAG,RAG,Advanced RAG,Passage Filter" name="keywords" />
+<meta content="AutoRAG - OpenVINO Reranker" name="title" />
+<meta content="Learn about openvino reranker module in AutoRAG" name="description" />
+<meta content="AutoRAG,RAG,Advanced RAG,Reranker,OpenVINO Reranker" name="keywords" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8ZKQM6RT9"></script>
@@ -15,11 +15,11 @@
         gtag('js', new Date());
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
-    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Similarity Percentile Cutoff" href="similarity_percentile_cutoff.html" /><link rel="prev" title="5. Passage Filter" href="passage_filter.html" />
-        <link rel="canonical" href="https://docs.auto-rag.com/nodes/passage_filter/similarity_threshold_cutoff.html" />
+    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="5. Passage Filter" href="../passage_filter/passage_filter.html" /><link rel="prev" title="Time Reranker" href="time_reranker.html" />
+        <link rel="canonical" href="https://docs.auto-rag.com/nodes/passage_reranker/openvino_reranker.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>Similarity Threshold Cutoff - AutoRAG documentation</title>
+        <title>OpenVINO Reranker - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -287,28 +287,28 @@
 <li class="toctree-l2"><a class="reference internal" href="../passage_augmenter/prev_next_augmenter.html">Prev Next Augmenter</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_reranker/passage_reranker.html">4. Passage_Reranker</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 4. Passage_Reranker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/upr.html">UPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/tart.html">TART</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/monot5.html">MonoT5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/koreranker.html">Ko-reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/cohere.html">cohere_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/rankgpt.html">RankGPT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/jina_reranker.html">jina_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/colbert.html">Colbert Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/sentence_transformer_reranker.html">Sentence Transformer Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/time_reranker.html">Time Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="passage_reranker.html">4. Passage_Reranker</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 4. Passage_Reranker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="upr.html">UPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tart.html">TART</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monot5.html">MonoT5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="koreranker.html">Ko-reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cohere.html">cohere_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rankgpt.html">RankGPT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jina_reranker.html">jina_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colbert.html">Colbert Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentence_transformer_reranker.html">Sentence Transformer Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_reranker.html">Time Reranker</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">OpenVINO Reranker</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="passage_filter.html">5. Passage Filter</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Similarity Threshold Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="similarity_percentile_cutoff.html">Similarity Percentile Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recency_filter.html">Recency Filter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="threshold_cutoff.html">Threshold Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="percentile_cutoff.html">Percentile Cutoff</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/similarity_threshold_cutoff.html">Similarity Threshold Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/similarity_percentile_cutoff.html">Similarity Percentile Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/recency_filter.html">Recency Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/threshold_cutoff.html">Threshold Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/percentile_cutoff.html">Percentile Cutoff</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../passage_compressor/passage_compressor.html">6. Passage_Compressor</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 6. Passage_Compressor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -405,7 +405,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../../_sources/nodes/passage_filter/similarity_threshold_cutoff.md.txt" title="View this page">
+  <a class="muted-link" href="../../_sources/nodes/passage_reranker/openvino_reranker.md.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -425,34 +425,22 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="similarity-threshold-cutoff">
-<h1>Similarity Threshold Cutoff<a class="headerlink" href="#similarity-threshold-cutoff" title="Link to this heading">¶</a></h1>
-<p>This module is inspired by
-LlamaIndex <a class="reference external" href="https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/OptimizerDemo/">“Sentence Embedding Optimizer”</a>.
-Re-calculate each content’s similarity with the query and filter out the contents that are below the threshold.</p>
-<p>📣 Keeps at least one item per query if all scores are below the threshold.</p>
+          <section id="openvino-reranker">
+<h1>OpenVINO Reranker<a class="headerlink" href="#openvino-reranker" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#"><span class="xref myst">OpenVINO™</span></a> is an open-source toolkit for optimizing and deploying AI inference. The OpenVINO™ Runtime supports various hardware devices including x86 and ARM CPUs, and Intel GPUs. It can help to boost deep learning performance in Computer Vision, Automatic Speech Recognition, Natural Language Processing and other common tasks.</p>
+<p>Hugging Face rerank model can be supported by OpenVINO through <code class="docutils literal notranslate"><span class="pre">OpenVINOReranker</span></code> class.</p>
 <section id="module-parameters">
 <h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><strong>threshold</strong> : The threshold value to filter out the contents.
-If the similarity score is below the threshold, the content will be filtered out.
-This is essential to run the module, so you have to set this parameter.</p></li>
-<li><p><strong>embedding_model</strong> : The embedding model name.</p></li>
-<li><p><strong>batch</strong> : The batch size for embedding queries and contents.</p></li>
+<li><p><strong>batch</strong> : The size of a batch. If you have limited CUDA memory, decrease the size of the batch. (default: 64)</p></li>
+<li><p><strong>model</strong> : The type of model id or path you want to use for reranking. Default is id “BAAI/bge-reranker-large”</p></li>
 </ul>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Information about the Embedding model can be found <a class="reference internal" href="../../local_model.html#supporting-embedding-models"><span class="std std-ref">Supporting Embedding models</span></a>.
-Plus, you can learn about how to add custom embedding model at <a class="reference internal" href="../../local_model.html#add-your-embedding-models"><span class="std std-ref">here</span></a>.</p>
-</div>
 </section>
 <section id="example-config-yaml">
 <h2><strong>Example config.yaml</strong><a class="headerlink" href="#example-config-yaml" title="Link to this heading">¶</a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">similarity_threshold_cutoff</span>
-<span class="w">    </span><span class="nt">threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.85</span>
-<span class="w">    </span><span class="nt">embedding_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
-<span class="w">    </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openvino_reranker</span>
+<span class="w">  </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BAAI/bge-reranker-large&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -463,23 +451,23 @@ Plus, you can learn about how to add custom embedding model at <a class="referen
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="similarity_percentile_cutoff.html">
+          <a class="next-page" href="../passage_filter/passage_filter.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Similarity Percentile Cutoff</div>
+                <div class="title">5. Passage Filter</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="passage_filter.html">
+          <a class="prev-page" href="time_reranker.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">5. Passage Filter</div>
+                <div class="title">Time Reranker</div>
                 
               </div>
             </a>
@@ -513,7 +501,7 @@ Plus, you can learn about how to add custom embedding model at <a class="referen
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Similarity Threshold Cutoff</a><ul>
+<li><a class="reference internal" href="#">OpenVINO Reranker</a><ul>
 <li><a class="reference internal" href="#module-parameters"><strong>Module Parameters</strong></a></li>
 <li><a class="reference internal" href="#example-config-yaml"><strong>Example config.yaml</strong></a></li>
 </ul>
