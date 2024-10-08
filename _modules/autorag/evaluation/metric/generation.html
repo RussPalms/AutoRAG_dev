@@ -768,11 +768,11 @@
 	<span class="n">generations</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generated_texts</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
 	<span class="n">generation_gt</span> <span class="o">=</span> <span class="p">[</span><span class="n">metric_input</span><span class="o">.</span><span class="n">generation_gt</span> <span class="k">for</span> <span class="n">metric_input</span> <span class="ow">in</span> <span class="n">metric_inputs</span><span class="p">]</span>
 	<span class="k">if</span> <span class="n">embedding_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">embedding_model</span> <span class="o">=</span> <span class="n">embedding_models</span><span class="p">[</span><span class="s2">&quot;huggingface_all_mpnet_base_v2&quot;</span><span class="p">]</span>
+		<span class="n">embedding_model</span> <span class="o">=</span> <span class="n">embedding_models</span><span class="p">[</span><span class="s2">&quot;huggingface_all_mpnet_base_v2&quot;</span><span class="p">]()</span>
 
 	<span class="n">embedding_model</span><span class="o">.</span><span class="n">embed_batch_size</span> <span class="o">=</span> <span class="n">batch</span>
 
-	<span class="n">openai_embedding_max_length</span> <span class="o">=</span> <span class="mi">8191</span>
+	<span class="n">openai_embedding_max_length</span> <span class="o">=</span> <span class="mi">8000</span>
 	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">embedding_model</span><span class="p">,</span> <span class="n">OpenAIEmbedding</span><span class="p">):</span>
 		<span class="n">generations</span> <span class="o">=</span> <span class="n">openai_truncate_by_token</span><span class="p">(</span>
 			<span class="n">generations</span><span class="p">,</span> <span class="n">openai_embedding_max_length</span><span class="p">,</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">model_name</span>

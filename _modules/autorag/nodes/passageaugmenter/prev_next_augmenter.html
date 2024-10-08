@@ -455,7 +455,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">slim_corpus_df</span> <span class="o">=</span> <span class="n">slim_corpus_df</span>
 
 		<span class="c1"># init embedding model</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">embedding_model</span> <span class="o">=</span> <span class="n">embedding_models</span><span class="p">[</span><span class="n">embedding_model</span><span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">embedding_model</span> <span class="o">=</span> <span class="n">embedding_models</span><span class="p">[</span><span class="n">embedding_model</span><span class="p">]()</span>
 
 	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_model</span>

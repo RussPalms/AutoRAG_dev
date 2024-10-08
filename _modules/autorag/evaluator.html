@@ -643,7 +643,7 @@
 				<span class="p">)</span>
 				<span class="c1"># get embedding_model</span>
 				<span class="k">if</span> <span class="n">embedding_model_str</span> <span class="ow">in</span> <span class="n">embedding_models</span><span class="p">:</span>
-					<span class="n">embedding_model</span> <span class="o">=</span> <span class="n">embedding_models</span><span class="p">[</span><span class="n">embedding_model_str</span><span class="p">]</span>
+					<span class="n">embedding_model</span> <span class="o">=</span> <span class="n">embedding_models</span><span class="p">[</span><span class="n">embedding_model_str</span><span class="p">]()</span>
 				<span class="k">else</span><span class="p">:</span>
 					<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
 						<span class="sa">f</span><span class="s2">&quot;embedding_model_str </span><span class="si">{</span><span class="n">embedding_model_str</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span>
