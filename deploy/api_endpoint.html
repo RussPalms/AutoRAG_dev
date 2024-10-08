@@ -429,44 +429,277 @@
 <h1>API endpoint<a class="headerlink" href="#api-endpoint" title="Link to this heading">¶</a></h1>
 <section id="running-api-server">
 <h2>Running API server<a class="headerlink" href="#running-api-server" title="Link to this heading">¶</a></h2>
-<p>As mentioned in the tutorial, you can run api server from the extracted YAML file or trial folder as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">Runner</span>
+<p>As mentioned in the tutorial, you can run api server as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">ApiRunner</span>
+<span class="kn">import</span> <span class="nn">nest_asyncio</span>
 
-<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">)</span>
-<span class="n">runner</span><span class="o">.</span><span class="n">run_api_server</span><span class="p">()</span>
+<span class="n">nest_asyncio</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
 
-<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="o">.</span><span class="n">from_trial_folder</span><span class="p">(</span><span class="s1">&#39;your/path/to/trial_folder&#39;</span><span class="p">)</span>
+<span class="n">runner</span> <span class="o">=</span> <span class="n">ApiRunner</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="s1">&#39;your/path/to/pipeline.yaml&#39;</span><span class="p">,</span> <span class="n">project_dir</span><span class="o">=</span><span class="s1">&#39;your/project/directory&#39;</span><span class="p">)</span>
 <span class="n">runner</span><span class="o">.</span><span class="n">run_api_server</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>run_api<span class="w"> </span>--config_path<span class="w"> </span>your/path/to/pipeline.yaml<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+<p>or</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.deploy</span> <span class="kn">import</span> <span class="n">ApiRunner</span>
+<span class="kn">import</span> <span class="nn">nest_asyncio</span>
+
+<span class="n">nest_asyncio</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">ApiRunner</span><span class="o">.</span><span class="n">from_trial_folder</span><span class="p">(</span><span class="s1">&#39;/your/path/to/trial_dir&#39;</span><span class="p">)</span>
+<span class="n">runner</span><span class="o">.</span><span class="n">run_api_server</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>autorag<span class="w"> </span>run_api<span class="w"> </span>--trial_dir<span class="w"> </span>/trial/dir/0<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
 </pre></div>
 </div>
 </section>
 <section id="id1">
 <h2>API Endpoint<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
-<p>You can use AutoRAG api server using <code class="docutils literal notranslate"><span class="pre">/run</span></code> endpoint.
-It is a <code class="docutils literal notranslate"><span class="pre">POST</span></code> operation, and you can specify a user query as <code class="docutils literal notranslate"><span class="pre">query</span></code> and result column as <code class="docutils literal notranslate"><span class="pre">result_column</span></code> in the request body.
-Then, you can get a response with result looks like <code class="docutils literal notranslate"><span class="pre">{'result_column':</span> <span class="pre">result}</span></code>
-The <code class="docutils literal notranslate"><span class="pre">result_column</span></code> is the same as the <code class="docutils literal notranslate"><span class="pre">result_column</span></code> you specified in the request body.
-And the <code class="docutils literal notranslate"><span class="pre">result_column</span></code> must be one of the last output of your pipeline. The default is ‘answer.’</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://your-host:your-port/run&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;accept: application/json&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;query\&quot;:\&quot;your question\&quot;, \&quot;result_column\&quot;:\&quot;your_result_column\&quot;}&quot;</span>
+<p>Certainly! To generate API endpoint documentation in Markdown format from the provided OpenAPI specification, we need to break down each endpoint and describe its purpose, request parameters, and response structure. Here’s how you can document the API:</p>
+</section>
+<hr class="docutils" />
+<section id="example-api-documentation">
+<h2>Example API Documentation<a class="headerlink" href="#example-api-documentation" title="Link to this heading">¶</a></h2>
+<section id="version-1-0-0">
+<h3>Version: 1.0.0<a class="headerlink" href="#version-1-0-0" title="Link to this heading">¶</a></h3>
+</section>
+<hr class="docutils" />
+<section id="endpoints">
+<h3>Endpoints<a class="headerlink" href="#endpoints" title="Link to this heading">¶</a></h3>
+<section id="v1-run-post">
+<h4>1. <code class="docutils literal notranslate"><span class="pre">/v1/run</span></code> (POST)<a class="headerlink" href="#v1-run-post" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><strong>Summary</strong>: Run a query and get generated text with retrieved passages.</p></li>
+<li><p><strong>Request Body</strong>:</p>
+<ul>
+<li><p><strong>Content Type</strong>: <code class="docutils literal notranslate"><span class="pre">application/json</span></code></p></li>
+<li><p><strong>Schema</strong>:</p>
+<ul>
+<li><p><strong>Properties</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">query</span></code> (string, required): The query string.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">result_column</span></code> (string, optional): The result column name. Default is <code class="docutils literal notranslate"><span class="pre">generated_texts</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Responses</strong>:</p>
+<ul>
+<li><p><strong>200 OK</strong>:</p>
+<ul>
+<li><p><strong>Content Type</strong>: <code class="docutils literal notranslate"><span class="pre">application/json</span></code></p></li>
+<li><p><strong>Schema</strong>:</p>
+<ul>
+<li><p><strong>Properties</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">result</span></code> (string or array of strings): The result text or list of texts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retrieved_passage</span></code> (array of objects): List of retrieved passages.</p>
+<ul>
+<li><p><strong>Properties</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">content</span></code> (string): The content of the passage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">doc_id</span></code> (string): Document ID.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filepath</span></code> (string, nullable): File path.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">file_page</span></code> (integer, nullable): File page number.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_idx</span></code> (integer, nullable): Start index.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end_idx</span></code> (integer, nullable): End index.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="v1-stream-post">
+<h4>2. <code class="docutils literal notranslate"><span class="pre">/v1/stream</span></code> (POST)<a class="headerlink" href="#v1-stream-post" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><strong>Summary</strong>: Stream generated text with retrieved passages.</p></li>
+<li><p><strong>Description</strong>: This endpoint streams the generated text line by line. The <code class="docutils literal notranslate"><span class="pre">retrieved_passage</span></code> is sent first, followed by the <code class="docutils literal notranslate"><span class="pre">result</span></code> streamed incrementally.</p></li>
+<li><p><strong>Request Body</strong>:</p>
+<ul>
+<li><p><strong>Content Type</strong>: <code class="docutils literal notranslate"><span class="pre">application/json</span></code></p></li>
+<li><p><strong>Schema</strong>:</p>
+<ul>
+<li><p><strong>Properties</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">query</span></code> (string, required): The query string.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">result_column</span></code> (string, optional): The result column name. Default is <code class="docutils literal notranslate"><span class="pre">generated_texts</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Responses</strong>:</p>
+<ul>
+<li><p><strong>200 OK</strong>:</p>
+<ul>
+<li><p><strong>Content Type</strong>: <code class="docutils literal notranslate"><span class="pre">text/event-stream</span></code></p></li>
+<li><p><strong>Schema</strong>:</p>
+<ul>
+<li><p><strong>Properties</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">result</span></code> (string or array of strings): The result text or list of texts (streamed line by line).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retrieved_passage</span></code> (array of objects): List of retrieved passages.</p>
+<ul>
+<li><p><strong>Properties</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">content</span></code> (string): The content of the passage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">doc_id</span></code> (string): Document ID.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filepath</span></code> (string, nullable): File path.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">file_page</span></code> (integer, nullable): File page number.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_idx</span></code> (integer, nullable): Start index.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end_idx</span></code> (integer, nullable): End index.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="version-get">
+<h4>3. <code class="docutils literal notranslate"><span class="pre">/version</span></code> (GET)<a class="headerlink" href="#version-get" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><strong>Summary</strong>: Get the API version.</p></li>
+<li><p><strong>Description</strong>: Returns the current version of the API as a string.</p></li>
+<li><p><strong>Responses</strong>:</p>
+<ul>
+<li><p><strong>200 OK</strong>:</p>
+<ul>
+<li><p><strong>Content Type</strong>: <code class="docutils literal notranslate"><span class="pre">application/json</span></code></p></li>
+<li><p><strong>Schema</strong>:</p>
+<ul>
+<li><p><strong>Properties</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">version</span></code> (string): The version of the API.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="api-client-usage-example">
+<h2>API client usage example<a class="headerlink" href="#api-client-usage-example" title="Link to this heading">¶</a></h2>
+<p>Certainly! Below, I’ll provide both Python sample code using the <code class="docutils literal notranslate"><span class="pre">requests</span></code> library and a <code class="docutils literal notranslate"><span class="pre">curl</span></code> command for each of the API endpoints described in the OpenAPI specification.</p>
+<section id="python-sample-code">
+<h3>Python Sample Code<a class="headerlink" href="#python-sample-code" title="Link to this heading">¶</a></h3>
+<p>First, ensure you have the <code class="docutils literal notranslate"><span class="pre">requests</span></code> library installed. You can install it using pip if you haven’t already:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>requests
 </pre></div>
 </div>
+<p>Here’s the Python client code for each endpoint:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://your-host:your-port/run&quot;</span>
-<span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="se">\&quot;</span><span class="s2">query</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">your question</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">result_column</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">your_result_column</span><span class="se">\&quot;</span><span class="s2">}&quot;</span>
-<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;accept&#39;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span>
+<span class="c1"># Base URL of the API</span>
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;http://example.com:8000&quot;</span>  <span class="c1"># Replace with the actual base URL of the API</span>
+
+<span class="k">def</span> <span class="nf">run_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">result_column</span><span class="o">=</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/v1/run&quot;</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
+        <span class="s2">&quot;result_column&quot;</span><span class="p">:</span> <span class="n">result_column</span>
     <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 
-<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">stream_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">result_column</span><span class="o">=</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/v1/stream&quot;</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
+        <span class="s2">&quot;result_column&quot;</span><span class="p">:</span> <span class="n">result_column</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span>
+                <span class="c1"># Decode the chunk and print it</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">retrieved_passages</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;retrieved_passage&quot;</span><span class="p">]</span> <span class="c1"># The retrieved passages</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_version</span><span class="p">():</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/version&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+<span class="c1"># Example usage</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Run a query</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">run_query</span><span class="p">(</span><span class="s2">&quot;example query&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run Query Result:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+    <span class="c1"># Stream a query</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stream Query Result:&quot;</span><span class="p">)</span>
+    <span class="n">stream_query</span><span class="p">(</span><span class="s2">&quot;example query&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get API version</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">get_version</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;API Version:&quot;</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="curl-commands">
+<h3><code class="docutils literal notranslate"><span class="pre">curl</span></code> Commands<a class="headerlink" href="#curl-commands" title="Link to this heading">¶</a></h3>
+<p>Here are the equivalent <code class="docutils literal notranslate"><span class="pre">curl</span></code> commands for each endpoint:</p>
+<section id="id2">
+<h4><code class="docutils literal notranslate"><span class="pre">/v1/run</span></code> (POST)<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://example.com/v1/run&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;: &quot;example query&quot;, &quot;result_column&quot;: &quot;generated_texts&quot;}&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h4><code class="docutils literal notranslate"><span class="pre">/v1/stream</span></code> (POST)<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://example.com/v1/stream&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;: &quot;example query&quot;, &quot;result_column&quot;: &quot;generated_texts&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>--no-buffer
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h4><code class="docutils literal notranslate"><span class="pre">/version</span></code> (GET)<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;http://example.com/version&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 </section>
 
@@ -528,6 +761,26 @@ And the <code class="docutils literal notranslate"><span class="pre">result_colu
 <li><a class="reference internal" href="#">API endpoint</a><ul>
 <li><a class="reference internal" href="#running-api-server">Running API server</a></li>
 <li><a class="reference internal" href="#id1">API Endpoint</a></li>
+<li><a class="reference internal" href="#example-api-documentation">Example API Documentation</a><ul>
+<li><a class="reference internal" href="#version-1-0-0">Version: 1.0.0</a></li>
+<li><a class="reference internal" href="#endpoints">Endpoints</a><ul>
+<li><a class="reference internal" href="#v1-run-post">1. <code class="docutils literal notranslate"><span class="pre">/v1/run</span></code> (POST)</a></li>
+<li><a class="reference internal" href="#v1-stream-post">2. <code class="docutils literal notranslate"><span class="pre">/v1/stream</span></code> (POST)</a></li>
+<li><a class="reference internal" href="#version-get">3. <code class="docutils literal notranslate"><span class="pre">/version</span></code> (GET)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api-client-usage-example">API client usage example</a><ul>
+<li><a class="reference internal" href="#python-sample-code">Python Sample Code</a></li>
+<li><a class="reference internal" href="#curl-commands"><code class="docutils literal notranslate"><span class="pre">curl</span></code> Commands</a><ul>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">/v1/run</span></code> (POST)</a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">/v1/stream</span></code> (POST)</a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">/version</span></code> (GET)</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -507,7 +507,16 @@
 		<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;gpt2&quot;</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 		<span class="n">tokenized_ids</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">generated_texts</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span>
 		<span class="n">pseudo_log_probs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">tokenized_ids</span><span class="p">))</span>
-		<span class="k">return</span> <span class="n">generated_texts</span><span class="p">,</span> <span class="n">tokenized_ids</span><span class="p">,</span> <span class="n">pseudo_log_probs</span></div>
+		<span class="k">return</span> <span class="n">generated_texts</span><span class="p">,</span> <span class="n">tokenized_ids</span><span class="p">,</span> <span class="n">pseudo_log_probs</span>
+
+<div class="viewcode-block" id="LlamaIndexLLM.stream">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.llama_index_llm.LlamaIndexLLM.stream">[docs]</a>
+	<span class="k">async</span> <span class="k">def</span> <span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">async</span> <span class="k">for</span> <span class="n">completion_response</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_instance</span><span class="o">.</span><span class="n">astream_complete</span><span class="p">(</span>
+			<span class="n">prompt</span>
+		<span class="p">):</span>
+			<span class="k">yield</span> <span class="n">completion_response</span><span class="o">.</span><span class="n">text</span></div>
+</div>
 
 </pre></div>
         </article>
