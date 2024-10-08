@@ -296,6 +296,7 @@
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/time_reranker.html">Time Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -932,8 +933,6 @@
           <li><a href="api_spec/autorag.nodes.passageaugmenter.html#module-autorag.nodes.passageaugmenter">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     autorag.nodes.passageaugmenter.base
 
@@ -941,6 +940,8 @@
           <li><a href="api_spec/autorag.nodes.passageaugmenter.html#module-autorag.nodes.passageaugmenter.base">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     autorag.nodes.passageaugmenter.pass_passage_augmenter
 
@@ -1212,6 +1213,13 @@
 
         <ul>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.upr">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.nodes.passagereranker.voyageai
+
+        <ul>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.voyageai">module</a>
 </li>
         </ul></li>
         <li>
@@ -2322,6 +2330,8 @@
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.upr">autorag.nodes.passagereranker.upr</a>
 </li>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.voyageai">autorag.nodes.passagereranker.voyageai</a>
+</li>
           <li><a href="api_spec/autorag.nodes.promptmaker.html#module-autorag.nodes.promptmaker">autorag.nodes.promptmaker</a>
 </li>
           <li><a href="api_spec/autorag.nodes.promptmaker.html#module-autorag.nodes.promptmaker.base">autorag.nodes.promptmaker.base</a>
@@ -2567,6 +2577,8 @@
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.time_reranker.TimeReranker.pure">(autorag.nodes.passagereranker.time_reranker.TimeReranker method)</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.upr.Upr.pure">(autorag.nodes.passagereranker.upr.Upr method)</a>
+</li>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.voyageai.VoyageAIReranker.pure">(autorag.nodes.passagereranker.voyageai.VoyageAIReranker method)</a>
 </li>
           <li><a href="api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.fstring.Fstring.pure">(autorag.nodes.promptmaker.fstring.Fstring method)</a>
 </li>
@@ -2915,10 +2927,10 @@
 </li>
         <li><a href="api_spec/autorag.html#autorag.strategy.validate_strategy_inputs">validate_strategy_inputs() (in module autorag.strategy)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.html#autorag.validator.Validator">Validator (class in autorag.validator)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.vectordb.VectorDB">VectorDB (class in autorag.nodes.retrieval.vectordb)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.vectordb.vectordb_ingest">vectordb_ingest() (in module autorag.nodes.retrieval.vectordb)</a>
@@ -2928,6 +2940,10 @@
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank.verbose">verbose (autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank attribute)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.generator.html#autorag.nodes.generator.vllm.Vllm">Vllm (class in autorag.nodes.generator.vllm)</a>
+</li>
+        <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.voyageai.voyageai_rerank_pure">voyageai_rerank_pure() (in module autorag.nodes.passagereranker.voyageai)</a>
+</li>
+        <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.voyageai.VoyageAIReranker">VoyageAIReranker (class in autorag.nodes.passagereranker.voyageai)</a>
 </li>
     </ul></td>
   </tr></table>

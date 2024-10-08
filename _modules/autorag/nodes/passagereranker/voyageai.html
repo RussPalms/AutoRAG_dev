@@ -12,10 +12,10 @@
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
     <link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
-        <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/evaluation/metric/retrieval_contents.html" />
+        <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/nodes/passagereranker/voyageai.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>autorag.evaluation.metric.retrieval_contents - AutoRAG documentation</title>
+        <title>autorag.nodes.passagereranker.voyageai - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -416,83 +416,124 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <h1>Source code for autorag.evaluation.metric.retrieval_contents</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This file contains the retrieval contents metric,</span>
-<span class="sd">which means calculate the metric based on the contents of the retrieved items.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+          <h1>Source code for autorag.nodes.passagereranker.voyageai</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">voyageai</span>
 
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="kn">from</span> <span class="nn">autorag.evaluation.metric.util</span> <span class="kn">import</span> <span class="n">autorag_metric</span>
-<span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">normalize_string</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.passagereranker.base</span> <span class="kn">import</span> <span class="n">BasePassageReranker</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">result_to_dataframe</span><span class="p">,</span> <span class="n">get_event_loop</span><span class="p">,</span> <span class="n">process_batch</span>
 
 
-<div class="viewcode-block" id="single_token_f1">
-<a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.single_token_f1">[docs]</a>
-<span class="k">def</span> <span class="nf">single_token_f1</span><span class="p">(</span><span class="n">ground_truth</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prediction</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-	<span class="n">prediction_tokens</span> <span class="o">=</span> <span class="n">normalize_string</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-	<span class="n">ground_truth_tokens</span> <span class="o">=</span> <span class="n">normalize_string</span><span class="p">(</span><span class="n">ground_truth</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-	<span class="n">common</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">prediction_tokens</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Counter</span><span class="p">(</span><span class="n">ground_truth_tokens</span><span class="p">)</span>
-	<span class="n">num_same</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">common</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-	<span class="k">if</span> <span class="n">num_same</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-	<span class="n">precision</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">num_same</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">prediction_tokens</span><span class="p">)</span>
-	<span class="n">recall</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">num_same</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ground_truth_tokens</span><span class="p">)</span>
-	<span class="n">f1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span>
-	<span class="k">return</span> <span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1</span></div>
+<div class="viewcode-block" id="VoyageAIReranker">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.voyageai.VoyageAIReranker">[docs]</a>
+<span class="k">class</span> <span class="nc">VoyageAIReranker</span><span class="p">(</span><span class="n">BasePassageReranker</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+		<span class="n">api_key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;api_key&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+		<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;VOYAGE_API_KEY&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">api_key</span>
+		<span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+				<span class="s2">&quot;Please set the API key for VoyageAI rerank in the environment variable VOYAGE_API_KEY &quot;</span>
+				<span class="s2">&quot;or directly set it on the config YAML file.&quot;</span>
+			<span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">voyage_client</span> <span class="o">=</span> <span class="n">voyageai</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">voyage_client</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="VoyageAIReranker.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.voyageai.VoyageAIReranker.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="n">top_k</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;top_k&quot;</span><span class="p">)</span>
+		<span class="n">batch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="s2">&quot;rerank-2&quot;</span><span class="p">)</span>
+		<span class="n">truncation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;truncation&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">truncation</span><span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+		<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+		<span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rerank-2&quot;</span><span class="p">,</span>
+		<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+		<span class="n">truncation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Rerank a list of contents with VoyageAI rerank models.</span>
+<span class="sd">		You can get the API key from https://docs.voyageai.com/docs/api-key-and-installation and set it in the environment variable VOYAGE_API_KEY.</span>
+
+<span class="sd">		:param queries: The list of queries to use for reranking</span>
+<span class="sd">		:param contents_list: The list of lists of contents to rerank</span>
+<span class="sd">		:param ids_list: The list of lists of ids retrieved from the initial ranking</span>
+<span class="sd">		:param top_k: The number of passages to be retrieved</span>
+<span class="sd">		:param model: The model name for VoyageAI rerank.</span>
+<span class="sd">		    You can choose between &quot;rerank-2&quot; and &quot;rerank-2-lite&quot;.</span>
+<span class="sd">		    Default is &quot;rerank-2&quot;.</span>
+<span class="sd">		:param batch: The number of queries to be processed in a batch</span>
+<span class="sd">		:param truncation: Whether to truncate the input to satisfy the &#39;context length limit&#39; on the query and the documents.</span>
+<span class="sd">		:return: Tuple of lists containing the reranked contents, ids, and scores</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+			<span class="n">voyageai_rerank_pure</span><span class="p">(</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">voyage_client</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">truncation</span>
+			<span class="p">)</span>
+			<span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents_list</span><span class="p">,</span> <span class="n">ids_list</span><span class="p">)</span>
+		<span class="p">]</span>
+		<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
+		<span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
+
+		<span class="n">content_result</span><span class="p">,</span> <span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">content_result</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">id_result</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">score_result</span><span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="retrieval_token_f1">
-<a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_f1">[docs]</a>
-<span class="nd">@autorag_metric</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieval_gt_contents&quot;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">retrieval_token_f1</span><span class="p">(</span><span class="n">metric_input</span><span class="p">:</span> <span class="n">MetricInput</span><span class="p">):</span>
-	<span class="n">pred</span> <span class="o">=</span> <span class="n">metric_input</span><span class="o">.</span><span class="n">retrieved_contents</span>
-	<span class="n">gt</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">metric_input</span><span class="o">.</span><span class="n">retrieval_gt_contents</span><span class="p">)</span>
+<div class="viewcode-block" id="voyageai_rerank_pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.voyageai.voyageai_rerank_pure">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">voyageai_rerank_pure</span><span class="p">(</span>
+	<span class="n">voyage_client</span><span class="p">:</span> <span class="n">voyageai</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">,</span>
+	<span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+	<span class="n">truncation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Rerank a list of contents with VoyageAI rerank models.</span>
 
-	<span class="n">calculated_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">single_token_f1</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">gt</span><span class="p">)))</span>
+<span class="sd">	:param voyage_client: The Voyage Client to use for reranking</span>
+<span class="sd">	:param model: The model name for VoyageAI rerank</span>
+<span class="sd">	:param query: The query to use for reranking</span>
+<span class="sd">	:param documents: The list of contents to rerank</span>
+<span class="sd">	:param ids: The list of ids corresponding to the documents</span>
+<span class="sd">	:param top_k: The number of passages to be retrieved</span>
+<span class="sd">	:param truncation: Whether to truncate the input to satisfy the &#39;context length limit&#39; on the query and the documents.</span>
+<span class="sd">	:return: Tuple of lists containing the reranked contents, ids, and scores</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">rerank_results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">voyage_client</span><span class="o">.</span><span class="n">rerank</span><span class="p">(</span>
+		<span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+		<span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+		<span class="n">documents</span><span class="o">=</span><span class="n">documents</span><span class="p">,</span>
+		<span class="n">top_k</span><span class="o">=</span><span class="n">top_k</span><span class="p">,</span>
+		<span class="n">truncation</span><span class="o">=</span><span class="n">truncation</span><span class="p">,</span>
 	<span class="p">)</span>
-	<span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">calculated_results</span><span class="p">)</span>
-	<span class="n">result_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">return</span> <span class="n">result_np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
-
-
-
-<div class="viewcode-block" id="retrieval_token_precision">
-<a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_precision">[docs]</a>
-<span class="nd">@autorag_metric</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieval_gt_contents&quot;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">retrieval_token_precision</span><span class="p">(</span><span class="n">metric_input</span><span class="p">:</span> <span class="n">MetricInput</span><span class="p">):</span>
-	<span class="n">pred</span> <span class="o">=</span> <span class="n">metric_input</span><span class="o">.</span><span class="n">retrieved_contents</span>
-	<span class="n">gt</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">metric_input</span><span class="o">.</span><span class="n">retrieval_gt_contents</span><span class="p">)</span>
-
-	<span class="n">calculated_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">single_token_f1</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">gt</span><span class="p">)))</span>
+	<span class="n">reranked_scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">relevance_score</span><span class="p">,</span> <span class="n">rerank_results</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
 	<span class="p">)</span>
-	<span class="n">result</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">calculated_results</span><span class="p">)</span>
-	<span class="n">result_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">return</span> <span class="n">result_np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
-
-
-
-<div class="viewcode-block" id="retrieval_token_recall">
-<a class="viewcode-back" href="../../../../api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_recall">[docs]</a>
-<span class="nd">@autorag_metric</span><span class="p">(</span><span class="n">fields_to_check</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieval_gt_contents&quot;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">retrieval_token_recall</span><span class="p">(</span><span class="n">metric_input</span><span class="p">:</span> <span class="n">MetricInput</span><span class="p">):</span>
-	<span class="n">pred</span> <span class="o">=</span> <span class="n">metric_input</span><span class="o">.</span><span class="n">retrieved_contents</span>
-	<span class="n">gt</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">metric_input</span><span class="o">.</span><span class="n">retrieval_gt_contents</span><span class="p">)</span>
-
-	<span class="n">calculated_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">single_token_f1</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">gt</span><span class="p">)))</span>
-	<span class="p">)</span>
-	<span class="n">_</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">calculated_results</span><span class="p">)</span>
-	<span class="n">result_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">return</span> <span class="n">result_np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
+	<span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">rerank_results</span><span class="o">.</span><span class="n">results</span><span class="p">))</span>
+	<span class="n">reranked_contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">documents</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">indices</span><span class="p">))</span>
+	<span class="n">reranked_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">indices</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">reranked_contents</span><span class="p">,</span> <span class="n">reranked_ids</span><span class="p">,</span> <span class="n">reranked_scores</span></div>
 
 </pre></div>
         </article>

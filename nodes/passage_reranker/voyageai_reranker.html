@@ -3,6 +3,9 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="AutoRAG - VoyageAI Reranker" name="title" />
+<meta content="Learn about voyage ai reranker module in AutoRAG" name="description" />
+<meta content="AutoRAG,RAG,Advanced RAG,Reranker,VoyageAI" name="keywords" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8ZKQM6RT9"></script>
@@ -12,11 +15,11 @@
         gtag('js', new Date());
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
-    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Legacy" href="../legacy/legacy.html" /><link rel="prev" title="Clova" href="clova.html" />
-        <link rel="canonical" href="https://docs.auto-rag.com/data_creation/parse/table_hybrid_parse.html" />
+    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="5. Passage Filter" href="../passage_filter/passage_filter.html" /><link rel="prev" title="OpenVINO Reranker" href="openvino_reranker.html" />
+        <link rel="canonical" href="https://docs.auto-rag.com/nodes/passage_reranker/voyageai_reranker.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>Table Hybrid Parse - AutoRAG documentation</title>
+        <title>voyageai_reranker - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -220,32 +223,32 @@
 <li class="toctree-l1"><a class="reference internal" href="../../local_model.html">Configure LLM &amp; Embedding models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Evaluation data creation tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_format.html">Dataset Format</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../data_creation.html">Data Creation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Data Creation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="../qa_creation/qa_creation.html">QA creation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of QA creation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../qa_creation/query_gen.html">Query Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../qa_creation/answer_gen.html">Answer Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../qa_creation/filter.html">Filtering</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../qa_creation/evolve.html">Query Evolving</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../data_creation/tutorial.html">Evaluation data creation tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_creation/data_format.html">Dataset Format</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../data_creation/data_creation.html">Data Creation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Data Creation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_creation/qa_creation/qa_creation.html">QA creation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of QA creation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/qa_creation/query_gen.html">Query Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/qa_creation/answer_gen.html">Answer Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/qa_creation/filter.html">Filtering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/qa_creation/evolve.html">Query Evolving</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../chunk/chunk.html">Chunk</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Chunk</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../chunk/langchain_chunk.html">Langchain Chunk</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../chunk/llama_index_chunk.html">Llama Index Chunk</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_creation/chunk/chunk.html">Chunk</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Chunk</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/chunk/langchain_chunk.html">Langchain Chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/chunk/llama_index_chunk.html">Llama Index Chunk</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current has-children"><a class="reference internal" href="parse.html">Parse</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Parse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="langchain_parse.html">Langchain Parse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="llama_parse.html">Llama Parse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clova.html">Clova</a></li>
-<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Table Hybrid Parse</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_creation/parse/parse.html">Parse</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Parse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/parse/langchain_parse.html">Langchain Parse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/parse/llama_parse.html">Llama Parse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/parse/clova.html">Clova</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/parse/table_hybrid_parse.html">Table Hybrid Parse</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../legacy/legacy.html">Legacy</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Legacy</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../legacy/ragas.html">RAGAS evaluation data generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../legacy/tutorial.html">Start creating your own evaluation data</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_creation/legacy/legacy.html">Legacy</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Legacy</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/legacy/ragas.html">RAGAS evaluation data generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_creation/legacy/tutorial.html">Start creating your own evaluation data</a></li>
 </ul>
 </li>
 </ul>
@@ -265,66 +268,66 @@
 <li class="toctree-l1"><a class="reference internal" href="../../evaluate_metrics/generation.html">Generation Metrics</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Nodes &amp; Modules</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../nodes/index.html">Available List</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/query_expansion/query_expansion.html"><strong>1. Query Expansion</strong></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of 1. Query Expansion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/query_decompose.html">Query Decompose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/hyde.html">HyDE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/multi_query_expansion.html">Multi Query Expansion</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Available List</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../query_expansion/query_expansion.html"><strong>1. Query Expansion</strong></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of 1. Query Expansion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../query_expansion/query_decompose.html">Query Decompose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../query_expansion/hyde.html">HyDE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../query_expansion/multi_query_expansion.html">Multi Query Expansion</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/retrieval/retrieval.html">2. Retrieval</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of 2. Retrieval</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/bm25.html">BM25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/vectordb.html">Vectordb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/hybrid_rrf.html">Hybrid - rrf</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/hybrid_cc.html">Hybrid - cc</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../retrieval/retrieval.html">2. Retrieval</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of 2. Retrieval</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../retrieval/bm25.html">BM25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../retrieval/vectordb.html">Vectordb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../retrieval/hybrid_rrf.html">Hybrid - rrf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../retrieval/hybrid_cc.html">Hybrid - cc</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_augmenter/passage_augmenter.html">3. Passage Augmenter</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of 3. Passage Augmenter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_augmenter/prev_next_augmenter.html">Prev Next Augmenter</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_augmenter/passage_augmenter.html">3. Passage Augmenter</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of 3. Passage Augmenter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../passage_augmenter/prev_next_augmenter.html">Prev Next Augmenter</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_reranker/passage_reranker.html">4. Passage_Reranker</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 4. Passage_Reranker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/upr.html">UPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/tart.html">TART</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/monot5.html">MonoT5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/koreranker.html">Ko-reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/cohere.html">cohere_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/rankgpt.html">RankGPT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/jina_reranker.html">jina_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/colbert.html">Colbert Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/sentence_transformer_reranker.html">Sentence Transformer Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/time_reranker.html">Time Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="passage_reranker.html">4. Passage_Reranker</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 4. Passage_Reranker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="upr.html">UPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tart.html">TART</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monot5.html">MonoT5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="koreranker.html">Ko-reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cohere.html">cohere_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rankgpt.html">RankGPT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jina_reranker.html">jina_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colbert.html">Colbert Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentence_transformer_reranker.html">Sentence Transformer Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_reranker.html">Time Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openvino_reranker.html">OpenVINO Reranker</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">voyageai_reranker</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/similarity_threshold_cutoff.html">Similarity Threshold Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/similarity_percentile_cutoff.html">Similarity Percentile Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/recency_filter.html">Recency Filter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/threshold_cutoff.html">Threshold Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/percentile_cutoff.html">Percentile Cutoff</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/similarity_threshold_cutoff.html">Similarity Threshold Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/similarity_percentile_cutoff.html">Similarity Percentile Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/recency_filter.html">Recency Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/threshold_cutoff.html">Threshold Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/percentile_cutoff.html">Percentile Cutoff</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_compressor/passage_compressor.html">6. Passage_Compressor</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 6. Passage_Compressor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/tree_summarize.html">Tree Summarize</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/refine.html">Refine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/longllmlingua.html">Long LLM Lingua</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_compressor/passage_compressor.html">6. Passage_Compressor</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 6. Passage_Compressor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/tree_summarize.html">Tree Summarize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/refine.html">Refine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/longllmlingua.html">Long LLM Lingua</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/prompt_maker/prompt_maker.html">7. Prompt Maker</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of 7. Prompt Maker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/fstring.html">F-String</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/long_context_reorder.html">Long Context Reorder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/window_replacement.html">Window Replacement</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../prompt_maker/prompt_maker.html">7. Prompt Maker</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of 7. Prompt Maker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../prompt_maker/fstring.html">F-String</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../prompt_maker/long_context_reorder.html">Long Context Reorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../prompt_maker/window_replacement.html">Window Replacement</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/generator/generator.html">8. Generator</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of 8. Generator</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/llama_index_llm.html">llama_index LLM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/vllm.html">vllm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/openai_llm.html">OpenAI LLM</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../generator/generator.html">8. Generator</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of 8. Generator</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generator/llama_index_llm.html">llama_index LLM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generator/vllm.html">vllm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generator/openai_llm.html">OpenAI LLM</a></li>
 </ul>
 </li>
 </ul>
@@ -403,7 +406,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../../_sources/data_creation/parse/table_hybrid_parse.md.txt" title="View this page">
+  <a class="muted-link" href="../../_sources/nodes/passage_reranker/voyageai_reranker.md.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -423,82 +426,57 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="table-hybrid-parse">
-<h1>Table Hybrid Parse<a class="headerlink" href="#table-hybrid-parse" title="Link to this heading">¶</a></h1>
-<p>Parse raw documents using a combination of text and table parsing modules.</p>
-<p>Because OCR models are paid models, it can be expensive to OCR-parse all raw documents.</p>
-<p>OCR models are primarily used to parse raw documents that contain tables.
-Therefore, it is cost-effective to parse raw documents that do not contain tables with non-OCR methods and parse raw documents that do contain tables with OCR.</p>
-<p>To accomplish this, the Table Hybrid Parse module performs parsing in the following steps</p>
-<ol class="arabic simple">
-<li><p>breaks the raw document into pages.</p></li>
-<li><p>uses table detection to distinguish between pages that contain tables and pages that do not.</p></li>
-<li><p>pages that do not contain tables are parsed by the text parsing module.</p></li>
-<li><p>Parses pages that contain tables with the table parsing module.</p></li>
-<li><p>merge the parsing results to return the final result.</p></li>
-</ol>
-<section id="table-detection">
-<h2>Table Detection<a class="headerlink" href="#table-detection" title="Link to this heading">¶</a></h2>
-<p>Use <code class="docutils literal notranslate"><span class="pre">PDFPlumber</span></code> to split pages with and without tables.</p>
-</section>
-<section id="table-parse-available-modules">
-<h2>Table Parse Available Modules<a class="headerlink" href="#table-parse-available-modules" title="Link to this heading">¶</a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">llama_parse</span></code></p>
-<ul>
-<li><p>You need to add <code class="docutils literal notranslate"><span class="pre">result_type:</span> <span class="pre">markdown</span></code> to the table_params.</p></li>
-</ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">clova</span></code></p>
-<ul>
-<li><p>You need to add <code class="docutils literal notranslate"><span class="pre">table_detection:</span> <span class="pre">true</span></code> to the table_params.</p></li>
-</ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">langchain_parse</span></code></p>
-<ul>
-<li><p>You need to add <code class="docutils literal notranslate"><span class="pre">parse_method:</span> <span class="pre">upstagelayoutanalysis</span></code> to the table_params.</p></li>
-</ul>
-</li>
-</ul>
-</section>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">text_parse_module</span></code>: str</p>
-<ul>
-<li><p>The module to use for text parsing.</p></li>
-</ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">text_params</span></code>: dict</p>
-<ul>
-<li><p>parameters for the text parsing module</p></li>
-</ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">table_parse_module</span></code>: str</p>
-<ul>
-<li><p>The module to use for table parsing.</p></li>
-</ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">table_params</span></code>: dict</p>
-<ul>
-<li><p>parameters for the table parsing module</p></li>
-</ul>
-</li>
-</ul>
-</section>
-<section id="example-yaml">
-<h2>Example YAML<a class="headerlink" href="#example-yaml" title="Link to this heading">¶</a></h2>
-<p>If you want to use the <code class="docutils literal notranslate"><span class="pre">langchain_parse</span></code> module for text parsing and the <code class="docutils literal notranslate"><span class="pre">clova</span></code> module for table parsing, you can use the <code class="docutils literal notranslate"><span class="pre">table_hybrid_parse</span></code> module.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_hybrid_parse</span>
-<span class="w">    </span><span class="nt">text_parse_module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">langchain_parse</span>
-<span class="w">    </span><span class="nt">text_params</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">parse_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdfplumber</span>
-<span class="w">    </span><span class="nt">table_parse_module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clova</span>
-<span class="w">    </span><span class="nt">table_params</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">table_detection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+          <section id="voyageai-reranker">
+<h1>voyageai_reranker<a class="headerlink" href="#voyageai-reranker" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">voyageai</span> <span class="pre">reranker</span></code> module is a reranker from <a class="reference external" href="https://www.voyageai.com/">VoyageAI</a>.
+It supports powerful and fast reranker for passage retrieval.</p>
+<section id="before-usage">
+<h2>Before Usage<a class="headerlink" href="#before-usage" title="Link to this heading">¶</a></h2>
+<p>At first, you need to get the VoyageAI API key from <a class="reference external" href="https://docs.voyageai.com/docs/api-key-and-installation">here</a>.</p>
+<p>Next, you can set your VoyageAI API key in the environment variable “VOYAGE_API_KEY”.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">VOYAGE_API_KEY</span><span class="o">=</span>your_voyageai_api_key
 </pre></div>
 </div>
+<p>Or, you can set your VoyageAI API key in the config.yaml file directly.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">voyageai_reranker</span>
+<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_voyageai_api_key</span>
+</pre></div>
+</div>
+</section>
+<section id="module-parameters">
+<h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>model</strong> : The type of model you want to use for reranking. Default is “rerank-2” and you can change
+it to “rerank-2-lite”</p></li>
+<li><p><strong>api_key</strong> : The voyageai api key.</p></li>
+<li><p><strong>truncation</strong> : Whether to truncate the input to satisfy the ‘context length limit’ on the query and the documents. Default is True.</p></li>
+</ul>
+</section>
+<section id="example-config-yaml">
+<h2><strong>Example config.yaml</strong><a class="headerlink" href="#example-config-yaml" title="Link to this heading">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">voyageai_reranker</span>
+<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_voyageai_api_key</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rerank-2</span>
+</pre></div>
+</div>
+<section id="supported-model-names">
+<h3>Supported Model Names<a class="headerlink" href="#supported-model-names" title="Link to this heading">¶</a></h3>
+<p>You can see the supported model names <a class="reference external" href="https://docs.voyageai.com/docs/reranker">here</a>.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Model Name</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>rerank-2</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>rerank-2-lite</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 </section>
 
@@ -507,23 +485,23 @@ Therefore, it is cost-effective to parse raw documents that do not contain table
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../legacy/legacy.html">
+          <a class="next-page" href="../passage_filter/passage_filter.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Legacy</div>
+                <div class="title">5. Passage Filter</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="clova.html">
+          <a class="prev-page" href="openvino_reranker.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Clova</div>
+                <div class="title">OpenVINO Reranker</div>
                 
               </div>
             </a>
@@ -557,11 +535,13 @@ Therefore, it is cost-effective to parse raw documents that do not contain table
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Table Hybrid Parse</a><ul>
-<li><a class="reference internal" href="#table-detection">Table Detection</a></li>
-<li><a class="reference internal" href="#table-parse-available-modules">Table Parse Available Modules</a></li>
-<li><a class="reference internal" href="#parameters">Parameters</a></li>
-<li><a class="reference internal" href="#example-yaml">Example YAML</a></li>
+<li><a class="reference internal" href="#">voyageai_reranker</a><ul>
+<li><a class="reference internal" href="#before-usage">Before Usage</a></li>
+<li><a class="reference internal" href="#module-parameters"><strong>Module Parameters</strong></a></li>
+<li><a class="reference internal" href="#example-config-yaml"><strong>Example config.yaml</strong></a><ul>
+<li><a class="reference internal" href="#supported-model-names">Supported Model Names</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

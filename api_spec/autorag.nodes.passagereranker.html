@@ -298,6 +298,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/time_reranker.html">Time Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -848,6 +849,42 @@ You can skip evaluation when you use only one module and a module parameter.</p>
 </dd></dl>
 
 </section>
+<section id="module-autorag.nodes.passagereranker.voyageai">
+<span id="autorag-nodes-passagereranker-voyageai-module"></span><h2>autorag.nodes.passagereranker.voyageai module<a class="headerlink" href="#module-autorag.nodes.passagereranker.voyageai" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.nodes.passagereranker.voyageai.VoyageAIReranker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.nodes.passagereranker.voyageai.</span></span><span class="sig-name descname"><span class="pre">VoyageAIReranker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/voyageai.html#VoyageAIReranker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.voyageai.VoyageAIReranker" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#autorag.nodes.passagereranker.base.BasePassageReranker" title="autorag.nodes.passagereranker.base.BasePassageReranker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePassageReranker</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autorag.nodes.passagereranker.voyageai.VoyageAIReranker.pure">
+<span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/voyageai.html#VoyageAIReranker.pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.voyageai.VoyageAIReranker.pure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.nodes.passagereranker.voyageai.voyageai_rerank_pure">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.nodes.passagereranker.voyageai.</span></span><span class="sig-name descname"><span class="pre">voyageai_rerank_pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voyage_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncClient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/autorag/nodes/passagereranker/voyageai.html#voyageai_rerank_pure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.nodes.passagereranker.voyageai.voyageai_rerank_pure" title="Link to this definition">¶</a></dt>
+<dd><p>Rerank a list of contents with VoyageAI rerank models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>voyage_client</strong> – The Voyage Client to use for reranking</p></li>
+<li><p><strong>model</strong> – The model name for VoyageAI rerank</p></li>
+<li><p><strong>query</strong> – The query to use for reranking</p></li>
+<li><p><strong>documents</strong> – The list of contents to rerank</p></li>
+<li><p><strong>ids</strong> – The list of ids corresponding to the documents</p></li>
+<li><p><strong>top_k</strong> – The number of passages to be retrieved</p></li>
+<li><p><strong>truncation</strong> – Whether to truncate the input to satisfy the ‘context length limit’ on the query and the documents.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of lists containing the reranked contents, ids, and scores</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-autorag.nodes.passagereranker">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-autorag.nodes.passagereranker" title="Link to this heading">¶</a></h2>
 </section>
@@ -1039,6 +1076,14 @@ You can skip evaluation when you use only one module and a module parameter.</p>
 <li><a class="reference internal" href="#autorag.nodes.passagereranker.upr.Upr.pure"><code class="docutils literal notranslate"><span class="pre">Upr.pure()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-autorag.nodes.passagereranker.voyageai">autorag.nodes.passagereranker.voyageai module</a><ul>
+<li><a class="reference internal" href="#autorag.nodes.passagereranker.voyageai.VoyageAIReranker"><code class="docutils literal notranslate"><span class="pre">VoyageAIReranker</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.nodes.passagereranker.voyageai.VoyageAIReranker.pure"><code class="docutils literal notranslate"><span class="pre">VoyageAIReranker.pure()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#autorag.nodes.passagereranker.voyageai.voyageai_rerank_pure"><code class="docutils literal notranslate"><span class="pre">voyageai_rerank_pure()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.nodes.passagereranker">Module contents</a></li>
