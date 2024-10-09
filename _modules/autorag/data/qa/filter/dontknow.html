@@ -447,6 +447,16 @@
 		<span class="s2">&quot;모르겠네유&quot;</span><span class="p">,</span>
 		<span class="s2">&quot;모르겠네요&quot;</span><span class="p">,</span>
 	<span class="p">],</span>
+	<span class="s2">&quot;ja&quot;</span><span class="p">:</span> <span class="p">[</span>
+		<span class="s2">&quot;知りません&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;わかりません&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;分かりません&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;知らないです&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;よく分かってません&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;わかりかねます&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;存じません&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;お答えいたしかねます&quot;</span>
+	<span class="p">]</span>
 <span class="p">}</span>
 
 
@@ -487,7 +497,7 @@
 <span class="sd">	:param client: The OpenAI client.</span>
 <span class="sd">	:param model_name: The model name.</span>
 <span class="sd">		You have to use gpt-4o-2024-08-06 or gpt-4o-mini-2024-07-18.</span>
-<span class="sd">	:param lang: The supported language is en or ko.</span>
+<span class="sd">	:param lang: The supported language is en, ko or ja.</span>
 <span class="sd">	:return: False if the row generation_gt is a &quot;don&#39;t know&quot; meaning.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">assert</span> <span class="s2">&quot;generation_gt&quot;</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;generation_gt column is not in the row.&quot;</span>
@@ -521,7 +531,7 @@
 <span class="sd">	:param row: The row dict from QA dataset.</span>
 <span class="sd">	:param llm: The Llama index llm instance.</span>
 <span class="sd">		It will be good if you set max tokens to low for saving tokens.</span>
-<span class="sd">	:param lang: The supported language is en or ko.</span>
+<span class="sd">	:param lang: The supported language is en, ko or ja.</span>
 <span class="sd">	:return: False if the row generation_gt is a &quot;don&#39;t know&quot; meaning.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">assert</span> <span class="s2">&quot;generation_gt&quot;</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;generation_gt column is not in the row.&quot;</span>

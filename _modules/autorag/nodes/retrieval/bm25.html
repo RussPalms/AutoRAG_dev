@@ -534,12 +534,40 @@
 
 
 
+<div class="viewcode-block" id="tokenize_ja_sudachipy">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.bm25.tokenize_ja_sudachipy">[docs]</a>
+<span class="k">def</span> <span class="nf">tokenize_ja_sudachipy</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="kn">from</span> <span class="nn">sudachipy</span> <span class="kn">import</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">tokenizer</span>
+	<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+			<span class="s2">&quot;You need to install SudachiPy to use &#39;sudachipy&#39; tokenizer. &quot;</span>
+			<span class="s2">&quot;Please install SudachiPy by running &#39;pip install sudachipy&#39;.&quot;</span>
+		<span class="p">)</span>
+
+	<span class="c1"># Initialize SudachiPy with the default tokenizer</span>
+	<span class="n">tokenizer_obj</span> <span class="o">=</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="nb">dict</span><span class="o">=</span><span class="s2">&quot;core&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+
+	<span class="c1"># Choose the tokenizer mode: NORMAL, SEARCH, A</span>
+	<span class="n">mode</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">Tokenizer</span><span class="o">.</span><span class="n">SplitMode</span><span class="o">.</span><span class="n">A</span>
+
+	<span class="c1"># Tokenize the input texts</span>
+	<span class="n">tokenized_list</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">:</span>
+		<span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer_obj</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+		<span class="n">tokenized_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">token</span><span class="o">.</span><span class="n">surface</span><span class="p">()</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">])</span>
+
+	<span class="k">return</span> <span class="n">tokenized_list</span></div>
+
+
+
 <span class="n">BM25_TOKENIZER</span> <span class="o">=</span> <span class="p">{</span>
 	<span class="s2">&quot;porter_stemmer&quot;</span><span class="p">:</span> <span class="n">tokenize_porter_stemmer</span><span class="p">,</span>
 	<span class="s2">&quot;ko_kiwi&quot;</span><span class="p">:</span> <span class="n">tokenize_ko_kiwi</span><span class="p">,</span>
 	<span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="n">tokenize_space</span><span class="p">,</span>
 	<span class="s2">&quot;ko_kkma&quot;</span><span class="p">:</span> <span class="n">tokenize_ko_kkma</span><span class="p">,</span>
 	<span class="s2">&quot;ko_okt&quot;</span><span class="p">:</span> <span class="n">tokenize_ko_okt</span><span class="p">,</span>
+	<span class="s2">&quot;sudachipy&quot;</span><span class="p">:</span> <span class="n">tokenize_ja_sudachipy</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -565,6 +593,7 @@
 		<span class="k">if</span> <span class="n">bm25_tokenizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="n">bm25_tokenizer</span> <span class="o">=</span> <span class="s2">&quot;porter_stemmer&quot;</span>
 		<span class="n">bm25_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resources_dir</span><span class="p">,</span> <span class="n">get_bm25_pkl_name</span><span class="p">(</span><span class="n">bm25_tokenizer</span><span class="p">))</span>
+
 		<span class="k">assert</span> <span class="p">(</span>
 			<span class="n">bm25_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 		<span class="p">),</span> <span class="s2">&quot;bm25_path must be specified for using bm25 retrieval.&quot;</span>

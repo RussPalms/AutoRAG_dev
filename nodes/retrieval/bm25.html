@@ -469,6 +469,12 @@ You can check more information about kkma at <a class="reference external" href=
 <h3>ko_okt (For Korean 🇰🇷)<a class="headerlink" href="#ko-okt-for-korean" title="Link to this heading">¶</a></h3>
 <p>It uses okt tokenizer for Korean. You have to install <code class="docutils literal notranslate"><span class="pre">konlpy</span></code> to use this tokenizer.
 You can check more information about okt at <a class="reference external" href="https://konlpy.org/ko/latest/api/konlpy.tag/#konlpy.tag._okt.Okt">here</a>.</p>
+</section>
+<section id="sudachipy-for-japanese">
+<h3>sudachipy (For Japanese 🇯🇵)<a class="headerlink" href="#sudachipy-for-japanese" title="Link to this heading">¶</a></h3>
+<p>If you want to use Japanese tokenizer, you can use sudachipy.
+You have to install the AutoRAG japanese version to use this by <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;AutoRAG[ja]&quot;</span></code>,
+or install sudachipy by yourself.</p>
 <div class="admonition-any-trouble-to-use-korean-tokenizer admonition">
 <p class="admonition-title">Any trouble to use Korean tokenizer?</p>
 <p>You need to install extra dependencies to properly use Korean tokenizer.
@@ -480,7 +486,7 @@ Please go to <a class="reference external" href="https://docs.auto-rag.com/insta
 <h2><strong>Example config.yaml</strong><a class="headerlink" href="#example-config-yaml" title="Link to this heading">¶</a></h2>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bm25</span>
-<span class="w">    </span><span class="nt">bm25_tokenizer</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">porter_stemmer</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ko_kiwi</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">space</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">gpt2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ko_kkma</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ko_okt</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">bm25_tokenizer</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">porter_stemmer</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ko_kiwi</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">space</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">gpt2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ko_kkma</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ko_okt</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">sudachipy</span><span class="w"> </span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
@@ -549,6 +555,7 @@ Please go to <a class="reference external" href="https://docs.auto-rag.com/insta
 <li><a class="reference internal" href="#ko-kiwi-for-korean">ko_kiwi (For Korean 🇰🇷)</a></li>
 <li><a class="reference internal" href="#ko-kkma-for-korean">ko_kkma (For Korean 🇰🇷)</a></li>
 <li><a class="reference internal" href="#ko-okt-for-korean">ko_okt (For Korean 🇰🇷)</a></li>
+<li><a class="reference internal" href="#sudachipy-for-japanese">sudachipy (For Japanese 🇯🇵)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#example-config-yaml"><strong>Example config.yaml</strong></a></li>

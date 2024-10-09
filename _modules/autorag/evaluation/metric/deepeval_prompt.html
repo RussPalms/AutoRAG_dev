@@ -478,6 +478,33 @@
 
 <span class="s2">JSON:</span>
 <span class="s2">&quot;&quot;&quot;</span>
+		<span class="k">elif</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;ja&quot;</span><span class="p">:</span> 
+			<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;与えられたテキストに基づいて、そこから推測できる事実に基づく主張のリストを生成してください。</span>
+
+<span class="s2">例:</span>
+<span class="s2">例のテキスト:</span>
+<span class="s2">「アインシュタインは1968年に光電効果の発見でノーベル賞を受賞しました。」</span>
+
+<span class="s2">例のJSON:</span>
+<span class="se">{{</span>
+<span class="s2">    &quot;claims&quot;: [</span>
+<span class="s2">        &quot;アインシュタインは光電効果の発見でノーベル賞を受賞しました。&quot;,</span>
+<span class="s2">        &quot;アインシュタインは1968年にノーベル賞を受賞しました。&quot;</span>
+<span class="s2">    ]</span>
+<span class="se">}}</span>
+<span class="s2">===== 例の終わり ======</span>
+
+<span class="s2">**</span>
+<span class="s2">重要: 必ずJSON形式で&quot;claims&quot;キーが文字列のリストとして返されるようにしてください。説明や余計な言葉は不要です。</span>
+<span class="s2">事実に基づく主張のみを含め、抽出された主張は提示された文脈全体を含むものでなければなりません。一部の事実のみを抜粋することは避けてください。</span>
+<span class="s2">事前知識を使用せず、テキストに基づいて主張を抽出してください。</span>
+<span class="s2">**</span>
+
+<span class="s2">テキスト:</span>
+<span class="si">{</span><span class="n">text</span><span class="si">}</span>
+
+<span class="s2">JSON:</span>
+<span class="s2">&quot;&quot;&quot;</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Language </span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span></div>
 
@@ -536,7 +563,34 @@
 <span class="s2">텍스트:</span>
 <span class="si">{</span><span class="n">text</span><span class="si">}</span>
 
-<span class="s2">JSON:&quot;&quot;&quot;</span>
+<span class="s2">JSON:</span>
+<span class="s2">&quot;&quot;&quot;</span>
+		<span class="k">elif</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;ja&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;与えられたテキストに基づいて、そこから推測できる事実で議論の余地のない真実のリストを生成してください。</span>
+
+<span class="s2">例:</span>
+<span class="s2">例のテキスト:</span>
+<span class="s2">「アインシュタインは1968年に光電効果の発見でノーベル賞を受賞しました。」</span>
+
+<span class="s2">例のJSON:</span>
+<span class="se">{{</span>
+<span class="s2">    &quot;truths&quot;: [</span>
+<span class="s2">        &quot;アインシュタインは光電効果の発見でノーベル賞を受賞しました。&quot;,</span>
+<span class="s2">        &quot;アインシュタインは1968年にノーベル賞を受賞しました。&quot;</span>
+<span class="s2">    ]</span>
+<span class="se">}}</span>
+<span class="s2">===== 例の終わり ======</span>
+
+<span class="s2">**</span>
+<span class="s2">重要: 必ずJSON形式で&quot;truths&quot;キーが文字列のリストとして返されるようにしてください。説明や余計な言葉は不要です。</span>
+<span class="s2">事実に基づく真実のみを含めてください。</span>
+<span class="s2">**</span>
+
+<span class="s2">テキスト:</span>
+<span class="si">{</span><span class="n">text</span><span class="si">}</span>
+
+<span class="s2">JSON:</span>
+<span class="s2">&quot;&quot;&quot;</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Language </span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span></div>
 
@@ -642,7 +696,57 @@
 <span class="s2">주장:</span>
 <span class="si">{</span><span class="n">claims</span><span class="si">}</span>
 
-<span class="s2">JSON:&quot;&quot;&quot;</span>
+<span class="s2">JSON:</span>
+<span class="s2">&quot;&quot;&quot;</span>
+		<span class="k">elif</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;ja&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;与えられた主張について、それぞれの主張が取得された文脈の事実と矛盾しているかどうかを示すJSONオブジェクトのリストを生成してください。JSONには2つのフィールド、&#39;verdict&#39;と&#39;reason&#39;があります。</span>
+<span class="s2">&#39;verdict&#39;フィールドは、主張が文脈に一致するかどうかを示すため、厳密に&#39;yes&#39;, &#39;no&#39;, &#39;idk&#39;のいずれかを使用します。</span>
+<span class="s2">&#39;verdict&#39;が&#39;no&#39;の場合にのみ、&#39;reason&#39;を提供してください。&#39;reason&#39;には、文脈に基づいて主張を修正する内容が含まれている必要があります。</span>
+
+<span class="s2">**</span>
+<span class="s2">重要: 必ずJSON形式で&#39;verdicts&#39;キーがJSONオブジェクトのリストとして返されるようにしてください。</span>
+<span class="s2">例の文脈:「アインシュタインは光電効果の発見でノーベル賞を受賞しました。アインシュタインは1968年にノーベル賞を受賞しました。アインシュタインはドイツの科学者です。」</span>
+<span class="s2">例の主張: [&quot;バラク・オバマは白人男性です。&quot;, &quot;チューリッヒはロンドンにある都市です。&quot;, &quot;アインシュタインは光電効果の発見でノーベル賞を受賞し、これが彼の名声に貢献したかもしれません。&quot;, &quot;アインシュタインは1969年に光電効果の発見でノーベル賞を受賞しました。&quot;, &quot;アインシュタインはドイツのシェフでした。&quot;]</span>
+
+<span class="s2">例のJSON:</span>
+<span class="se">{{</span>
+<span class="s2">    &quot;verdicts&quot;: [</span>
+<span class="s2">        </span><span class="se">{{</span>
+<span class="s2">            &quot;verdict&quot;: &quot;idk&quot;</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">,</span>
+<span class="s2">        </span><span class="se">{{</span>
+<span class="s2">            &quot;verdict&quot;: &quot;idk&quot;</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">,</span>
+<span class="s2">        </span><span class="se">{{</span>
+<span class="s2">            &quot;verdict&quot;: &quot;yes&quot;</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">,</span>
+<span class="s2">        </span><span class="se">{{</span>
+<span class="s2">            &quot;verdict&quot;: &quot;no&quot;,</span>
+<span class="s2">            &quot;reason&quot;: &quot;実際の出力は、アインシュタインが1969年にノーベル賞を受賞したと主張していますが、文脈では1968年と述べられています。&quot;</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">,</span>
+<span class="s2">        </span><span class="se">{{</span>
+<span class="s2">            &quot;verdict&quot;: &quot;no&quot;,</span>
+<span class="s2">            &quot;reason&quot;: &quot;実際の出力は、アインシュタインがドイツのシェフだと主張していますが、文脈では彼がドイツの科学者であると述べられています。&quot;</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">,</span>
+<span class="s2">    ]</span>
+<span class="se">}}</span>
+<span class="s2">===== 例の終わり ======</span>
+
+<span class="s2">&#39;verdicts&#39;のリストの長さは、主張のリストの長さと必ず等しくなければなりません。</span>
+<span class="s2">&#39;yes&#39;または&#39;idk&#39;の場合、&#39;reason&#39;を提供する必要はありません。</span>
+<span class="s2">文脈と直接矛盾する場合にのみ、&#39;no&#39;を提供してください。決して事前知識を使用しないでください。</span>
+<span class="s2">「〜かもしれない」や「〜の可能性がある」といった曖昧な表現は矛盾とは見なされません。</span>
+<span class="s2">情報が不足している、または文脈で言及されていない主張には必ず&#39;idk&#39;で答えてください。さもないと私は死んでしまいます。</span>
+<span class="s2">**</span>
+
+<span class="s2">文脈:</span>
+<span class="si">{</span><span class="n">retrieval_context</span><span class="si">}</span>
+
+<span class="s2">主張:</span>
+<span class="si">{</span><span class="n">claims</span><span class="si">}</span>
+
+<span class="s2">JSON:</span>
+<span class="s2">&quot;&quot;&quot;</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Language </span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span></div>
 </div>

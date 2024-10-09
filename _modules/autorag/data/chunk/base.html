@@ -542,9 +542,16 @@
 				<span class="nb">zip</span><span class="p">(</span><span class="n">chunk_texts</span><span class="p">,</span> <span class="n">file_names</span><span class="p">),</span>
 			<span class="p">)</span>
 		<span class="p">)</span>
+	<span class="k">elif</span> <span class="n">file_name_language</span> <span class="o">==</span> <span class="s1">&#39;ja&#39;</span><span class="p">:</span>
+				<span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+			<span class="nb">map</span><span class="p">(</span>
+				<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;ファイル名: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2"> 内容: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+				<span class="nb">zip</span><span class="p">(</span><span class="n">chunk_texts</span><span class="p">,</span> <span class="n">file_names</span><span class="p">),</span>
+			<span class="p">)</span>
+		<span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-			<span class="sa">f</span><span class="s2">&quot;Unsupported file_name_language: </span><span class="si">{</span><span class="n">file_name_language</span><span class="si">}</span><span class="s2">. Choose from &#39;en&#39; or &#39;ko&#39;.&quot;</span>
+			<span class="sa">f</span><span class="s2">&quot;Unsupported file_name_language: </span><span class="si">{</span><span class="n">file_name_language</span><span class="si">}</span><span class="s2">. Choose from &#39;en&#39; ,&#39;ko&#39; or &#39;ja.&quot;</span>
 		<span class="p">)</span></div>
 
 </pre></div>
