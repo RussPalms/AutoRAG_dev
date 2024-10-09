@@ -12,10 +12,10 @@
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
     <link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
-        <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/nodes/generator/run.html" />
+        <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/nodes/passagereranker/mixedbreadai.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>autorag.nodes.generator.run - AutoRAG documentation</title>
+        <title>autorag.nodes.passagereranker.mixedbreadai - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -417,156 +417,141 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <h1>Source code for autorag.nodes.generator.run</h1><div class="highlight"><pre>
+          <h1>Source code for autorag.nodes.passagereranker.mixedbreadai</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">mixedbread_ai.client</span> <span class="kn">import</span> <span class="n">AsyncMixedbreadAI</span>
 
-<span class="kn">from</span> <span class="nn">autorag.evaluation</span> <span class="kn">import</span> <span class="n">evaluate_generation</span>
-<span class="kn">from</span> <span class="nn">autorag.evaluation.util</span> <span class="kn">import</span> <span class="n">cast_metrics</span>
-<span class="kn">from</span> <span class="nn">autorag.schema.metricinput</span> <span class="kn">import</span> <span class="n">MetricInput</span>
-<span class="kn">from</span> <span class="nn">autorag.strategy</span> <span class="kn">import</span> <span class="n">measure_speed</span><span class="p">,</span> <span class="n">filter_by_threshold</span><span class="p">,</span> <span class="n">select_best</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">to_list</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.passagereranker.base</span> <span class="kn">import</span> <span class="n">BasePassageReranker</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">result_to_dataframe</span><span class="p">,</span>
+	<span class="n">get_event_loop</span><span class="p">,</span>
+	<span class="n">process_batch</span><span class="p">,</span>
+	<span class="n">pop_params</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="run_generator_node">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.run.run_generator_node">[docs]</a>
-<span class="k">def</span> <span class="nf">run_generator_node</span><span class="p">(</span>
-	<span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
-	<span class="n">module_params</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
-	<span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-	<span class="n">node_line_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-	<span class="n">strategies</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="MixedbreadAIReranker">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.mixedbreadai.MixedbreadAIReranker">[docs]</a>
+<span class="k">class</span> <span class="nc">MixedbreadAIReranker</span><span class="p">(</span><span class="n">BasePassageReranker</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+		<span class="o">*</span><span class="n">args</span><span class="p">,</span>
+		<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+	<span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initialize mixedbread-ai rerank node.</span>
+
+<span class="sd">		:param project_dir: The project directory path.</span>
+<span class="sd">		:param api_key: The API key for MixedbreadAI rerank.</span>
+<span class="sd">		    You can set it in the environment variable MXBAI_API_KEY.</span>
+<span class="sd">		    Or, you can directly set it on the config YAML file using this parameter.</span>
+<span class="sd">		    Default is env variable &quot;MXBAI_API_KEY&quot;.</span>
+<span class="sd">		:param kwargs: Extra arguments that are not affected</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+		<span class="n">api_key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;api_key&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+		<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MXBAI_API_KEY&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">api_key</span>
+		<span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+				<span class="s2">&quot;Please set the API key for Mixedbread AI rerank in the environment variable MXBAI_API_KEY &quot;</span>
+				<span class="s2">&quot;or directly set it on the config YAML file.&quot;</span>
+			<span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">AsyncMixedbreadAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MixedbreadAIReranker.pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.mixedbreadai.MixedbreadAIReranker.pure">[docs]</a>
+	<span class="nd">@result_to_dataframe</span><span class="p">([</span><span class="s2">&quot;retrieved_contents&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_ids&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieve_scores&quot;</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_run</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span>
+		<span class="n">top_k</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;top_k&quot;</span><span class="p">)</span>
+		<span class="n">batch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="s2">&quot;mixedbread-ai/mxbai-rerank-large-v1&quot;</span><span class="p">)</span>
+		<span class="n">rerank_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">reranking</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pure</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="o">**</span><span class="n">rerank_params</span><span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">_pure</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span>
+		<span class="n">queries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+		<span class="n">contents_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">ids_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+		<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+		<span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mixedbread-ai/mxbai-rerank-large-v1&quot;</span><span class="p">,</span>
+		<span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+	<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Rerank a list of contents with mixedbread-ai rerank models.</span>
+<span class="sd">		You can get the API key from https://www.mixedbread.ai/api-reference#quick-start-guide and set it in the environment variable MXBAI_API_KEY.</span>
+
+<span class="sd">		:param queries: The list of queries to use for reranking</span>
+<span class="sd">		:param contents_list: The list of lists of contents to rerank</span>
+<span class="sd">		:param ids_list: The list of lists of ids retrieved from the initial ranking</span>
+<span class="sd">		:param top_k: The number of passages to be retrieved</span>
+<span class="sd">		:param model: The model name for mixedbread-ai rerank.</span>
+<span class="sd">			You can choose between &quot;mixedbread-ai/mxbai-rerank-large-v1&quot;, &quot;mixedbread-ai/mxbai-rerank-base-v1&quot; and &quot;mixedbread-ai/mxbai-rerank-xsmall-v1&quot;.</span>
+<span class="sd">			Default is &quot;mixedbread-ai/mxbai-rerank-large-v1&quot;.</span>
+<span class="sd">		:param batch: The number of queries to be processed in a batch</span>
+<span class="sd">		        :return: Tuple of lists containing the reranked contents, ids, and scores</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+			<span class="n">mixedbreadai_rerank_pure</span><span class="p">(</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="n">top_k</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span>
+			<span class="p">)</span>
+			<span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">contents_list</span><span class="p">,</span> <span class="n">ids_list</span><span class="p">)</span>
+		<span class="p">]</span>
+		<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
+		<span class="n">results</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">process_batch</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
+
+		<span class="n">content_result</span><span class="p">,</span> <span class="n">id_result</span><span class="p">,</span> <span class="n">score_result</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">content_result</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">id_result</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">score_result</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="mixedbreadai_rerank_pure">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.mixedbreadai.mixedbreadai_rerank_pure">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">mixedbreadai_rerank_pure</span><span class="p">(</span>
+	<span class="n">client</span><span class="p">:</span> <span class="n">AsyncMixedbreadAI</span><span class="p">,</span>
+	<span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+	<span class="n">documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+	<span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+	<span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mixedbread-ai/mxbai-rerank-large-v1&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Run evaluation and select the best module among generator node results.</span>
-<span class="sd">	And save the results and summary to generator node directory.</span>
+<span class="sd">	Rerank a list of contents with mixedbread-ai rerank models.</span>
 
-<span class="sd">	:param modules: Generator modules to run.</span>
-<span class="sd">	:param module_params: Generator module parameters.</span>
-<span class="sd">	    Including node parameters, which is used for every module in this node.</span>
-<span class="sd">	:param previous_result: Previous result dataframe.</span>
-<span class="sd">	    Could be prompt maker node&#39;s result.</span>
-<span class="sd">	:param node_line_dir: This node line&#39;s directory.</span>
-<span class="sd">	:param strategies: Strategies for generator node.</span>
-<span class="sd">	:return: The best result dataframe.</span>
-<span class="sd">	    It contains previous result columns and generator node&#39;s result columns.</span>
+<span class="sd">	:param client: The mixedbread-ai client to use for reranking</span>
+<span class="sd">	:param query: The query to use for reranking</span>
+<span class="sd">	:param documents: The list of contents to rerank</span>
+<span class="sd">	:param ids: The list of ids corresponding to the documents</span>
+<span class="sd">	:param top_k: The number of passages to be retrieved</span>
+<span class="sd">	:param model: The model name for mixedbread-ai rerank.</span>
+<span class="sd">	    You can choose between &quot;mixedbread-ai/mxbai-rerank-large-v1&quot; and &quot;mixedbread-ai/mxbai-rerank-base-v1&quot;.</span>
+<span class="sd">	    Default is &quot;mixedbread-ai/mxbai-rerank-large-v1&quot;.</span>
+<span class="sd">	:return: Tuple of lists containing the reranked contents, ids, and scores</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">):</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">)</span>
-	<span class="n">project_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
-	<span class="n">node_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">,</span> <span class="s2">&quot;generator&quot;</span><span class="p">)</span>  <span class="c1"># node name</span>
-	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">node_dir</span><span class="p">):</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">node_dir</span><span class="p">)</span>
-	<span class="n">qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;qa.parquet&quot;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span>
+
+	<span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">reranking</span><span class="p">(</span>
+		<span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+		<span class="nb">input</span><span class="o">=</span><span class="n">documents</span><span class="p">,</span>
+		<span class="n">top_k</span><span class="o">=</span><span class="n">top_k</span><span class="p">,</span>
+		<span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
 	<span class="p">)</span>
-	<span class="k">if</span> <span class="s2">&quot;generation_gt&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">qa_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must have &#39;generation_gt&#39; column in qa.parquet.&quot;</span><span class="p">)</span>
-
-	<span class="n">results</span><span class="p">,</span> <span class="n">execution_times</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
-		<span class="o">*</span><span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">measure_speed</span><span class="p">(</span>
-				<span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">run_evaluator</span><span class="p">,</span>
-				<span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span>
-				<span class="n">previous_result</span><span class="o">=</span><span class="n">previous_result</span><span class="p">,</span>
-				<span class="o">**</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-			<span class="p">),</span>
-			<span class="nb">zip</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">module_params</span><span class="p">),</span>
-		<span class="p">)</span>
-	<span class="p">)</span>
-	<span class="n">average_times</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">execution_times</span><span class="p">))</span>
-
-	<span class="c1"># get average token usage</span>
-	<span class="n">token_usages</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;generated_tokens&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">results</span><span class="p">))</span>
-
-	<span class="c1"># make rows to metric_inputs</span>
-	<span class="n">generation_gt</span> <span class="o">=</span> <span class="n">to_list</span><span class="p">(</span><span class="n">qa_data</span><span class="p">[</span><span class="s2">&quot;generation_gt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-
-	<span class="n">metric_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">MetricInput</span><span class="p">(</span><span class="n">generation_gt</span><span class="o">=</span><span class="n">gen_gt</span><span class="p">)</span> <span class="k">for</span> <span class="n">gen_gt</span> <span class="ow">in</span> <span class="n">generation_gt</span><span class="p">]</span>
-
-	<span class="n">metric_names</span><span class="p">,</span> <span class="n">metric_params</span> <span class="o">=</span> <span class="n">cast_metrics</span><span class="p">(</span><span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metrics&quot;</span><span class="p">))</span>
-	<span class="k">if</span> <span class="n">metric_names</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">metric_names</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must at least one metrics for generator evaluation.&quot;</span><span class="p">)</span>
-	<span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span>
-			<span class="k">lambda</span> <span class="n">result</span><span class="p">:</span> <span class="n">evaluate_generator_node</span><span class="p">(</span>
-				<span class="n">result</span><span class="p">,</span> <span class="n">metric_inputs</span><span class="p">,</span> <span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metrics&quot;</span><span class="p">)</span>
-			<span class="p">),</span>
-			<span class="n">results</span><span class="p">,</span>
-		<span class="p">)</span>
-	<span class="p">)</span>
-
-	<span class="c1"># save results to folder</span>
-	<span class="n">filepaths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">.parquet&quot;</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">modules</span><span class="p">)))</span>
-	<span class="p">)</span>
-	<span class="nb">list</span><span class="p">(</span>
-		<span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">filepaths</span><span class="p">))</span>
-	<span class="p">)</span>  <span class="c1"># execute save to parquet</span>
-	<span class="n">filenames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">filepaths</span><span class="p">))</span>
-
-	<span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-		<span class="p">{</span>
-			<span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filenames</span><span class="p">,</span>
-			<span class="s2">&quot;module_name&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">module</span><span class="p">:</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">modules</span><span class="p">)),</span>
-			<span class="s2">&quot;module_params&quot;</span><span class="p">:</span> <span class="n">module_params</span><span class="p">,</span>
-			<span class="s2">&quot;execution_time&quot;</span><span class="p">:</span> <span class="n">average_times</span><span class="p">,</span>
-			<span class="s2">&quot;average_output_token&quot;</span><span class="p">:</span> <span class="n">token_usages</span><span class="p">,</span>
-			<span class="o">**</span><span class="p">{</span>
-				<span class="n">metric</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">results</span><span class="p">))</span>
-				<span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metric_names</span>
-			<span class="p">},</span>
-		<span class="p">}</span>
-	<span class="p">)</span>
-
-	<span class="c1"># filter by strategies</span>
-	<span class="k">if</span> <span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;speed_threshold&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">results</span><span class="p">,</span> <span class="n">filenames</span> <span class="o">=</span> <span class="n">filter_by_threshold</span><span class="p">(</span>
-			<span class="n">results</span><span class="p">,</span> <span class="n">average_times</span><span class="p">,</span> <span class="n">strategies</span><span class="p">[</span><span class="s2">&quot;speed_threshold&quot;</span><span class="p">],</span> <span class="n">filenames</span>
-		<span class="p">)</span>
-	<span class="k">if</span> <span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;token_threshold&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="n">results</span><span class="p">,</span> <span class="n">filenames</span> <span class="o">=</span> <span class="n">filter_by_threshold</span><span class="p">(</span>
-			<span class="n">results</span><span class="p">,</span> <span class="n">token_usages</span><span class="p">,</span> <span class="n">strategies</span><span class="p">[</span><span class="s2">&quot;token_threshold&quot;</span><span class="p">],</span> <span class="n">filenames</span>
-		<span class="p">)</span>
-	<span class="n">selected_result</span><span class="p">,</span> <span class="n">selected_filename</span> <span class="o">=</span> <span class="n">select_best</span><span class="p">(</span>
-		<span class="n">results</span><span class="p">,</span> <span class="n">metric_names</span><span class="p">,</span> <span class="n">filenames</span><span class="p">,</span> <span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-	<span class="p">)</span>
-	<span class="n">best_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">previous_result</span><span class="p">,</span> <span class="n">selected_result</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-	<span class="c1"># add &#39;is_best&#39; column at summary file</span>
-	<span class="n">summary_df</span><span class="p">[</span><span class="s2">&quot;is_best&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">selected_filename</span>
-
-	<span class="c1"># save files</span>
-	<span class="n">summary_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_dir</span><span class="p">,</span> <span class="s2">&quot;summary.csv&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-	<span class="n">best_result</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-			<span class="n">node_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;best_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">selected_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.parquet&quot;</span>
-		<span class="p">),</span>
-		<span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-	<span class="p">)</span>
-	<span class="k">return</span> <span class="n">best_result</span></div>
-
-
-
-<div class="viewcode-block" id="evaluate_generator_node">
-<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.run.evaluate_generator_node">[docs]</a>
-<span class="k">def</span> <span class="nf">evaluate_generator_node</span><span class="p">(</span>
-	<span class="n">result_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-	<span class="n">metric_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MetricInput</span><span class="p">],</span>
-	<span class="n">metrics</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]],</span>
-<span class="p">):</span>
-	<span class="nd">@evaluate_generation</span><span class="p">(</span><span class="n">metric_inputs</span><span class="o">=</span><span class="n">metric_inputs</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">)</span>
-	<span class="k">def</span> <span class="nf">evaluate_generation_module</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-		<span class="k">return</span> <span class="p">(</span>
-			<span class="n">df</span><span class="p">[</span><span class="s2">&quot;generated_texts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-			<span class="n">df</span><span class="p">[</span><span class="s2">&quot;generated_tokens&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-			<span class="n">df</span><span class="p">[</span><span class="s2">&quot;generated_log_probs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-		<span class="p">)</span>
-
-	<span class="k">return</span> <span class="n">evaluate_generation_module</span><span class="p">(</span><span class="n">result_df</span><span class="p">)</span></div>
+	<span class="n">reranked_scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">score</span><span class="p">,</span> <span class="n">results</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+	<span class="n">reranked_scores_float</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">reranked_scores</span><span class="p">))</span>
+	<span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">results</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+	<span class="n">reranked_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">documents</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">indices</span><span class="p">))</span>
+	<span class="n">reranked_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">indices</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">reranked_contents</span><span class="p">,</span> <span class="n">reranked_ids</span><span class="p">,</span> <span class="n">reranked_scores_float</span></div>
 
 </pre></div>
         </article>

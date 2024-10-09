@@ -297,6 +297,7 @@
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/time_reranker.html">Time Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -780,13 +781,6 @@
 </li>
         </ul></li>
         <li>
-    autorag.deploy
-
-        <ul>
-          <li><a href="api_spec/autorag.html#module-autorag.deploy">module</a>
-</li>
-        </ul></li>
-        <li>
     autorag.evaluation
 
         <ul>
@@ -940,8 +934,6 @@
           <li><a href="api_spec/autorag.nodes.passageaugmenter.html#module-autorag.nodes.passageaugmenter.base">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     autorag.nodes.passageaugmenter.pass_passage_augmenter
 
@@ -949,6 +941,8 @@
           <li><a href="api_spec/autorag.nodes.passageaugmenter.html#module-autorag.nodes.passageaugmenter.pass_passage_augmenter">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     autorag.nodes.passageaugmenter.prev_next_augmenter
 
@@ -1129,6 +1123,13 @@
 
         <ul>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.koreranker">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.nodes.passagereranker.mixedbreadai
+
+        <ul>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.mixedbreadai">module</a>
 </li>
         </ul></li>
         <li>
@@ -2052,6 +2053,10 @@
 </li>
         <li><a href="api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput">MetricInput (class in autorag.schema.metricinput)</a>
 </li>
+        <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.mixedbreadai.mixedbreadai_rerank_pure">mixedbreadai_rerank_pure() (in module autorag.nodes.passagereranker.mixedbreadai)</a>
+</li>
+        <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.mixedbreadai.MixedbreadAIReranker">MixedbreadAIReranker (class in autorag.nodes.passagereranker.mixedbreadai)</a>
+</li>
         <li><a href="api_spec/autorag.html#autorag.MockEmbeddingRandom">MockEmbeddingRandom (class in autorag)</a>
 </li>
         <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.Response.model_computed_fields">model_computed_fields (autorag.data.qa.evolve.openai_query_evolve.Response attribute)</a>
@@ -2206,8 +2211,6 @@
 </li>
           <li><a href="api_spec/autorag.data.utils.html#module-autorag.data.utils.util">autorag.data.utils.util</a>
 </li>
-          <li><a href="api_spec/autorag.html#module-autorag.deploy">autorag.deploy</a>
-</li>
           <li><a href="api_spec/autorag.evaluation.html#module-autorag.evaluation">autorag.evaluation</a>
 </li>
           <li><a href="api_spec/autorag.evaluation.html#module-autorag.evaluation.generation">autorag.evaluation.generation</a>
@@ -2305,6 +2308,8 @@
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.jina">autorag.nodes.passagereranker.jina</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.koreranker">autorag.nodes.passagereranker.koreranker</a>
+</li>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.mixedbreadai">autorag.nodes.passagereranker.mixedbreadai</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.monot5">autorag.nodes.passagereranker.monot5</a>
 </li>
@@ -2561,6 +2566,8 @@
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.jina.JinaReranker.pure">(autorag.nodes.passagereranker.jina.JinaReranker method)</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.koreranker.KoReranker.pure">(autorag.nodes.passagereranker.koreranker.KoReranker method)</a>
+</li>
+          <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.mixedbreadai.MixedbreadAIReranker.pure">(autorag.nodes.passagereranker.mixedbreadai.MixedbreadAIReranker method)</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.monot5.MonoT5.pure">(autorag.nodes.passagereranker.monot5.MonoT5 method)</a>
 </li>
