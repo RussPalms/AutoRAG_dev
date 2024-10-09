@@ -360,6 +360,7 @@
 <li class="toctree-l4"><a class="reference internal" href="autorag.data.utils.html">autorag.data.utils package</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html">autorag.deploy package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="autorag.evaluation.html">autorag.evaluation package</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of autorag.evaluation package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="autorag.evaluation.metric.html">autorag.evaluation.metric package</a></li>
 </ul>
@@ -478,6 +479,78 @@
 <li class="toctree-l3"><a class="reference internal" href="autorag.data.html#autorag.data.split_by_sentence_kiwi"><code class="docutils literal notranslate"><span class="pre">split_by_sentence_kiwi()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="autorag.deploy.html">autorag.deploy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="autorag.deploy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.deploy.html#module-autorag.deploy.api">autorag.deploy.api module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.ApiRunner"><code class="docutils literal notranslate"><span class="pre">ApiRunner</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.ApiRunner.extract_retrieve_passage"><code class="docutils literal notranslate"><span class="pre">ApiRunner.extract_retrieve_passage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.ApiRunner.run_api_server"><code class="docutils literal notranslate"><span class="pre">ApiRunner.run_api_server()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.QueryRequest"><code class="docutils literal notranslate"><span class="pre">QueryRequest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.QueryRequest.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">QueryRequest.model_computed_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.QueryRequest.model_config"><code class="docutils literal notranslate"><span class="pre">QueryRequest.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.QueryRequest.model_fields"><code class="docutils literal notranslate"><span class="pre">QueryRequest.model_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.QueryRequest.query"><code class="docutils literal notranslate"><span class="pre">QueryRequest.query</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.QueryRequest.result_column"><code class="docutils literal notranslate"><span class="pre">QueryRequest.result_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.content"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.doc_id"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.doc_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.end_idx"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.end_idx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.file_page"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.file_page</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.filepath"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.filepath</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.model_computed_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.model_config"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.model_fields"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.model_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RetrievedPassage.start_idx"><code class="docutils literal notranslate"><span class="pre">RetrievedPassage.start_idx</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RunResponse"><code class="docutils literal notranslate"><span class="pre">RunResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RunResponse.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">RunResponse.model_computed_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RunResponse.model_config"><code class="docutils literal notranslate"><span class="pre">RunResponse.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RunResponse.model_fields"><code class="docutils literal notranslate"><span class="pre">RunResponse.model_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RunResponse.result"><code class="docutils literal notranslate"><span class="pre">RunResponse.result</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.RunResponse.retrieved_passage"><code class="docutils literal notranslate"><span class="pre">RunResponse.retrieved_passage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.VersionResponse"><code class="docutils literal notranslate"><span class="pre">VersionResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.VersionResponse.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">VersionResponse.model_computed_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.VersionResponse.model_config"><code class="docutils literal notranslate"><span class="pre">VersionResponse.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.VersionResponse.model_fields"><code class="docutils literal notranslate"><span class="pre">VersionResponse.model_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.api.VersionResponse.version"><code class="docutils literal notranslate"><span class="pre">VersionResponse.version</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.deploy.html#module-autorag.deploy.base">autorag.deploy.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.BaseRunner"><code class="docutils literal notranslate"><span class="pre">BaseRunner</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.BaseRunner.from_trial_folder"><code class="docutils literal notranslate"><span class="pre">BaseRunner.from_trial_folder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.BaseRunner.from_yaml"><code class="docutils literal notranslate"><span class="pre">BaseRunner.from_yaml()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.Runner"><code class="docutils literal notranslate"><span class="pre">Runner</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.Runner.run"><code class="docutils literal notranslate"><span class="pre">Runner.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.extract_best_config"><code class="docutils literal notranslate"><span class="pre">extract_best_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.extract_node_line_names"><code class="docutils literal notranslate"><span class="pre">extract_node_line_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.extract_node_strategy"><code class="docutils literal notranslate"><span class="pre">extract_node_strategy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.summary_df_to_yaml"><code class="docutils literal notranslate"><span class="pre">summary_df_to_yaml()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.deploy.html#module-autorag.deploy.gradio">autorag.deploy.gradio module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.gradio.GradioRunner"><code class="docutils literal notranslate"><span class="pre">GradioRunner</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.gradio.GradioRunner.run"><code class="docutils literal notranslate"><span class="pre">GradioRunner.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.gradio.GradioRunner.run_web"><code class="docutils literal notranslate"><span class="pre">GradioRunner.run_web()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.deploy.html#module-autorag.deploy">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="autorag.evaluation.html">autorag.evaluation package</a><ul>
@@ -992,7 +1065,7 @@ The metadata will be returned even if you did not give input ‘metadatas’ par
 <span id="autorag-web-module"></span><h2>autorag.web module<a class="headerlink" href="#module-autorag.web" title="Link to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.web.chat_box">
-<span class="sig-prename descclassname"><span class="pre">autorag.web.</span></span><span class="sig-name descname"><span class="pre">chat_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Runner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/web.html#chat_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.web.chat_box" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">autorag.web.</span></span><span class="sig-name descname"><span class="pre">chat_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.Runner" title="autorag.deploy.base.Runner"><span class="pre">Runner</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/web.html#chat_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.web.chat_box" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">

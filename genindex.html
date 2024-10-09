@@ -358,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="api_spec/autorag.data.utils.html">autorag.data.utils package</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="api_spec/autorag.deploy.html">autorag.deploy package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="api_spec/autorag.evaluation.html">autorag.evaluation package</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of autorag.evaluation package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="api_spec/autorag.evaluation.metric.html">autorag.evaluation.metric package</a></li>
 </ul>
@@ -439,6 +440,8 @@
           <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse.answer">(autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse attribute)</a>
 </li>
         </ul></li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.ApiRunner">ApiRunner (class in autorag.deploy.api)</a>
+</li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.apply_recursive">apply_recursive() (in module autorag.utils.util)</a>
 </li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.async_g_eval">async_g_eval() (in module autorag.evaluation.metric.generation)</a>
@@ -781,6 +784,34 @@
 </li>
         </ul></li>
         <li>
+    autorag.deploy
+
+        <ul>
+          <li><a href="api_spec/autorag.deploy.html#module-autorag.deploy">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.deploy.api
+
+        <ul>
+          <li><a href="api_spec/autorag.deploy.html#module-autorag.deploy.api">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.deploy.base
+
+        <ul>
+          <li><a href="api_spec/autorag.deploy.html#module-autorag.deploy.base">module</a>
+</li>
+        </ul></li>
+        <li>
+    autorag.deploy.gradio
+
+        <ul>
+          <li><a href="api_spec/autorag.deploy.html#module-autorag.deploy.gradio">module</a>
+</li>
+        </ul></li>
+        <li>
     autorag.evaluation
 
         <ul>
@@ -927,6 +958,8 @@
           <li><a href="api_spec/autorag.nodes.passageaugmenter.html#module-autorag.nodes.passageaugmenter">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     autorag.nodes.passageaugmenter.base
 
@@ -941,8 +974,6 @@
           <li><a href="api_spec/autorag.nodes.passageaugmenter.html#module-autorag.nodes.passageaugmenter.pass_passage_augmenter">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     autorag.nodes.passageaugmenter.prev_next_augmenter
 
@@ -1493,6 +1524,8 @@
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.base.BaseRetrieval">BaseRetrieval (class in autorag.nodes.retrieval.base)</a>
 </li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.BaseRunner">BaseRunner (class in autorag.deploy.base)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.data.qa.html#autorag.data.qa.schema.Corpus.batch_apply">batch_apply() (autorag.data.qa.schema.Corpus method)</a>
@@ -1563,10 +1596,10 @@
 </li>
         <li><a href="api_spec/autorag.data.qa.html#autorag.data.qa.schema.Raw.chunk">chunk() (autorag.data.qa.schema.Raw method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.html#autorag.chunker.Chunker">Chunker (class in autorag.chunker)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.data.chunk.html#autorag.data.chunk.base.chunker_node">chunker_node() (in module autorag.data.chunk.base)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.cohere.cohere_rerank_pure">cohere_rerank_pure() (in module autorag.nodes.passagereranker.cohere)</a>
@@ -1595,6 +1628,8 @@
           <li><a href="api_spec/autorag.data.qa.evolve.html#autorag.data.qa.evolve.openai_query_evolve.conditional_evolve_ragas">(in module autorag.data.qa.evolve.openai_query_evolve)</a>
 </li>
         </ul></li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.content">content (autorag.deploy.api.RetrievedPassage attribute)</a>
+</li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.convert_datetime_string">convert_datetime_string() (in module autorag.utils.util)</a>
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.convert_env_in_dict">convert_env_in_dict() (in module autorag.utils.util)</a>
@@ -1625,9 +1660,11 @@
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.dict_to_markdown_table">dict_to_markdown_table() (in module autorag.utils.util)</a>
 </li>
+        <li><a href="api_spec/autorag.data.legacy.qacreation.html#autorag.data.legacy.qacreation.llama_index.distribute_list_by_ratio">distribute_list_by_ratio() (in module autorag.data.legacy.qacreation.llama_index)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api_spec/autorag.data.legacy.qacreation.html#autorag.data.legacy.qacreation.llama_index.distribute_list_by_ratio">distribute_list_by_ratio() (in module autorag.data.legacy.qacreation.llama_index)</a>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.doc_id">doc_id (autorag.deploy.api.RetrievedPassage attribute)</a>
 </li>
         <li><a href="api_spec/autorag.data.qa.filter.html#autorag.data.qa.filter.dontknow.dontknow_filter_llama_index">dontknow_filter_llama_index() (in module autorag.data.qa.filter.dontknow)</a>
 </li>
@@ -1655,6 +1692,8 @@
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.tokenization_enc_t5.EncT5Tokenizer">EncT5Tokenizer (class in autorag.nodes.passagereranker.tart.tokenization_enc_t5)</a>
 </li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.end_idx">end_idx (autorag.deploy.api.RetrievedPassage attribute)</a>
+</li>
         <li><a href="api_spec/autorag.evaluation.html#autorag.evaluation.generation.evaluate_generation">evaluate_generation() (in module autorag.evaluation.generation)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.generator.html#autorag.nodes.generator.run.evaluate_generator_node">evaluate_generator_node() (in module autorag.nodes.generator.run)</a>
@@ -1667,10 +1706,10 @@
 </li>
         <li><a href="api_spec/autorag.nodes.passagecompressor.html#autorag.nodes.passagecompressor.run.evaluate_passage_compressor_node">evaluate_passage_compressor_node() (in module autorag.nodes.passagecompressor.run)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.evaluation.html#autorag.evaluation.retrieval.evaluate_retrieval">evaluate_retrieval() (in module autorag.evaluation.retrieval)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.evaluation.html#autorag.evaluation.retrieval_contents.evaluate_retrieval_contents">evaluate_retrieval_contents() (in module autorag.evaluation.retrieval_contents)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.run.evaluate_retrieval_node">evaluate_retrieval_node() (in module autorag.nodes.retrieval.run)</a>
@@ -1684,6 +1723,14 @@
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.koreranker.exp_normalize">exp_normalize() (in module autorag.nodes.passagereranker.koreranker)</a>
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.explode">explode() (in module autorag.utils.util)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.extract_best_config">extract_best_config() (in module autorag.deploy.base)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.extract_node_line_names">extract_node_line_names() (in module autorag.deploy.base)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.extract_node_strategy">extract_node_strategy() (in module autorag.deploy.base)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.ApiRunner.extract_retrieve_passage">extract_retrieve_passage() (autorag.deploy.api.ApiRunner method)</a>
 </li>
         <li><a href="api_spec/autorag.schema.html#autorag.schema.node.extract_values">extract_values() (in module autorag.schema.node)</a>
 </li>
@@ -1710,6 +1757,10 @@
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.fetch_contents">fetch_contents() (in module autorag.utils.util)</a>
 </li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.fetch_one_content">fetch_one_content() (in module autorag.utils.util)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.file_page">file_page (autorag.deploy.api.RetrievedPassage attribute)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.filepath">filepath (autorag.deploy.api.RetrievedPassage attribute)</a>
 </li>
         <li><a href="api_spec/autorag.data.qa.html#autorag.data.qa.schema.QA.filter">filter() (autorag.data.qa.schema.QA method)</a>
 </li>
@@ -1750,6 +1801,10 @@
 </li>
         </ul></li>
         <li><a href="api_spec/autorag.html#autorag.chunker.Chunker.from_parquet">from_parquet() (autorag.chunker.Chunker class method)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.BaseRunner.from_trial_folder">from_trial_folder() (autorag.deploy.base.BaseRunner class method)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.BaseRunner.from_yaml">from_yaml() (autorag.deploy.base.BaseRunner class method)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.promptmaker.html#autorag.nodes.promptmaker.fstring.Fstring">Fstring (class in autorag.nodes.promptmaker.fstring)</a>
 </li>
@@ -1803,10 +1858,10 @@
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.colbert.get_colbert_score">get_colbert_score() (in module autorag.nodes.passagereranker.colbert)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.nodes.passagereranker.tart.html#autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification.get_encoder">get_encoder() (autorag.nodes.passagereranker.tart.modeling_enc_t5.EncT5ForSequenceClassification method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.get_event_loop">get_event_loop() (in module autorag.utils.util)</a>
 </li>
         <li><a href="api_spec/autorag.data.utils.html#autorag.data.utils.util.get_file_metadata">get_file_metadata() (in module autorag.data.utils.util)</a>
@@ -1848,6 +1903,8 @@
         <li><a href="api_spec/autorag.html#autorag.support.get_support_modules">get_support_modules() (in module autorag.support)</a>
 </li>
         <li><a href="api_spec/autorag.html#autorag.support.get_support_nodes">get_support_nodes() (in module autorag.support)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.gradio.GradioRunner">GradioRunner (class in autorag.deploy.gradio)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -2072,6 +2129,14 @@
 </li>
           <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse.model_computed_fields">(autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse attribute)</a>
 </li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.QueryRequest.model_computed_fields">(autorag.deploy.api.QueryRequest attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.model_computed_fields">(autorag.deploy.api.RetrievedPassage attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RunResponse.model_computed_fields">(autorag.deploy.api.RunResponse attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.VersionResponse.model_computed_fields">(autorag.deploy.api.VersionResponse attribute)</a>
+</li>
           <li><a href="api_spec/autorag.html#autorag.MockEmbeddingRandom.model_computed_fields">(autorag.MockEmbeddingRandom attribute)</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank.model_computed_fields">(autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank attribute)</a>
@@ -2090,6 +2155,14 @@
 </li>
           <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse.model_config">(autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse attribute)</a>
 </li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.QueryRequest.model_config">(autorag.deploy.api.QueryRequest attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.model_config">(autorag.deploy.api.RetrievedPassage attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RunResponse.model_config">(autorag.deploy.api.RunResponse attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.VersionResponse.model_config">(autorag.deploy.api.VersionResponse attribute)</a>
+</li>
           <li><a href="api_spec/autorag.html#autorag.MockEmbeddingRandom.model_config">(autorag.MockEmbeddingRandom attribute)</a>
 </li>
           <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank.model_config">(autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank attribute)</a>
@@ -2107,6 +2180,14 @@
           <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.Response.model_fields">(autorag.data.qa.query.openai_gen_query.Response attribute)</a>
 </li>
           <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse.model_fields">(autorag.data.qa.query.openai_gen_query.TwoHopIncrementalResponse attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.QueryRequest.model_fields">(autorag.deploy.api.QueryRequest attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.model_fields">(autorag.deploy.api.RetrievedPassage attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RunResponse.model_fields">(autorag.deploy.api.RunResponse attribute)</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.VersionResponse.model_fields">(autorag.deploy.api.VersionResponse attribute)</a>
 </li>
           <li><a href="api_spec/autorag.html#autorag.MockEmbeddingRandom.model_fields">(autorag.MockEmbeddingRandom attribute)</a>
 </li>
@@ -2210,6 +2291,14 @@
           <li><a href="api_spec/autorag.data.utils.html#module-autorag.data.utils">autorag.data.utils</a>
 </li>
           <li><a href="api_spec/autorag.data.utils.html#module-autorag.data.utils.util">autorag.data.utils.util</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#module-autorag.deploy">autorag.deploy</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#module-autorag.deploy.api">autorag.deploy.api</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#module-autorag.deploy.base">autorag.deploy.base</a>
+</li>
+          <li><a href="api_spec/autorag.deploy.html#module-autorag.deploy.gradio">autorag.deploy.gradio</a>
 </li>
           <li><a href="api_spec/autorag.evaluation.html#module-autorag.evaluation">autorag.evaluation</a>
 </li>
@@ -2625,6 +2714,8 @@
         <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.Response.query">query (autorag.data.qa.query.openai_gen_query.Response attribute)</a>
 
         <ul>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.QueryRequest.query">(autorag.deploy.api.QueryRequest attribute)</a>
+</li>
           <li><a href="api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput.query">(autorag.schema.metricinput.MetricInput attribute)</a>
 </li>
         </ul></li>
@@ -2635,6 +2726,8 @@
         <li><a href="api_spec/autorag.data.qa.query.html#autorag.data.qa.query.openai_gen_query.query_gen_openai_base">query_gen_openai_base() (in module autorag.data.qa.query.openai_gen_query)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.query_decompose.QueryDecompose">QueryDecompose (class in autorag.nodes.queryexpansion.query_decompose)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.QueryRequest">QueryRequest (class in autorag.deploy.api)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -2684,6 +2777,10 @@
         </ul></li>
         <li><a href="api_spec/autorag.html#autorag.evaluator.Evaluator.restart_trial">restart_trial() (autorag.evaluator.Evaluator method)</a>
 </li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RunResponse.result">result (autorag.deploy.api.RunResponse attribute)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.QueryRequest.result_column">result_column (autorag.deploy.api.QueryRequest attribute)</a>
+</li>
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.result_to_dataframe">result_to_dataframe() (in module autorag.utils.util)</a>
 </li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval.retrieval_f1">retrieval_f1() (in module autorag.evaluation.metric.retrieval)</a>
@@ -2700,19 +2797,23 @@
 </li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval.retrieval_precision">retrieval_precision() (in module autorag.evaluation.metric.retrieval)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval.retrieval_recall">retrieval_recall() (in module autorag.evaluation.metric.retrieval)</a>
 </li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_f1">retrieval_token_f1() (in module autorag.evaluation.metric.retrieval_contents)</a>
 </li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_precision">retrieval_token_precision() (in module autorag.evaluation.metric.retrieval_contents)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.retrieval_token_recall">retrieval_token_recall() (in module autorag.evaluation.metric.retrieval_contents)</a>
 </li>
         <li><a href="api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput.retrieved_contents">retrieved_contents (autorag.schema.metricinput.MetricInput attribute)</a>
 </li>
         <li><a href="api_spec/autorag.schema.html#autorag.schema.metricinput.MetricInput.retrieved_ids">retrieved_ids (autorag.schema.metricinput.MetricInput attribute)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RunResponse.retrieved_passage">retrieved_passage (autorag.deploy.api.RunResponse attribute)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage">RetrievedPassage (class in autorag.deploy.api)</a>
 </li>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.generation.rouge">rouge() (in module autorag.evaluation.metric.generation)</a>
 </li>
@@ -2720,12 +2821,18 @@
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.hybrid_rrf.rrf_pure">rrf_pure() (in module autorag.nodes.retrieval.hybrid_rrf)</a>
 </li>
-        <li><a href="api_spec/autorag.schema.html#autorag.schema.node.Node.run">run() (autorag.schema.node.Node method)</a>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.Runner.run">run() (autorag.deploy.base.Runner method)</a>
 
         <ul>
+          <li><a href="api_spec/autorag.deploy.html#autorag.deploy.gradio.GradioRunner.run">(autorag.deploy.gradio.GradioRunner method)</a>
+</li>
+          <li><a href="api_spec/autorag.schema.html#autorag.schema.node.Node.run">(autorag.schema.node.Node method)</a>
+</li>
           <li><a href="api_spec/autorag.html#autorag.dashboard.run">(in module autorag.dashboard)</a>
 </li>
         </ul></li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.ApiRunner.run_api_server">run_api_server() (autorag.deploy.api.ApiRunner method)</a>
+</li>
         <li><a href="api_spec/autorag.data.chunk.html#autorag.data.chunk.run.run_chunker">run_chunker() (in module autorag.data.chunk.run)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.hybrid_cc.HybridCC.run_evaluator">run_evaluator() (autorag.nodes.retrieval.hybrid_cc.HybridCC class method)</a>
@@ -2759,6 +2866,12 @@
         <li><a href="api_spec/autorag.nodes.queryexpansion.html#autorag.nodes.queryexpansion.run.run_query_expansion_node">run_query_expansion_node() (in module autorag.nodes.queryexpansion.run)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.run.run_retrieval_node">run_retrieval_node() (in module autorag.nodes.retrieval.run)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.gradio.GradioRunner.run_web">run_web() (autorag.deploy.gradio.GradioRunner method)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.Runner">Runner (class in autorag.deploy.base)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RunResponse">RunResponse (class in autorag.deploy.api)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -2802,10 +2915,10 @@
 </li>
         <li><a href="api_spec/autorag.nodes.passagefilter.html#autorag.nodes.passagefilter.similarity_threshold_cutoff.SimilarityThresholdCutoff">SimilarityThresholdCutoff (class in autorag.nodes.passagefilter.similarity_threshold_cutoff)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.evaluation.metric.html#autorag.evaluation.metric.retrieval_contents.single_token_f1">single_token_f1() (in module autorag.evaluation.metric.retrieval_contents)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.colbert.slice_tensor">slice_tensor() (in module autorag.nodes.passagereranker.colbert)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.colbert.slice_tokenizer_result">slice_tokenizer_result() (in module autorag.nodes.passagereranker.colbert)</a>
@@ -2821,6 +2934,8 @@
         <li><a href="api_spec/autorag.utils.html#autorag.utils.util.split_dataframe">split_dataframe() (in module autorag.utils.util)</a>
 </li>
         <li><a href="api_spec/autorag.html#autorag.chunker.Chunker.start_chunking">start_chunking() (autorag.chunker.Chunker method)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.RetrievedPassage.start_idx">start_idx (autorag.deploy.api.RetrievedPassage attribute)</a>
 </li>
         <li><a href="api_spec/autorag.html#autorag.parser.Parser.start_parsing">start_parsing() (autorag.parser.Parser method)</a>
 </li>
@@ -2844,6 +2959,8 @@
           <li><a href="api_spec/autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM.structured_output">(autorag.nodes.generator.openai_llm.OpenAILLM method)</a>
 </li>
         </ul></li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.base.summary_df_to_yaml">summary_df_to_yaml() (in module autorag.deploy.base)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -2938,15 +3055,19 @@
 </li>
         <li><a href="api_spec/autorag.html#autorag.validator.Validator">Validator (class in autorag.validator)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.vectordb.VectorDB">VectorDB (class in autorag.nodes.retrieval.vectordb)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.vectordb.vectordb_ingest">vectordb_ingest() (in module autorag.nodes.retrieval.vectordb)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.retrieval.html#autorag.nodes.retrieval.vectordb.vectordb_pure">vectordb_pure() (in module autorag.nodes.retrieval.vectordb)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank.verbose">verbose (autorag.nodes.passagereranker.rankgpt.AsyncRankGPTRerank attribute)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.VersionResponse.version">version (autorag.deploy.api.VersionResponse attribute)</a>
+</li>
+        <li><a href="api_spec/autorag.deploy.html#autorag.deploy.api.VersionResponse">VersionResponse (class in autorag.deploy.api)</a>
 </li>
         <li><a href="api_spec/autorag.nodes.generator.html#autorag.nodes.generator.vllm.Vllm">Vllm (class in autorag.nodes.generator.vllm)</a>
 </li>
