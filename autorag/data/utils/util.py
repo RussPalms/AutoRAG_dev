@@ -9,6 +9,7 @@ import yaml
 from langchain_core.documents import Document
 from llama_index.core.schema import NodeRelationship
 
+from autorag.data.qa.schema import Raw
 from autorag.schema import Module
 from autorag.utils.util import make_combinations, explode
 
@@ -101,3 +102,31 @@ def get_start_end_idx(original_text: str, search_str: str) -> Tuple[int, int]:
 		return 0, 0
 	end_idx = start_idx + len(search_str)
 	return start_idx, end_idx - 1
+
+
+def llama_index_documents_to_raw(
+	llama_documents: List[Document],
+) -> Raw:
+	"""
+	Convert LlamaIndex documents to the Raw object.
+	You can implement any data source you want to use through LlamaIndex.
+
+	:param llama_documents: The list of LlamaIndex documents.
+	:return: The Raw object that contains the loaded data.
+	"""
+	raw_df = pd.DataFrame(
+		list(
+			map(
+				lambda doc: {
+					"texts": doc.page_content,
+					"path": doc.metadata.get("file_path", None),
+					"page": doc.metadata.get("page_label", None),
+					"last_modified_datetime": doc.metadata.get(
+						"last_modified_datetime", datetime.now()
+					),
+				},
+				llama_documents,
+			)
+		)
+	)
+	return Raw(raw_df)
