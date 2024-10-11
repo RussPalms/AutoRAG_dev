@@ -14,7 +14,7 @@
     <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/evaluator.html" />
 
-    <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.0 and Furo 2024.08.06 -->
         <title>autorag.evaluator - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
@@ -499,6 +499,8 @@
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
 				<span class="sa">f</span><span class="s2">&quot;Corpus data path </span><span class="si">{</span><span class="n">corpus_data_path</span><span class="si">}</span><span class="s2"> is not a parquet file.&quot;</span>
 			<span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">qa_data_path</span> <span class="o">=</span> <span class="n">qa_data_path</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">corpus_data_path</span> <span class="o">=</span> <span class="n">corpus_data_path</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">qa_data_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">corpus_data_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span> <span class="o">=</span> <span class="n">cast_qa_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="p">)</span>
@@ -523,8 +525,20 @@
 
 <div class="viewcode-block" id="Evaluator.start_trial">
 <a class="viewcode-back" href="../../api_spec/autorag.html#autorag.evaluator.Evaluator.start_trial">[docs]</a>
-	<span class="k">def</span> <span class="nf">start_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ascii_art</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">start_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skip_validation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">skip_validation</span><span class="p">:</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ascii_art</span><span class="p">)</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+				<span class="s2">&quot;Start Validation input data and config YAML file first. &quot;</span>
+				<span class="s2">&quot;If you want to skip this, put the --skip_validation flag or &quot;</span>
+				<span class="s2">&quot;`skip_validation` at the start_trial function.&quot;</span>
+			<span class="p">)</span>
+			<span class="kn">from</span> <span class="nn">autorag.validator</span> <span class="kn">import</span> <span class="n">Validator</span>  <span class="c1"># resolve circular import</span>
+
+			<span class="n">validator</span> <span class="o">=</span> <span class="n">Validator</span><span class="p">(</span>
+				<span class="n">qa_data_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qa_data_path</span><span class="p">,</span> <span class="n">corpus_data_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus_data_path</span>
+			<span class="p">)</span>
+			<span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
 
 		<span class="n">trial_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_new_trial_name</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__make_trial_dir</span><span class="p">(</span><span class="n">trial_name</span><span class="p">)</span>
@@ -1010,7 +1024,7 @@
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
