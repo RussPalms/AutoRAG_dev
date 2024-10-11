@@ -20,7 +20,7 @@ class Parser:
 		trial_name = self.__get_new_trial_name()
 		self.__make_trial_dir(trial_name)
 
-		# copy yaml file to trial directory
+		# copy YAML file to the trial directory
 		shutil.copy(
 			yaml_path, os.path.join(self.project_dir, trial_name, "parse_config.yaml")
 		)
