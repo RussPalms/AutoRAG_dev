@@ -446,7 +446,7 @@ Plus, the value of the metadata must be <code class="docutils literal notranslat
 <li><p><strong>threshold</strong> : The threshold value to filter out the contents.
 If the time is later than a threshold, the content will be filtered out.
 This is essential to run the module, so you have to set this parameter.</p>
-<p>📌 <strong>threshold</strong> format should be one of the following three!</p>
+<p>📌 <strong>threshold_datetime</strong> format should be one of the following three!</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span> <span class="pre">HH:MM</span></code></p></li>
@@ -459,7 +459,7 @@ This is essential to run the module, so you have to set this parameter.</p>
 <h2><strong>Example config.yaml</strong><a class="headerlink" href="#example-config-yaml" title="Link to this heading">¶</a></h2>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recency_filter</span>
-<span class="w">    </span><span class="nt">threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2015-01-01</span>
+<span class="w">    </span><span class="nt">threshold_datetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2015-01-01</span>
 </pre></div>
 </div>
 </section>
