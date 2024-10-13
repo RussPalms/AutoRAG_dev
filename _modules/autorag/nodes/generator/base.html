@@ -14,7 +14,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/nodes/generator/base.html" />
 
-    <!-- Generated with Sphinx 8.1.0 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.2 and Furo 2024.08.06 -->
         <title>autorag.nodes.generator.base - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
@@ -299,6 +299,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/flashrank_reranker.html">FlashRank Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -473,10 +474,17 @@
 		<span class="k">return</span> <span class="n">result</span></div>
 
 
+<div class="viewcode-block" id="BaseGenerator.astream">
+<a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.base.BaseGenerator.astream">[docs]</a>
+	<span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+	<span class="k">async</span> <span class="k">def</span> <span class="nf">astream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">pass</span></div>
+
+
 <div class="viewcode-block" id="BaseGenerator.stream">
 <a class="viewcode-back" href="../../../../api_spec/autorag.nodes.generator.html#autorag.nodes.generator.base.BaseGenerator.stream">[docs]</a>
 	<span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-	<span class="k">async</span> <span class="k">def</span> <span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 		<span class="k">pass</span></div>
 </div>
 

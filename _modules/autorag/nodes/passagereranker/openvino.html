@@ -14,7 +14,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/nodes/passagereranker/openvino.html" />
 
-    <!-- Generated with Sphinx 8.1.0 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.2 and Furo 2024.08.06 -->
         <title>autorag.nodes.passagereranker.openvino - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
@@ -299,6 +299,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/flashrank_reranker.html">FlashRank Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -424,13 +425,9 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">from</span> <span class="nn">autorag.nodes.passagereranker.base</span> <span class="kn">import</span> <span class="n">BasePassageReranker</span>
-
-<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
-<span class="kn">from</span> <span class="nn">optimum.intel.openvino</span> <span class="kn">import</span> <span class="n">OVModelForSequenceClassification</span>
 
 
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
@@ -440,6 +437,7 @@
 	<span class="n">select_top_k</span><span class="p">,</span>
 	<span class="n">result_to_dataframe</span><span class="p">,</span>
 	<span class="n">pop_params</span><span class="p">,</span>
+	<span class="n">empty_cuda_cache</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -457,6 +455,7 @@
 
 		<span class="k">try</span><span class="p">:</span>
 			<span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">HfApi</span>
+			<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
 		<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
 				<span class="s2">&quot;Could not import huggingface_hub python package. &quot;</span>
@@ -499,6 +498,14 @@
 			<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
 				<span class="k">return</span> <span class="kc">True</span>
 
+		<span class="k">try</span><span class="p">:</span>
+			<span class="kn">from</span> <span class="nn">optimum.intel.openvino</span> <span class="kn">import</span> <span class="n">OVModelForSequenceClassification</span>
+		<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+				<span class="s2">&quot;Please install optimum package to use OpenVINOReranker&quot;</span>
+				<span class="s2">&quot;pip install &#39;optimum[openvino,nncf]&#39;&quot;</span>
+			<span class="p">)</span>
+
 		<span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span>
 			<span class="n">OVModelForSequenceClassification</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">,</span> <span class="n">kwargs</span>
 		<span class="p">)</span>
@@ -519,8 +526,7 @@
 	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span>
-		<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-			<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+		<span class="n">empty_cuda_cache</span><span class="p">()</span>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="OpenVINOReranker.pure">

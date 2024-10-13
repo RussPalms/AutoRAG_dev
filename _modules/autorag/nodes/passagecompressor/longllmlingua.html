@@ -14,7 +14,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/nodes/passagecompressor/longllmlingua.html" />
 
-    <!-- Generated with Sphinx 8.1.0 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.2 and Furo 2024.08.06 -->
         <title>autorag.nodes.passagecompressor.longllmlingua - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
@@ -299,6 +299,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../nodes/passage_reranker/flashrank_reranker.html">FlashRank Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -422,11 +423,9 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">llmlingua</span> <span class="kn">import</span> <span class="n">PromptCompressor</span>
 
 <span class="kn">from</span> <span class="nn">autorag.nodes.passagecompressor.base</span> <span class="kn">import</span> <span class="n">BasePassageCompressor</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">pop_params</span><span class="p">,</span> <span class="n">result_to_dataframe</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">pop_params</span><span class="p">,</span> <span class="n">result_to_dataframe</span><span class="p">,</span> <span class="n">empty_cuda_cache</span>
 
 
 <span class="c1"># TODO: Parallel Processing Refactoring at #460</span>
@@ -438,14 +437,20 @@
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
 		<span class="bp">self</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NousResearch/Llama-2-7b-hf&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 	<span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="kn">from</span> <span class="nn">llmlingua</span> <span class="kn">import</span> <span class="n">PromptCompressor</span>
+		<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+				<span class="s2">&quot;LongLLMLingua is not installed. Please install it by running `pip install llmlingua`.&quot;</span>
+			<span class="p">)</span>
+
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
 		<span class="n">model_init_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">PromptCompressor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">llm_lingua</span> <span class="o">=</span> <span class="n">PromptCompressor</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="o">**</span><span class="n">model_init_params</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_lingua</span>
-		<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-			<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+		<span class="n">empty_cuda_cache</span><span class="p">()</span>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="LongLLMLingua.pure">
@@ -498,7 +503,7 @@
 <span class="k">def</span> <span class="nf">llmlingua_pure</span><span class="p">(</span>
 	<span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 	<span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-	<span class="n">llm_lingua</span><span class="p">:</span> <span class="n">PromptCompressor</span><span class="p">,</span>
+	<span class="n">llm_lingua</span><span class="p">,</span>
 	<span class="n">instructions</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 	<span class="n">target_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
 	<span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
@@ -515,6 +520,12 @@
 <span class="sd">	:param kwargs: Additional keyword arguments.</span>
 <span class="sd">	:return: The compressed text.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="kn">from</span> <span class="nn">llmlingua</span> <span class="kn">import</span> <span class="n">PromptCompressor</span>
+	<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+			<span class="s2">&quot;LongLLMLingua is not installed. Please install it by running `pip install llmlingua`.&quot;</span>
+		<span class="p">)</span>
 	<span class="c1"># split by &quot;\n\n&quot; (recommended by LongLLMLingua authors)</span>
 	<span class="n">new_context_texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="n">contents</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)]</span>
 	<span class="n">compress_prompt_params</span> <span class="o">=</span> <span class="n">pop_params</span><span class="p">(</span><span class="n">PromptCompressor</span><span class="o">.</span><span class="n">compress_prompt</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>

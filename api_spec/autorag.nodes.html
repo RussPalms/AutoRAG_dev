@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="autorag.nodes.generator package" href="autorag.nodes.generator.html" /><link rel="prev" title="autorag.evaluation.metric package" href="autorag.evaluation.metric.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/api_spec/autorag.nodes.html" />
 
-    <!-- Generated with Sphinx 8.1.0 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.2 and Furo 2024.08.06 -->
         <title>autorag.nodes package - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
@@ -300,6 +300,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/flashrank_reranker.html">FlashRank Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -435,6 +436,7 @@
 <li class="toctree-l2"><a class="reference internal" href="autorag.nodes.generator.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="autorag.nodes.generator.html#module-autorag.nodes.generator.base">autorag.nodes.generator.base module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.base.BaseGenerator"><code class="docutils literal notranslate"><span class="pre">BaseGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.base.BaseGenerator.astream"><code class="docutils literal notranslate"><span class="pre">BaseGenerator.astream()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.base.BaseGenerator.cast_to_run"><code class="docutils literal notranslate"><span class="pre">BaseGenerator.cast_to_run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.base.BaseGenerator.stream"><code class="docutils literal notranslate"><span class="pre">BaseGenerator.stream()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.base.BaseGenerator.structured_output"><code class="docutils literal notranslate"><span class="pre">BaseGenerator.structured_output()</span></code></a></li>
@@ -445,6 +447,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="autorag.nodes.generator.html#module-autorag.nodes.generator.llama_index_llm">autorag.nodes.generator.llama_index_llm module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.llama_index_llm.LlamaIndexLLM"><code class="docutils literal notranslate"><span class="pre">LlamaIndexLLM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.llama_index_llm.LlamaIndexLLM.astream"><code class="docutils literal notranslate"><span class="pre">LlamaIndexLLM.astream()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.llama_index_llm.LlamaIndexLLM.pure"><code class="docutils literal notranslate"><span class="pre">LlamaIndexLLM.pure()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.llama_index_llm.LlamaIndexLLM.stream"><code class="docutils literal notranslate"><span class="pre">LlamaIndexLLM.stream()</span></code></a></li>
 </ul>
@@ -453,6 +456,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="autorag.nodes.generator.html#module-autorag.nodes.generator.openai_llm">autorag.nodes.generator.openai_llm module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM"><code class="docutils literal notranslate"><span class="pre">OpenAILLM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM.astream"><code class="docutils literal notranslate"><span class="pre">OpenAILLM.astream()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM.get_result"><code class="docutils literal notranslate"><span class="pre">OpenAILLM.get_result()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM.get_result_o1"><code class="docutils literal notranslate"><span class="pre">OpenAILLM.get_result_o1()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.openai_llm.OpenAILLM.get_structured_result"><code class="docutils literal notranslate"><span class="pre">OpenAILLM.get_structured_result()</span></code></a></li>
@@ -471,6 +475,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="autorag.nodes.generator.html#module-autorag.nodes.generator.vllm">autorag.nodes.generator.vllm module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.vllm.Vllm"><code class="docutils literal notranslate"><span class="pre">Vllm</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.vllm.Vllm.astream"><code class="docutils literal notranslate"><span class="pre">Vllm.astream()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.vllm.Vllm.pure"><code class="docutils literal notranslate"><span class="pre">Vllm.pure()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.generator.html#autorag.nodes.generator.vllm.Vllm.stream"><code class="docutils literal notranslate"><span class="pre">Vllm.stream()</span></code></a></li>
 </ul>
@@ -627,10 +632,10 @@
 <li class="toctree-l2"><a class="reference internal" href="autorag.nodes.passagereranker.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html">autorag.nodes.passagereranker.tart package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#module-autorag.nodes.passagereranker.tart.modeling_enc_t5">autorag.nodes.passagereranker.tart.modeling_enc_t5 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#module-autorag.nodes.passagereranker.tart.tart">autorag.nodes.passagereranker.tart.tart module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#module-autorag.nodes.passagereranker.tart.tokenization_enc_t5">autorag.nodes.passagereranker.tart.tokenization_enc_t5 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#module-autorag.nodes.passagereranker.tart">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#autorag-nodes-passagereranker-tart-modeling-enc-t5-module">autorag.nodes.passagereranker.tart.modeling_enc_t5 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#autorag-nodes-passagereranker-tart-tart-module">autorag.nodes.passagereranker.tart.tart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#autorag-nodes-passagereranker-tart-tokenization-enc-t5-module">autorag.nodes.passagereranker.tart.tokenization_enc_t5 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.tart.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -675,6 +680,14 @@
 <li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.flag_embedding_llm.FlagEmbeddingLLMReranker.pure"><code class="docutils literal notranslate"><span class="pre">FlagEmbeddingLLMReranker.pure()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.flashrank">autorag.nodes.passagereranker.flashrank module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.flashrank.FlashRankReranker"><code class="docutils literal notranslate"><span class="pre">FlashRankReranker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.flashrank.FlashRankReranker.pure"><code class="docutils literal notranslate"><span class="pre">FlashRankReranker.pure()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.nodes.passagereranker.html#autorag.nodes.passagereranker.flashrank.flashrank_run_model"><code class="docutils literal notranslate"><span class="pre">flashrank_run_model()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="autorag.nodes.passagereranker.html#module-autorag.nodes.passagereranker.jina">autorag.nodes.passagereranker.jina module</a><ul>

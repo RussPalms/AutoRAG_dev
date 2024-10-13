@@ -2,7 +2,11 @@
 <html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="AutoRAG - FlashRank Reranker" name="title" />
+<meta content="Learn about flashrank reranker module in AutoRAG" name="description" />
+<meta content="AutoRAG,RAG,Advanced RAG,Reranker,FlashRank Reranker" name="keywords" />
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8ZKQM6RT9"></script>
     <script>
@@ -11,11 +15,11 @@
         gtag('js', new Date());
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
-    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
-        <link rel="canonical" href="https://docs.auto-rag.com/_modules/autorag/chunker.html" />
+    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="5. Passage Filter" href="../passage_filter/passage_filter.html" /><link rel="prev" title="Mixedbread AI Reranker" href="mixedbreadai_reranker.html" />
+        <link rel="canonical" href="https://docs.auto-rag.com/nodes/passage_reranker/flashrank_reranker.html" />
 
-    <!-- Generated with Sphinx 8.1.0 and Furo 2024.08.06 -->
-        <title>autorag.chunker - AutoRAG documentation</title>
+    <!-- Generated with Sphinx 8.1.2 and Furo 2024.08.06 -->
+        <title>FlashRank Reranker - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -190,7 +194,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -264,67 +268,68 @@
 <li class="toctree-l1"><a class="reference internal" href="../../evaluate_metrics/generation.html">Generation Metrics</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Nodes &amp; Modules</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../nodes/index.html">Available List</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/query_expansion/query_expansion.html"><strong>1. Query Expansion</strong></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of 1. Query Expansion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/query_decompose.html">Query Decompose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/hyde.html">HyDE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/query_expansion/multi_query_expansion.html">Multi Query Expansion</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Available List</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../query_expansion/query_expansion.html"><strong>1. Query Expansion</strong></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of 1. Query Expansion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../query_expansion/query_decompose.html">Query Decompose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../query_expansion/hyde.html">HyDE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../query_expansion/multi_query_expansion.html">Multi Query Expansion</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/retrieval/retrieval.html">2. Retrieval</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of 2. Retrieval</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/bm25.html">BM25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/vectordb.html">Vectordb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/hybrid_rrf.html">Hybrid - rrf</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/retrieval/hybrid_cc.html">Hybrid - cc</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../retrieval/retrieval.html">2. Retrieval</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of 2. Retrieval</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../retrieval/bm25.html">BM25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../retrieval/vectordb.html">Vectordb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../retrieval/hybrid_rrf.html">Hybrid - rrf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../retrieval/hybrid_cc.html">Hybrid - cc</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_augmenter/passage_augmenter.html">3. Passage Augmenter</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of 3. Passage Augmenter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_augmenter/prev_next_augmenter.html">Prev Next Augmenter</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_augmenter/passage_augmenter.html">3. Passage Augmenter</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of 3. Passage Augmenter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../passage_augmenter/prev_next_augmenter.html">Prev Next Augmenter</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_reranker/passage_reranker.html">4. Passage_Reranker</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 4. Passage_Reranker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/upr.html">UPR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/tart.html">TART</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/monot5.html">MonoT5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/koreranker.html">Ko-reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/cohere.html">cohere_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/rankgpt.html">RankGPT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/jina_reranker.html">jina_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/colbert.html">Colbert Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/sentence_transformer_reranker.html">Sentence Transformer Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/time_reranker.html">Time Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_reranker/mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="passage_reranker.html">4. Passage_Reranker</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 4. Passage_Reranker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="upr.html">UPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tart.html">TART</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monot5.html">MonoT5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="koreranker.html">Ko-reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cohere.html">cohere_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rankgpt.html">RankGPT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jina_reranker.html">jina_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colbert.html">Colbert Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentence_transformer_reranker.html">Sentence Transformer Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flag_embedding_reranker.html">Flag Embedding Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flag_embedding_llm_reranker.html">Flag Embedding LLM Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_reranker.html">Time Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openvino_reranker.html">OpenVINO Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voyageai_reranker.html">voyageai_reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">FlashRank Reranker</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/similarity_threshold_cutoff.html">Similarity Threshold Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/similarity_percentile_cutoff.html">Similarity Percentile Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/recency_filter.html">Recency Filter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/threshold_cutoff.html">Threshold Cutoff</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_filter/percentile_cutoff.html">Percentile Cutoff</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/similarity_threshold_cutoff.html">Similarity Threshold Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/similarity_percentile_cutoff.html">Similarity Percentile Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/recency_filter.html">Recency Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/threshold_cutoff.html">Threshold Cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_filter/percentile_cutoff.html">Percentile Cutoff</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/passage_compressor/passage_compressor.html">6. Passage_Compressor</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 6. Passage_Compressor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/tree_summarize.html">Tree Summarize</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/refine.html">Refine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/passage_compressor/longllmlingua.html">Long LLM Lingua</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../passage_compressor/passage_compressor.html">6. Passage_Compressor</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 6. Passage_Compressor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/tree_summarize.html">Tree Summarize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/refine.html">Refine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../passage_compressor/longllmlingua.html">Long LLM Lingua</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/prompt_maker/prompt_maker.html">7. Prompt Maker</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of 7. Prompt Maker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/fstring.html">F-String</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/long_context_reorder.html">Long Context Reorder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/prompt_maker/window_replacement.html">Window Replacement</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../prompt_maker/prompt_maker.html">7. Prompt Maker</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of 7. Prompt Maker</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../prompt_maker/fstring.html">F-String</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../prompt_maker/long_context_reorder.html">Long Context Reorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../prompt_maker/window_replacement.html">Window Replacement</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../nodes/generator/generator.html">8. Generator</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of 8. Generator</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/llama_index_llm.html">llama_index LLM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/vllm.html">vllm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nodes/generator/openai_llm.html">OpenAI LLM</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../generator/generator.html">8. Generator</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of 8. Generator</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generator/llama_index_llm.html">llama_index LLM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generator/vllm.html">vllm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generator/openai_llm.html">OpenAI LLM</a></li>
 </ul>
 </li>
 </ul>
@@ -403,7 +408,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="../../_sources/nodes/passage_reranker/flashrank_reranker.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -412,111 +423,67 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <h1>Source code for autorag.chunker</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
-
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">from</span> <span class="nn">autorag.data.chunk.run</span> <span class="kn">import</span> <span class="n">run_chunker</span>
-<span class="kn">from</span> <span class="nn">autorag.data.utils.util</span> <span class="kn">import</span> <span class="n">load_yaml</span><span class="p">,</span> <span class="n">get_param_combinations</span>
-
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="Chunker">
-<a class="viewcode-back" href="../../api_spec/autorag.html#autorag.chunker.Chunker">[docs]</a>
-<span class="k">class</span> <span class="nc">Chunker</span><span class="p">:</span>
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">parsed_raw</span> <span class="o">=</span> <span class="n">raw_df</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="k">if</span> <span class="n">project_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-
-<div class="viewcode-block" id="Chunker.from_parquet">
-<a class="viewcode-back" href="../../api_spec/autorag.html#autorag.chunker.Chunker.from_parquet">[docs]</a>
-	<span class="nd">@classmethod</span>
-	<span class="k">def</span> <span class="nf">from_parquet</span><span class="p">(</span>
-		<span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-	<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Chunker&quot;</span><span class="p">:</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">parsed_data_path</span><span class="p">):</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;parsed_data_path </span><span class="si">{</span><span class="n">parsed_data_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">parsed_data_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">):</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-				<span class="sa">f</span><span class="s2">&quot;parsed_data_path </span><span class="si">{</span><span class="n">parsed_data_path</span><span class="si">}</span><span class="s2"> is not a parquet file.&quot;</span>
-			<span class="p">)</span>
-		<span class="n">parsed_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">parsed_data_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span><span class="p">)</span>
-		<span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">parsed_result</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Chunker.start_chunking">
-<a class="viewcode-back" href="../../api_spec/autorag.html#autorag.chunker.Chunker.start_chunking">[docs]</a>
-	<span class="k">def</span> <span class="nf">start_chunking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-		<span class="n">trial_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_new_trial_name</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">__make_trial_dir</span><span class="p">(</span><span class="n">trial_name</span><span class="p">)</span>
-
-		<span class="c1"># Copy YAML file to the trial directory</span>
-		<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
-			<span class="n">yaml_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">,</span> <span class="s2">&quot;chunk_config.yaml&quot;</span><span class="p">)</span>
-		<span class="p">)</span>
-
-		<span class="c1"># load yaml file</span>
-		<span class="n">modules</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
-
-		<span class="n">input_modules</span><span class="p">,</span> <span class="n">input_params</span> <span class="o">=</span> <span class="n">get_param_combinations</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
-
-		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Chunking Start...&quot;</span><span class="p">)</span>
-		<span class="n">run_chunker</span><span class="p">(</span>
-			<span class="n">modules</span><span class="o">=</span><span class="n">input_modules</span><span class="p">,</span>
-			<span class="n">module_params</span><span class="o">=</span><span class="n">input_params</span><span class="p">,</span>
-			<span class="n">parsed_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parsed_raw</span><span class="p">,</span>
-			<span class="n">trial_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">),</span>
-		<span class="p">)</span>
-		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Chunking Done!&quot;</span><span class="p">)</span></div>
-
-
-	<span class="k">def</span> <span class="nf">__get_new_trial_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-		<span class="n">trial_json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;trial.json&quot;</span><span class="p">)</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">trial_json_path</span><span class="p">):</span>
-			<span class="k">return</span> <span class="s2">&quot;0&quot;</span>
-		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">trial_json_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-			<span class="n">trial_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">trial_json</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;trial_name&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-
-	<span class="k">def</span> <span class="nf">__make_trial_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-		<span class="n">trial_json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;trial.json&quot;</span><span class="p">)</span>
-		<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">trial_json_path</span><span class="p">):</span>
-			<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">trial_json_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-				<span class="n">trial_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="n">trial_json</span> <span class="o">=</span> <span class="p">[]</span>
-
-		<span class="n">trial_json</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-			<span class="p">{</span>
-				<span class="s2">&quot;trial_name&quot;</span><span class="p">:</span> <span class="n">trial_name</span><span class="p">,</span>
-				<span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">),</span>
-			<span class="p">}</span>
-		<span class="p">)</span>
-		<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">))</span>
-		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">trial_json_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-			<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">trial_json</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
-
+          <section id="flashrank-reranker">
+<h1>FlashRank Reranker<a class="headerlink" href="#flashrank-reranker" title="Link to this heading">¶</a></h1>
+<p><a class="reference external" href="https://github.com/PrithivirajDamodaran/FlashRank">FlashRank</a> is the Ultra-lite &amp; Super-fast Python library to add re-ranking to your existing search &amp; retrieval pipelines.</p>
+<p>It is based on SoTA cross-encoders, with gratitude to all the model owners.</p>
+<section id="module-parameters">
+<h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p><strong>batch</strong> : The size of a batch. If you have limited CUDA memory, decrease the size of the batch. (default: 64)</p></li>
+<li><p><strong>model</strong> : The type of model id or path you want to use for reranking. Default is id “”ms-marco-TinyBERT-L-2-v2””.</p>
+<ul class="simple">
+<li><p>You can get the list of available models from <a class="reference external" href="https://github.com/PrithivirajDamodaran/FlashRank.">FlashRank</a></p></li>
+</ul>
+<div class="admonition-note admonition">
+<p class="admonition-title">Note</p>
+<p>“rank_zephyr_7b_v1_full” is an llm based reranker that uses llama-cpp.
+Due to issues with parallel inference, “rank_zephyr_7b_v1_full” is not currently supported by AutoRAG.</p>
+</div>
+</li>
+</ul>
+</section>
+<section id="example-config-yaml">
+<h2><strong>Example config.yaml</strong><a class="headerlink" href="#example-config-yaml" title="Link to this heading">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flashrank_reranker</span>
+<span class="w">  </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ms-marco-MiniLM-L-12-v2&quot;</span>
 </pre></div>
+</div>
+</section>
+</section>
+
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="../passage_filter/passage_filter.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">5. Passage Filter</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="mixedbreadai_reranker.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Mixedbread AI Reranker</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -535,8 +502,28 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">FlashRank Reranker</a><ul>
+<li><a class="reference internal" href="#module-parameters"><strong>Module Parameters</strong></a></li>
+<li><a class="reference internal" href="#example-config-yaml"><strong>Example config.yaml</strong></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

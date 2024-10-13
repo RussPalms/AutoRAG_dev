@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="autorag.schema package" href="autorag.schema.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/api_spec/autorag.utils.html" />
 
-    <!-- Generated with Sphinx 8.1.0 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.2 and Furo 2024.08.06 -->
         <title>autorag.utils package - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
@@ -300,6 +300,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nodes/passage_reranker/flashrank_reranker.html">FlashRank Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -533,6 +534,11 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.utils.util.embedding_query_content">
 <span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">embedding_query_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contents_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/utils/util.html#embedding_query_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.embedding_query_content" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.utils.util.empty_cuda_cache">
+<span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">empty_cuda_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/utils/util.html#empty_cuda_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.empty_cuda_cache" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -868,6 +874,7 @@ And its elements must be list type.</p>
 <li><a class="reference internal" href="#autorag.utils.util.dict_to_markdown"><code class="docutils literal notranslate"><span class="pre">dict_to_markdown()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.dict_to_markdown_table"><code class="docutils literal notranslate"><span class="pre">dict_to_markdown_table()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.embedding_query_content"><code class="docutils literal notranslate"><span class="pre">embedding_query_content()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.utils.util.empty_cuda_cache"><code class="docutils literal notranslate"><span class="pre">empty_cuda_cache()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.explode"><code class="docutils literal notranslate"><span class="pre">explode()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.fetch_contents"><code class="docutils literal notranslate"><span class="pre">fetch_contents()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.fetch_one_content"><code class="docutils literal notranslate"><span class="pre">fetch_one_content()</span></code></a></li>

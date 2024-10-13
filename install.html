@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Tutorial" href="tutorial.html" /><link rel="prev" title="AutoRAG documentation" href="index.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/install.html" />
 
-    <!-- Generated with Sphinx 8.1.0 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.2 and Furo 2024.08.06 -->
         <title>Installation and Setup - AutoRAG documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
@@ -303,6 +303,7 @@
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/openvino_reranker.html">OpenVINO Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/voyageai_reranker.html">voyageai_reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/mixedbreadai_reranker.html">Mixedbread AI Reranker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nodes/passage_reranker/flashrank_reranker.html">FlashRank Reranker</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="nodes/passage_filter/passage_filter.html">5. Passage Filter</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 5. Passage Filter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -457,26 +458,39 @@ First, you can check out the <a class="reference internal" href="troubleshooting
 <p>Due to the constraints, we recommend using Docker images for running AutoRAG on Windows.</p>
 <p>Plus, you MAKE SURE UPGRADE UP TO v0.3.1 for Windows users.</p>
 </section>
+<section id="installation-for-local-models">
+<h2>Installation for Local Models 🏠<a class="headerlink" href="#installation-for-local-models" title="Link to this heading">¶</a></h2>
+<p>For using local models, you need to install some additional dependencies.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;AutoRAG[gpu]&quot;</span>
+</pre></div>
+</div>
+</section>
 <section id="installation-for-parsing">
 <h2>Installation for Parsing 🌲<a class="headerlink" href="#installation-for-parsing" title="Link to this heading">¶</a></h2>
 <p>For parsing you need to install some local packages like <a class="reference external" href="https://man7.org/linux/man-pages/man3/libmagic.3.html">libmagic</a>,
 <a class="reference external" href="https://github.com/tesseract-ocr/tesseract">tesseract</a>, and <a class="reference external" href="https://poppler.freedesktop.org/">poppler</a>.
 The installation method depends upon your OS.</p>
 <p>After installing this, you can install AutoRAG with parsing like below.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>AutoRAG<span class="o">[</span>parse<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;AutoRAG[parse]&quot;</span>
 </pre></div>
 </div>
 </section>
 <section id="installation-for-korean">
 <h2>Installation for Korean 🇰🇷<a class="headerlink" href="#installation-for-korean" title="Link to this heading">¶</a></h2>
 <p>You can install optional dependencies for the Korean language.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>AutoRAG<span class="o">[</span>ko<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;AutoRAG[ko]&quot;</span>
 </pre></div>
 </div>
 <p>And after that, you have to install <strong>jdk 17</strong> for using <code class="docutils literal notranslate"><span class="pre">konlpy</span></code>.
 Plus, remember to set environment PATH for jdk.
 (JAVA_HOME and PATH)</p>
 <p>The instruction for Mac users is <a class="reference external" href="https://velog.io/&#64;yoonsy/M1%EC%B9%A9-Mac%EC%97%90-konlpy-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0">here</a>.</p>
+</section>
+<section id="installation-for-japanese">
+<h2>Installation for Japanese 🇯🇵<a class="headerlink" href="#installation-for-japanese" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;AutoRAG[ja]&quot;</span>
+</pre></div>
+</div>
 </section>
 <section id="setup-openai-api-key">
 <h2>Setup OPENAI API KEY<a class="headerlink" href="#setup-openai-api-key" title="Link to this heading">¶</a></h2>
@@ -538,6 +552,7 @@ We are writing this documentation for contributors, so please wait for a while.<
 </section>
 <section id="run-autorag-with-docker">
 <h2>Run AutoRAG with 🐳 Docker<a class="headerlink" href="#run-autorag-with-docker" title="Link to this heading">¶</a></h2>
+<p>Tip: If you want to build an image for a gpu version, you can use <code class="docutils literal notranslate"><span class="pre">autoraghq/autorag:gpu</span></code> or <code class="docutils literal notranslate"><span class="pre">autoraghq/autorag:gpu-parsing</span></code></p>
 <p>To run AutoRAG using Docker, follow these steps:</p>
 <section id="build-the-docker-image">
 <h3>1. Build the Docker Image<a class="headerlink" href="#build-the-docker-image" title="Link to this heading">¶</a></h3>
@@ -553,7 +568,7 @@ We are writing this documentation for contributors, so please wait for a while.<
 <span class="w">  </span>-v<span class="w"> </span>~/.cache/huggingface:/root/.cache/huggingface<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/sample_config:/usr/src/app/sample_config<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/projects:/usr/src/app/projects<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>autoraghq/autorag:all<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>autoraghq/autorag:api<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--config<span class="w"> </span>/usr/src/app/sample_config/rag/simple/simple_openai.yaml<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--qa_data_path<span class="w"> </span>/usr/src/app/projects/test01/qa_validation.parquet<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--corpus_data_path<span class="w"> </span>/usr/src/app/projects/test01/corpus.parquet<span class="w"> </span><span class="se">\</span>
@@ -579,7 +594,7 @@ We are writing this documentation for contributors, so please wait for a while.<
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/sample_config:/usr/src/app/sample_config<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/projects:/usr/src/app/projects<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-e<span class="w"> </span><span class="nv">HF_HOME</span><span class="o">=</span>/cache/huggingface<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>autoraghq/autorag:all<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>autoraghq/autorag:api<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--config<span class="w"> </span>/usr/src/app/sample_config/rag/simple/simple_openai.yaml<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--qa_data_path<span class="w"> </span>/usr/src/app/projects/test01/qa_validation.parquet<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--corpus_data_path<span class="w"> </span>/usr/src/app/projects/test01/corpus.parquet<span class="w"> </span><span class="se">\</span>
@@ -597,10 +612,28 @@ We are writing this documentation for contributors, so please wait for a while.<
 <section id="debugging-and-manual-access">
 <h3>5. Debugging and Manual Access<a class="headerlink" href="#debugging-and-manual-access" title="Link to this heading">¶</a></h3>
 <p>To manually access the container for debugging or testing, start a Bash shell:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--entrypoint<span class="w"> </span>/bin/bash<span class="w"> </span>autoraghq/autorag:all
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--entrypoint<span class="w"> </span>/bin/bash<span class="w"> </span>autoraghq/autorag:api
 </pre></div>
 </div>
 <p>This command allows you to explore the container’s filesystem, run commands manually, or inspect logs for troubleshooting.</p>
+</section>
+<section id="use-gpu-version">
+<h3>6. Use gpu version<a class="headerlink" href="#use-gpu-version" title="Link to this heading">¶</a></h3>
+<p>To use the gpu version, you must install CUDA and cuDNN in your host system.
+It built on the cuda 11.8 version and pytorch docker image.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>~/.cache/huggingface:/cache/huggingface<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/sample_config:/usr/src/app/sample_config<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/projects:/usr/src/app/projects<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">HF_HOME</span><span class="o">=</span>/cache/huggingface<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--gpus<span class="w"> </span>all<span class="w"> </span><span class="se">\ </span><span class="c1"># Be sure to add this line</span>
+<span class="w">  </span>autoraghq/autorag:gpu<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--config<span class="w"> </span>/usr/src/app/sample_config/rag/simple/simple_openai.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--qa_data_path<span class="w"> </span>/usr/src/app/projects/test01/qa_validation.parquet<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--corpus_data_path<span class="w"> </span>/usr/src/app/projects/test01/corpus.parquet<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--project_dir<span class="w"> </span>/usr/src/app/projects/test01
+</pre></div>
+</div>
 </section>
 </section>
 <section id="additional-notes">
@@ -669,8 +702,10 @@ We are writing this documentation for contributors, so please wait for a while.<
             <ul>
 <li><a class="reference internal" href="#">Installation and Setup</a><ul>
 <li><a class="reference internal" href="#note-for-windows-users">Note for Windows Users</a></li>
+<li><a class="reference internal" href="#installation-for-local-models">Installation for Local Models 🏠</a></li>
 <li><a class="reference internal" href="#installation-for-parsing">Installation for Parsing 🌲</a></li>
 <li><a class="reference internal" href="#installation-for-korean">Installation for Korean 🇰🇷</a></li>
+<li><a class="reference internal" href="#installation-for-japanese">Installation for Japanese 🇯🇵</a></li>
 <li><a class="reference internal" href="#setup-openai-api-key">Setup OPENAI API KEY</a></li>
 <li><a class="reference internal" href="#build-from-source">Build from source</a></li>
 <li><a class="reference internal" href="#run-autorag-with-docker">Run AutoRAG with 🐳 Docker</a><ul>
@@ -684,6 +719,7 @@ We are writing this documentation for contributors, so please wait for a while.<
 </ul>
 </li>
 <li><a class="reference internal" href="#debugging-and-manual-access">5. Debugging and Manual Access</a></li>
+<li><a class="reference internal" href="#use-gpu-version">6. Use gpu version</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#additional-notes">Additional Notes</a></li>
