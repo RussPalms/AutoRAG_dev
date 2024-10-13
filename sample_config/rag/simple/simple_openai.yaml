@@ -22,5 +22,5 @@ node_lines:
       modules:
         - module_type: llama_index_llm
           llm: openai
-          model: [gpt-3.5-turbo-16k, gpt-4]
+          model: [gpt-3.5-turbo-16k]
           batch: 2
