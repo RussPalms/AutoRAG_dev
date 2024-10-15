@@ -6,7 +6,8 @@ import pandas as pd
 import yaml
 
 from autorag.evaluator import Evaluator
-from autorag.deploy import Runner
+
+from src.runner import GradioStreamRunner
 
 
 def display_yaml(file):
@@ -46,6 +47,17 @@ def set_environment_variable(api_name, api_key):
 		except Exception as e:
 			return f"Error setting environment variable: {e}"
 	return "API Name or Key is missing"
+
+
+def stream_chat_responses(file, question):
+	# Default YAML Runner
+	yaml_path = "/Users/kimbwook/PycharmProjects/AutoRAG/sample_config/rag/extracted_sample.yaml"
+	project_dir = os.path.join(pathlib.PurePath(file.name).parent, "project")
+	gradio_runner = GradioStreamRunner.from_yaml(yaml_path, project_dir)
+
+	# Stream responses for the chatbox
+	for output in gradio_runner.stream_run(question):
+		yield [(question, output[0])], [(question, output[0])]
 
 
 # Paths to example files
@@ -199,25 +211,8 @@ with gr.Blocks() as demo:
 					gr.Markdown("#### Custom YAML Chat")
 					custom_chatbox = gr.Chatbot(label="Custom YAML Conversation")
 
-			def run_both_chats(file, question):
-				# Default YAML Runner
-				yaml_path = "/Users/kimbwook/PycharmProjects/AutoRAG/sample_config/rag/extracted_sample.yaml"
-				project_dir = os.path.join(
-					pathlib.PurePath(file.name).parent, "project"
-				)
-				default_runner = Runner.from_yaml(yaml_path, project_dir)
-				default_answer = default_runner.run(question)
-
-				# Custom YAML Runner
-				trial_dir = os.path.join(project_dir, "0")
-				custom_runner = Runner.from_trial_folder(trial_dir)
-				custom_answer = custom_runner.run(question)
-
-				# Return responses for both chatboxes
-				return [(question, default_answer)], [(question, custom_answer)]
-
 			question_input.submit(
-				run_both_chats,
+				stream_chat_responses,
 				inputs=[yaml_file, question_input],
 				outputs=[default_chatbox, custom_chatbox],
 			)
