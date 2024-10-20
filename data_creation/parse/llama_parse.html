@@ -430,6 +430,11 @@
 <h1>Llama Parse<a class="headerlink" href="#llama-parse" title="Link to this heading">¶</a></h1>
 <p>Parse raw documents to use
 <a class="reference external" href="https://github.com/run-llama/llama_parse">Llama Parse</a>.</p>
+<section id="set-environment-variables">
+<h2>Set Environment Variables<a class="headerlink" href="#set-environment-variables" title="Link to this heading">¶</a></h2>
+<p>You need to set the <code class="docutils literal notranslate"><span class="pre">LLAMA_CLOUD_API_KEY</span></code> environment variables to use Llama Parse.</p>
+<p>You can get API Key at <a class="reference external" href="https://docs.cloud.llamaindex.ai/llamaparse/getting_started/get_an_api_key">here</a></p>
+</section>
 <section id="language-support">
 <h2>Language Support<a class="headerlink" href="#language-support" title="Link to this heading">¶</a></h2>
 <p>You can find more information about the supported languages at
@@ -446,12 +451,99 @@
 <li><p>json</p></li>
 </ul>
 </section>
+<section id="use-multimodal-model">
+<h2>Use Multimodal Model<a class="headerlink" href="#use-multimodal-model" title="Link to this heading">¶</a></h2>
+<p>You can see more information about multimodal model at <a class="reference external" href="https://docs.cloud.llamaindex.ai/llamaparse/features/multimodal">Multimodal Parsing</a></p>
+<p>If you want to use multimodal model, you need to set the following parameters.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">use_vendor_multimodal_model</span></code>: Whether to use the vendor multimodal model. If you want to use multimodal model, set it to True. Default is False.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vendor_multimodal_model_name</span></code>: The name of the vendor multimodal model. Default is “openai-gpt4o”.</p></li>
+</ol>
+<ul class="simple">
+<li><p>You can find the list of available multimodal models <a class="reference external" href="https://docs.cloud.llamaindex.ai/llamaparse/features/multimodal">here</a>.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p><code class="docutils literal notranslate"><span class="pre">use_own_key</span></code>: Whether to use the own API key. Default is False.</p></li>
+</ol>
+<ul class="simple">
+<li><p>If this is set to False, the <a class="reference external" href="https://docs.cloud.llamaindex.ai/llamaparse/features/multimodal">Basic Plan</a> provided by llama parse will be used.</p>
+<ul>
+<li><p>If set to False, only set environ variable <code class="docutils literal notranslate"><span class="pre">LLAMA_CLOUD_API_KEY</span></code> is required to use it.</p></li>
+</ul>
+</li>
+<li><p>If true, you will need to set the api_key below.</p></li>
+<li><p>There are two ways to set up an API key.</p>
+<ul>
+<li><p>Putting <code class="docutils literal notranslate"><span class="pre">vendor_multimodal_api_key</span></code> directly into the YAML File</p></li>
+<li><p>Put the API Key in an environment variable based on <code class="docutils literal notranslate"><span class="pre">vendor_multimodal_model_name</span></code>.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">vendor_multimodal_model_name</span></code>: <code class="docutils literal notranslate"><span class="pre">openai-gpt4o</span></code> or <code class="docutils literal notranslate"><span class="pre">openai-gpt-4o-mini</span></code></p>
+<ul>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">OPENAI_API_KEY</span></code> environment variable</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vendor_multimodal_model_name</span></code>: <code class="docutils literal notranslate"><span class="pre">anthropic-sonnet-3.5</span></code></p>
+<ul>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">ANTHROPIC_API_KEY</span></code> environment variable</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vendor_multimodal_model_name</span></code>: <code class="docutils literal notranslate"><span class="pre">gemini-1.5-flash</span></code> or <code class="docutils literal notranslate"><span class="pre">gemini-1.5-pro</span></code></p>
+<ul>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">GEMINI_API_KEY</span></code> environment variable</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>vendor_multimodal_model_name: “custom-azure-model” is not supported in this module.</p>
+</div>
+</section>
 <section id="example-yaml">
 <h2>Example YAML<a class="headerlink" href="#example-yaml" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Not use multimodal model</p></li>
+</ul>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_parse</span>
 <span class="w">    </span><span class="nt">result_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown</span>
 <span class="w">    </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Use multimodal model with <a class="reference external" href="https://docs.cloud.llamaindex.ai/llamaparse/features/multimodal">Basic Plan</a> provided by llama parse</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llamaparse</span>
+<span class="w">    </span><span class="nt">result_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown</span>
+<span class="w">    </span><span class="nt">use_vendor_multimodal_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">vendor_multimodal_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai-gpt-4o-mini</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Use multimodal model with own API Key</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llamaparse</span>
+<span class="w">    </span><span class="nt">result_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown</span>
+<span class="w">    </span><span class="nt">use_vendor_multimodal_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">vendor_multimodal_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai-gpt-4o-mini</span>
+<span class="w">    </span><span class="nt">use_own_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">vendor_multimodal_api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR_OPENAI_API_KEY</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Use multimodal model with own API Key (Environment Variable)</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llamaparse</span>
+<span class="w">    </span><span class="nt">result_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown</span>
+<span class="w">    </span><span class="nt">use_vendor_multimodal_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">vendor_multimodal_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai-gpt-4o-mini</span>
+<span class="w">    </span><span class="nt">use_own_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </section>
@@ -513,8 +605,10 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Llama Parse</a><ul>
+<li><a class="reference internal" href="#set-environment-variables">Set Environment Variables</a></li>
 <li><a class="reference internal" href="#language-support">Language Support</a></li>
 <li><a class="reference internal" href="#table-extraction">Table Extraction</a></li>
+<li><a class="reference internal" href="#use-multimodal-model">Use Multimodal Model</a></li>
 <li><a class="reference internal" href="#example-yaml">Example YAML</a></li>
 </ul>
 </li>
