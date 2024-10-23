@@ -218,6 +218,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -704,7 +707,7 @@ Default is <cite>generated_texts</cite>, which is the output of the <cite>genera
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.deploy.base.extract_best_config">
 <span class="sig-prename descclassname"><span class="pre">autorag.deploy.base.</span></span><span class="sig-name descname"><span class="pre">extract_best_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/autorag/deploy/base.html#extract_best_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.deploy.base.extract_best_config" title="Link to this definition">¶</a></dt>
-<dd><p>Extract the optimal pipeline from evaluated trial.</p>
+<dd><p>Extract the optimal pipeline from the evaluated trial.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -712,7 +715,7 @@ Default is <cite>generated_texts</cite>, which is the output of the <cite>genera
 Must already be evaluated.</p></li>
 <li><p><strong>output_path</strong> – Output path that pipeline yaml file will be saved.
 Must be .yaml or .yml file.
-If None, it does not save yaml file and just return dict values.
+If None, it does not save YAML file and just returns dict values.
 Default is None.</p></li>
 </ul>
 </dd>
@@ -753,6 +756,11 @@ You can load this to access trail_folder/config.yaml.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.deploy.base.extract_vectordb_config">
+<span class="sig-prename descclassname"><span class="pre">autorag.deploy.base.</span></span><span class="sig-name descname"><span class="pre">extract_vectordb_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/autorag/deploy/base.html#extract_vectordb_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.deploy.base.extract_vectordb_config" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="autorag.deploy.base.summary_df_to_yaml">
@@ -938,6 +946,7 @@ You can access the web interface at <cite>http://server_name:server_port</cite> 
 <li><a class="reference internal" href="#autorag.deploy.base.extract_best_config"><code class="docutils literal notranslate"><span class="pre">extract_best_config()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.deploy.base.extract_node_line_names"><code class="docutils literal notranslate"><span class="pre">extract_node_line_names()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.deploy.base.extract_node_strategy"><code class="docutils literal notranslate"><span class="pre">extract_node_strategy()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.deploy.base.extract_vectordb_config"><code class="docutils literal notranslate"><span class="pre">extract_vectordb_config()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.deploy.base.summary_df_to_yaml"><code class="docutils literal notranslate"><span class="pre">summary_df_to_yaml()</span></code></a></li>
 </ul>
 </li>

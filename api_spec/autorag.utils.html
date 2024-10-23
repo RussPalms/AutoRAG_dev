@@ -218,6 +218,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -462,6 +465,25 @@
 <section id="module-autorag.utils.util">
 <span id="autorag-utils-util-module"></span><h2>autorag.utils.util module<a class="headerlink" href="#module-autorag.utils.util" title="Link to this heading">¶</a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="autorag.utils.util.aflatten_apply">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">aflatten_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nested_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/autorag/utils/util.html#aflatten_apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.aflatten_apply" title="Link to this definition">¶</a></dt>
+<dd><p>This function flattens the input list and applies the function to the elements.
+After that, it reconstructs the list to the original shape.
+Its speciality is that the first dimension length of the list can be different from each other.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> – The function that applies to the flattened list.</p></li>
+<li><p><strong>nested_list</strong> – The nested list to be flattened.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The list that is reconstructed after applying the function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="autorag.utils.util.apply_recursive">
 <span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">apply_recursive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/utils/util.html#apply_recursive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.apply_recursive" title="Link to this definition">¶</a></dt>
 <dd><p>Recursively apply a function to all elements in a list, tuple, set, np.ndarray, or pd.Series and return as List.</p>
@@ -661,6 +683,21 @@ Default is [‘module_params’].</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The summary dataframe.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.utils.util.load_yaml_config">
+<span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">load_yaml_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/autorag/utils/util.html#load_yaml_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.load_yaml_config" title="Link to this definition">¶</a></dt>
+<dd><p>Load a YAML configuration file for AutoRAG.
+It contains safe loading, converting string to tuple, and insert environment variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yaml_path</strong> – The path of the YAML configuration file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded configuration dictionary.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -866,6 +903,7 @@ And its elements must be list type.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.utils.util">autorag.utils.util module</a><ul>
+<li><a class="reference internal" href="#autorag.utils.util.aflatten_apply"><code class="docutils literal notranslate"><span class="pre">aflatten_apply()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.apply_recursive"><code class="docutils literal notranslate"><span class="pre">apply_recursive()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.convert_datetime_string"><code class="docutils literal notranslate"><span class="pre">convert_datetime_string()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.convert_env_in_dict"><code class="docutils literal notranslate"><span class="pre">convert_env_in_dict()</span></code></a></li>
@@ -886,6 +924,7 @@ And its elements must be list type.</p>
 <li><a class="reference internal" href="#autorag.utils.util.get_best_row"><code class="docutils literal notranslate"><span class="pre">get_best_row()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.get_event_loop"><code class="docutils literal notranslate"><span class="pre">get_event_loop()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.load_summary_file"><code class="docutils literal notranslate"><span class="pre">load_summary_file()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.utils.util.load_yaml_config"><code class="docutils literal notranslate"><span class="pre">load_yaml_config()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.make_batch"><code class="docutils literal notranslate"><span class="pre">make_batch()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.make_combinations"><code class="docutils literal notranslate"><span class="pre">make_combinations()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.normalize_string"><code class="docutils literal notranslate"><span class="pre">normalize_string()</span></code></a></li>

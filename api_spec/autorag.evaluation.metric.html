@@ -218,6 +218,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -757,6 +760,16 @@ which means calculate the metric based on the contents of the retrieved items.</
 <span class="sig-prename descclassname"><span class="pre">autorag.evaluation.metric.util.</span></span><span class="sig-name descname"><span class="pre">calculate_cosine_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/evaluation/metric/util.html#calculate_cosine_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluation.metric.util.calculate_cosine_similarity" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.evaluation.metric.util.calculate_inner_product">
+<span class="sig-prename descclassname"><span class="pre">autorag.evaluation.metric.util.</span></span><span class="sig-name descname"><span class="pre">calculate_inner_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/evaluation/metric/util.html#calculate_inner_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluation.metric.util.calculate_inner_product" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autorag.evaluation.metric.util.calculate_l2_distance">
+<span class="sig-prename descclassname"><span class="pre">autorag.evaluation.metric.util.</span></span><span class="sig-name descname"><span class="pre">calculate_l2_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/evaluation/metric/util.html#calculate_l2_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluation.metric.util.calculate_l2_distance" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-autorag.evaluation.metric">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-autorag.evaluation.metric" title="Link to this heading">¶</a></h2>
@@ -862,6 +875,8 @@ which means calculate the metric based on the contents of the retrieved items.</
 <li><a class="reference internal" href="#autorag.evaluation.metric.util.autorag_metric"><code class="docutils literal notranslate"><span class="pre">autorag_metric()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.evaluation.metric.util.autorag_metric_loop"><code class="docutils literal notranslate"><span class="pre">autorag_metric_loop()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.evaluation.metric.util.calculate_cosine_similarity"><code class="docutils literal notranslate"><span class="pre">calculate_cosine_similarity()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.evaluation.metric.util.calculate_inner_product"><code class="docutils literal notranslate"><span class="pre">calculate_inner_product()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.evaluation.metric.util.calculate_l2_distance"><code class="docutils literal notranslate"><span class="pre">calculate_l2_distance()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-autorag.evaluation.metric">Module contents</a></li>

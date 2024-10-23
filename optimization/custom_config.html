@@ -221,6 +221,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -506,11 +509,15 @@ It will convert to combinations of module parameters, and AutoRAG will test it o
 <span class="w">        </span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bm25</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vectordb</span>
-<span class="w">            </span><span class="nt">embedding_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<span class="w">            </span><span class="nt">vectordb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hybrid_rrf</span>
 <span class="w">            </span><span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(&#39;bm25&#39;, &#39;vectordb&#39;)</span>
 <span class="w">            </span><span class="nt">rrf_k</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">10</span><span class="p p-Indicator">]</span>
 </pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Above YAML file is not working. For more information, please check out the <a class="reference external" href="https://docs.auto-rag.com/nodes/retrieval/hybrid_rrf.html">hybrid rrf</a> module.</p>
 </div>
 <div class="admonition-what-is-tuple-in-the-yaml-file admonition">
 <p class="admonition-title">What is tuple in the yaml file?</p>
@@ -530,16 +537,15 @@ You can use environment variables in the YAML file directly.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">node_line_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node_line_1</span>
 <span class="w">    </span><span class="nt">nodes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">node_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retrieval</span>
-<span class="w">        </span><span class="nt">top_k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">        </span><span class="nt">top_k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TOP-K}</span>
 <span class="w">        </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">sem_score</span><span class="p p-Indicator">]</span>
 <span class="w">        </span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vectordb</span>
-<span class="w">            </span><span class="nt">embedding_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
-<span class="w">            </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OPENAI_API_KEY}</span>
+<span class="w">            </span><span class="nt">vectordb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 </pre></div>
 </div>
-<p>Look the <code class="docutils literal notranslate"><span class="pre">api_key</span></code> parameter. You can use environment variable directly in the YAML file.</p>
+<p>Look the <code class="docutils literal notranslate"><span class="pre">TOP-K</span></code> parameter. You can use environment variable directly in the YAML file.</p>
 <p>Use ‘${}’ to use an environment variable in the YAML file.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>

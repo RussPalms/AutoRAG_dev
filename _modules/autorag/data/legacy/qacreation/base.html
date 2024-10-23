@@ -217,6 +217,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -571,6 +574,7 @@
 <span class="sd">	:param kwargs: The keyword arguments for qa_creation_func.</span>
 <span class="sd">	:return: QA dataset dataframe.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">raise</span> <span class="ne">DeprecationWarning</span><span class="p">(</span><span class="s2">&quot;This function is deprecated.&quot;</span><span class="p">)</span>
 	<span class="k">assert</span> <span class="p">(</span>
 		<span class="s2">&quot;query&quot;</span> <span class="ow">in</span> <span class="n">existing_query_df</span><span class="o">.</span><span class="n">columns</span>
 	<span class="p">),</span> <span class="s2">&quot;existing_query_df must have &#39;query&#39; column.&quot;</span>

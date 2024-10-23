@@ -217,6 +217,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -429,15 +432,17 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">chromadb</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
-<span class="kn">from</span> <span class="nn">autorag</span> <span class="kn">import</span> <span class="n">embedding_models</span>
 <span class="kn">from</span> <span class="nn">autorag.node_line</span> <span class="kn">import</span> <span class="n">run_node_line</span>
 <span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.base</span> <span class="kn">import</span> <span class="n">get_bm25_pkl_name</span>
 <span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.bm25</span> <span class="kn">import</span> <span class="n">bm25_ingest</span>
-<span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.vectordb</span> <span class="kn">import</span> <span class="n">vectordb_ingest</span>
+<span class="kn">from</span> <span class="nn">autorag.nodes.retrieval.vectordb</span> <span class="kn">import</span> <span class="p">(</span>
+	<span class="n">vectordb_ingest</span><span class="p">,</span>
+	<span class="n">filter_exist_ids</span><span class="p">,</span>
+	<span class="n">filter_exist_ids_from_retrieval_gt</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">autorag.schema</span> <span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">autorag.schema.node</span> <span class="kn">import</span> <span class="p">(</span>
 	<span class="n">module_type_exists</span><span class="p">,</span>
@@ -451,11 +456,11 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="p">(</span>
 	<span class="n">load_summary_file</span><span class="p">,</span>
-	<span class="n">convert_string_to_tuple_in_dict</span><span class="p">,</span>
-	<span class="n">convert_env_in_dict</span><span class="p">,</span>
 	<span class="n">explode</span><span class="p">,</span>
-	<span class="n">empty_cuda_cache</span><span class="p">,</span>
+	<span class="n">load_yaml_config</span><span class="p">,</span>
+	<span class="n">get_event_loop</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">autorag.vectordb</span> <span class="kn">import</span> <span class="n">load_all_vectordb_from_yaml</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
@@ -526,7 +531,26 @@
 
 <div class="viewcode-block" id="Evaluator.start_trial">
 <a class="viewcode-back" href="../../api_spec/autorag.html#autorag.evaluator.Evaluator.start_trial">[docs]</a>
-	<span class="k">def</span> <span class="nf">start_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skip_validation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">start_trial</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skip_validation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">full_ingest</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+	<span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Start AutoRAG trial.</span>
+<span class="sd">		The trial means one experiment to optimize the RAG pipeline.</span>
+<span class="sd">		It consists of ingesting corpus data, running all nodes and modules, evaluating and finding the optimal modules.</span>
+
+<span class="sd">		:param yaml_path: The config YAML path</span>
+<span class="sd">		:param skip_validation: If True, it skips the validation step.</span>
+<span class="sd">			The validation step checks the input config YAML file is well formatted,</span>
+<span class="sd">			and there is any problem with the system settings.</span>
+<span class="sd">			Default is False.</span>
+<span class="sd">		:param full_ingest: If True, it checks the whole corpus data from corpus.parquet that exists in the Vector DB.</span>
+<span class="sd">			If your corpus is huge and don&#39;t want to check the whole vector DB, please set it to False.</span>
+<span class="sd">		:return: None</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># Make Resources directory</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">skip_validation</span><span class="p">:</span>
 			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ascii_art</span><span class="p">)</span>
 			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -541,6 +565,8 @@
 			<span class="p">)</span>
 			<span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
 
+		<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_DIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span>
+
 		<span class="n">trial_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_new_trial_name</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__make_trial_dir</span><span class="p">(</span><span class="n">trial_name</span><span class="p">)</span>
 
@@ -548,8 +574,29 @@
 		<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
 			<span class="n">yaml_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">,</span> <span class="s2">&quot;config.yaml&quot;</span><span class="p">)</span>
 		<span class="p">)</span>
+		<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">load_yaml_config</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
+		<span class="n">vectordb</span> <span class="o">=</span> <span class="n">yaml_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vectordb&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+		<span class="n">vectordb_config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;vectordb.yaml&quot;</span>
+		<span class="p">)</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vectordb_config_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+			<span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">({</span><span class="s2">&quot;vectordb&quot;</span><span class="p">:</span> <span class="n">vectordb</span><span class="p">},</span> <span class="n">f</span><span class="p">)</span>
+
 		<span class="n">node_lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_node_lines</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">__embed</span><span class="p">(</span><span class="n">node_lines</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__ingest_bm25_full</span><span class="p">(</span><span class="n">node_lines</span><span class="p">)</span>
+
+		<span class="c1"># Ingest VectorDB corpus</span>
+		<span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+			<span class="nb">list</span><span class="p">(</span>
+				<span class="nb">map</span><span class="p">(</span>
+					<span class="k">lambda</span> <span class="n">nodes</span><span class="p">:</span> <span class="n">module_type_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;vectordb&quot;</span><span class="p">),</span>
+					<span class="n">node_lines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+				<span class="p">)</span>
+			<span class="p">)</span>
+		<span class="p">):</span>
+			<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
+			<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__ingest_vectordb</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="n">full_ingest</span><span class="p">))</span>
 
 		<span class="n">trial_summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 			<span class="n">columns</span><span class="o">=</span><span class="p">[</span>
@@ -580,7 +627,7 @@
 		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Evaluation complete.&quot;</span><span class="p">)</span></div>
 
 
-	<span class="k">def</span> <span class="nf">__embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_lines</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Node</span><span class="p">]]):</span>
+	<span class="k">def</span> <span class="nf">__ingest_bm25_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_lines</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Node</span><span class="p">]]):</span>
 		<span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
 			<span class="nb">list</span><span class="p">(</span>
 				<span class="nb">map</span><span class="p">(</span>
@@ -588,7 +635,6 @@
 				<span class="p">)</span>
 			<span class="p">)</span>
 		<span class="p">):</span>
-			<span class="c1"># ingest BM25 corpus</span>
 			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Embedding BM25 corpus...&quot;</span><span class="p">)</span>
 			<span class="n">bm25_tokenizer_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
 				<span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
@@ -610,78 +656,6 @@
 				<span class="c1"># ingest because bm25 supports update new corpus data</span>
 				<span class="n">bm25_ingest</span><span class="p">(</span><span class="n">bm25_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="p">,</span> <span class="n">bm25_tokenizer</span><span class="o">=</span><span class="n">bm25_tokenizer</span><span class="p">)</span>
 			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BM25 corpus embedding complete.&quot;</span><span class="p">)</span>
-
-		<span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
-			<span class="nb">list</span><span class="p">(</span>
-				<span class="nb">map</span><span class="p">(</span>
-					<span class="k">lambda</span> <span class="n">nodes</span><span class="p">:</span> <span class="n">module_type_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;vectordb&quot;</span><span class="p">),</span>
-					<span class="n">node_lines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-				<span class="p">)</span>
-			<span class="p">)</span>
-		<span class="p">):</span>
-			<span class="c1"># load embedding_models in nodes</span>
-			<span class="n">embedding_models_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-				<span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
-					<span class="nb">map</span><span class="p">(</span>
-						<span class="k">lambda</span> <span class="n">nodes</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_embedding_model</span><span class="p">(</span><span class="n">nodes</span><span class="p">),</span>
-						<span class="n">node_lines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-					<span class="p">)</span>
-				<span class="p">)</span>
-			<span class="p">)</span>
-
-			<span class="c1"># get embedding batch size in nodes</span>
-			<span class="n">embedding_batch_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-				<span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
-					<span class="nb">map</span><span class="p">(</span>
-						<span class="k">lambda</span> <span class="n">nodes</span><span class="p">:</span> <span class="n">extract_values_from_nodes</span><span class="p">(</span>
-							<span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;embedding_batch&quot;</span>
-						<span class="p">),</span>
-						<span class="n">node_lines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-					<span class="p">)</span>
-				<span class="p">)</span>
-			<span class="p">)</span>
-			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">embedding_batch_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-				<span class="n">embedding_batch</span> <span class="o">=</span> <span class="mi">100</span>
-			<span class="k">else</span><span class="p">:</span>
-				<span class="n">embedding_batch</span> <span class="o">=</span> <span class="n">embedding_batch_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-			<span class="c1"># duplicate check in embedding_models</span>
-			<span class="n">embedding_models_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">embedding_models_list</span><span class="p">))</span>
-
-			<span class="n">vectordb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;chroma&quot;</span><span class="p">)</span>
-			<span class="n">vectordb</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">vectordb_dir</span><span class="p">)</span>
-
-			<span class="k">for</span> <span class="n">embedding_model_str</span> <span class="ow">in</span> <span class="n">embedding_models_list</span><span class="p">:</span>
-				<span class="c1"># ingest VectorDB corpus</span>
-				<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Embedding VectorDB corpus with </span><span class="si">{</span><span class="n">embedding_model_str</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
-
-				<span class="c1"># Get the collection with GET or CREATE, as it may already exist</span>
-				<span class="n">collection</span> <span class="o">=</span> <span class="n">vectordb</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span>
-					<span class="n">name</span><span class="o">=</span><span class="n">embedding_model_str</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hnsw:space&quot;</span><span class="p">:</span> <span class="s2">&quot;cosine&quot;</span><span class="p">}</span>
-				<span class="p">)</span>
-				<span class="c1"># get embedding_model</span>
-				<span class="k">if</span> <span class="n">embedding_model_str</span> <span class="ow">in</span> <span class="n">embedding_models</span><span class="p">:</span>
-					<span class="n">embedding_model</span> <span class="o">=</span> <span class="n">embedding_models</span><span class="p">[</span><span class="n">embedding_model_str</span><span class="p">]()</span>
-				<span class="k">else</span><span class="p">:</span>
-					<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-						<span class="sa">f</span><span class="s2">&quot;embedding_model_str </span><span class="si">{</span><span class="n">embedding_model_str</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span>
-					<span class="p">)</span>
-					<span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-						<span class="sa">f</span><span class="s2">&quot;embedding_model_str </span><span class="si">{</span><span class="n">embedding_model_str</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span>
-					<span class="p">)</span>
-				<span class="n">vectordb_ingest</span><span class="p">(</span>
-					<span class="n">collection</span><span class="p">,</span>
-					<span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="p">,</span>
-					<span class="n">embedding_model</span><span class="p">,</span>
-					<span class="n">embedding_batch</span><span class="o">=</span><span class="n">embedding_batch</span><span class="p">,</span>
-				<span class="p">)</span>
-				<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-					<span class="sa">f</span><span class="s2">&quot;VectorDB corpus embedding complete with </span><span class="si">{</span><span class="n">embedding_model_str</span><span class="si">}</span><span class="s2">.&quot;</span>
-				<span class="p">)</span>
-				<span class="k">del</span> <span class="n">embedding_model</span>
-				<span class="n">empty_cuda_cache</span><span class="p">()</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No ingestion needed.&quot;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">__get_new_trial_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 		<span class="n">trial_json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;trial.json&quot;</span><span class="p">)</span>
@@ -711,16 +685,7 @@
 
 	<span class="nd">@staticmethod</span>
 	<span class="k">def</span> <span class="nf">_load_node_lines</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Node</span><span class="p">]]:</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">):</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;YAML file </span><span class="si">{</span><span class="n">yaml_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
-		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-			<span class="k">try</span><span class="p">:</span>
-				<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-			<span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;YAML file </span><span class="si">{</span><span class="n">yaml_path</span><span class="si">}</span><span class="s2"> could not be loaded.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
-
-		<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">convert_string_to_tuple_in_dict</span><span class="p">(</span><span class="n">yaml_dict</span><span class="p">)</span>
-		<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">convert_env_in_dict</span><span class="p">(</span><span class="n">yaml_dict</span><span class="p">)</span>
+		<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">load_yaml_config</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
 		<span class="n">node_lines</span> <span class="o">=</span> <span class="n">yaml_dict</span><span class="p">[</span><span class="s2">&quot;node_lines&quot;</span><span class="p">]</span>
 		<span class="n">node_line_dict</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="k">for</span> <span class="n">node_line</span> <span class="ow">in</span> <span class="n">node_lines</span><span class="p">:</span>
@@ -733,6 +698,7 @@
 <a class="viewcode-back" href="../../api_spec/autorag.html#autorag.evaluator.Evaluator.restart_trial">[docs]</a>
 	<span class="k">def</span> <span class="nf">restart_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ascii_art</span><span class="p">)</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_DIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span>
 		<span class="c1"># Check if trial_path exists</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">trial_path</span><span class="p">):</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trial path </span><span class="si">{</span><span class="n">trial_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
@@ -989,7 +955,22 @@
 		<span class="n">embedding_models_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
 			<span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="n">embedding_models_list</span><span class="p">)</span>
 		<span class="p">)</span>
-		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">embedding_models_list</span><span class="p">))</span></div>
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">embedding_models_list</span><span class="p">))</span>
+
+	<span class="k">async</span> <span class="k">def</span> <span class="nf">__ingest_vectordb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">,</span> <span class="n">full_ingest</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+		<span class="n">vectordb_list</span> <span class="o">=</span> <span class="n">load_all_vectordb_from_yaml</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">full_ingest</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="c1"># get the target ingest corpus from the whole corpus</span>
+			<span class="k">for</span> <span class="n">vectordb</span> <span class="ow">in</span> <span class="n">vectordb_list</span><span class="p">:</span>
+				<span class="n">target_corpus</span> <span class="o">=</span> <span class="k">await</span> <span class="n">filter_exist_ids</span><span class="p">(</span><span class="n">vectordb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span><span class="p">)</span>
+				<span class="k">await</span> <span class="n">vectordb_ingest</span><span class="p">(</span><span class="n">vectordb</span><span class="p">,</span> <span class="n">target_corpus</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="c1"># get the target ingest corpus from the retrieval gt only</span>
+			<span class="k">for</span> <span class="n">vectordb</span> <span class="ow">in</span> <span class="n">vectordb_list</span><span class="p">:</span>
+				<span class="n">target_corpus</span> <span class="o">=</span> <span class="k">await</span> <span class="n">filter_exist_ids_from_retrieval_gt</span><span class="p">(</span>
+					<span class="n">vectordb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus_data</span>
+				<span class="p">)</span>
+				<span class="k">await</span> <span class="n">vectordb_ingest</span><span class="p">(</span><span class="n">vectordb</span><span class="p">,</span> <span class="n">target_corpus</span><span class="p">)</span></div>
 
 </pre></div>
         </article>

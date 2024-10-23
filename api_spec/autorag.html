@@ -218,6 +218,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -540,6 +543,7 @@
 <li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.extract_best_config"><code class="docutils literal notranslate"><span class="pre">extract_best_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.extract_node_line_names"><code class="docutils literal notranslate"><span class="pre">extract_node_line_names()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.extract_node_strategy"><code class="docutils literal notranslate"><span class="pre">extract_node_strategy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.extract_vectordb_config"><code class="docutils literal notranslate"><span class="pre">extract_vectordb_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.deploy.html#autorag.deploy.base.summary_df_to_yaml"><code class="docutils literal notranslate"><span class="pre">summary_df_to_yaml()</span></code></a></li>
 </ul>
 </li>
@@ -771,6 +775,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="autorag.utils.html#module-autorag.utils.util">autorag.utils.util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.aflatten_apply"><code class="docutils literal notranslate"><span class="pre">aflatten_apply()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.apply_recursive"><code class="docutils literal notranslate"><span class="pre">apply_recursive()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.convert_datetime_string"><code class="docutils literal notranslate"><span class="pre">convert_datetime_string()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.convert_env_in_dict"><code class="docutils literal notranslate"><span class="pre">convert_env_in_dict()</span></code></a></li>
@@ -791,6 +796,7 @@
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.get_best_row"><code class="docutils literal notranslate"><span class="pre">get_best_row()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.get_event_loop"><code class="docutils literal notranslate"><span class="pre">get_event_loop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.load_summary_file"><code class="docutils literal notranslate"><span class="pre">load_summary_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.load_yaml_config"><code class="docutils literal notranslate"><span class="pre">load_yaml_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.make_batch"><code class="docutils literal notranslate"><span class="pre">make_batch()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.make_combinations"><code class="docutils literal notranslate"><span class="pre">make_combinations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html#autorag.utils.util.normalize_string"><code class="docutils literal notranslate"><span class="pre">normalize_string()</span></code></a></li>
@@ -885,8 +891,27 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="autorag.evaluator.Evaluator.start_trial">
-<span class="sig-name descname"><span class="pre">start_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_validation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/evaluator.html#Evaluator.start_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluator.Evaluator.start_trial" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">start_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_validation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_ingest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/evaluator.html#Evaluator.start_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.evaluator.Evaluator.start_trial" title="Link to this definition">¶</a></dt>
+<dd><p>Start AutoRAG trial.
+The trial means one experiment to optimize the RAG pipeline.
+It consists of ingesting corpus data, running all nodes and modules, evaluating and finding the optimal modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>yaml_path</strong> – The config YAML path</p></li>
+<li><p><strong>skip_validation</strong> – If True, it skips the validation step.
+The validation step checks the input config YAML file is well formatted,
+and there is any problem with the system settings.
+Default is False.</p></li>
+<li><p><strong>full_ingest</strong> – If True, it checks the whole corpus data from corpus.parquet that exists in the Vector DB.
+If your corpus is huge and don’t want to check the whole vector DB, please set it to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1124,56 +1149,6 @@ The metadata will be returned even if you did not give input ‘metadatas’ par
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.additional_kwargs">
-<span class="sig-name descname"><span class="pre">additional_kwargs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.additional_kwargs" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.aws_access_key_id">
-<span class="sig-name descname"><span class="pre">aws_access_key_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.aws_access_key_id" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.aws_secret_access_key">
-<span class="sig-name descname"><span class="pre">aws_secret_access_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.aws_secret_access_key" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.aws_session_token">
-<span class="sig-name descname"><span class="pre">aws_session_token</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.aws_session_token" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.botocore_config">
-<span class="sig-name descname"><span class="pre">botocore_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.botocore_config" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.botocore_session">
-<span class="sig-name descname"><span class="pre">botocore_session</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.botocore_session" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.context_size">
-<span class="sig-name descname"><span class="pre">context_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.context_size" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.max_retries">
-<span class="sig-name descname"><span class="pre">max_retries</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.max_retries" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.max_tokens">
-<span class="sig-name descname"><span class="pre">max_tokens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.max_tokens" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.model">
-<span class="sig-name descname"><span class="pre">model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.model" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="autorag.AutoRAGBedrock.model_computed_fields">
 <span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.model_computed_fields" title="Link to this definition">¶</a></dt>
 <dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
@@ -1200,26 +1175,6 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 method.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.profile_name">
-<span class="sig-name descname"><span class="pre">profile_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.profile_name" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.region_name">
-<span class="sig-name descname"><span class="pre">region_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.region_name" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.temperature">
-<span class="sig-name descname"><span class="pre">temperature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.temperature" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.AutoRAGBedrock.timeout">
-<span class="sig-name descname"><span class="pre">timeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#autorag.AutoRAGBedrock.timeout" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -1233,11 +1188,6 @@ method.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.</span></span><span class="sig-name descname"><span class="pre">MockEmbeddingRandom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Gt</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">gt</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Le</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">le</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">2048</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CallbackManager</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag.html#MockEmbeddingRandom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.MockEmbeddingRandom" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MockEmbedding</span></code></p>
 <p>Mock embedding with random vectors.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="autorag.MockEmbeddingRandom.embed_dim">
-<span class="sig-name descname"><span class="pre">embed_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#autorag.MockEmbeddingRandom.embed_dim" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="autorag.MockEmbeddingRandom.model_computed_fields">
 <span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#autorag.MockEmbeddingRandom.model_computed_fields" title="Link to this definition">¶</a></dt>
@@ -1404,29 +1354,14 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 <li><a class="reference internal" href="#module-autorag">Module contents</a><ul>
 <li><a class="reference internal" href="#autorag.AutoRAGBedrock"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock</span></code></a><ul>
 <li><a class="reference internal" href="#autorag.AutoRAGBedrock.acomplete"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.acomplete()</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.additional_kwargs"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.additional_kwargs</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.aws_access_key_id"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.aws_access_key_id</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.aws_secret_access_key"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.aws_secret_access_key</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.aws_session_token"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.aws_session_token</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.botocore_config"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.botocore_config</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.botocore_session"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.botocore_session</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.context_size"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.context_size</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.max_retries"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.max_retries</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.max_tokens"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.max_tokens</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.model"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.model</span></code></a></li>
 <li><a class="reference internal" href="#autorag.AutoRAGBedrock.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.model_computed_fields</span></code></a></li>
 <li><a class="reference internal" href="#autorag.AutoRAGBedrock.model_config"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.model_config</span></code></a></li>
 <li><a class="reference internal" href="#autorag.AutoRAGBedrock.model_fields"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.model_fields</span></code></a></li>
 <li><a class="reference internal" href="#autorag.AutoRAGBedrock.model_post_init"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.model_post_init()</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.profile_name"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.profile_name</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.region_name"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.region_name</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.temperature"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.temperature</span></code></a></li>
-<li><a class="reference internal" href="#autorag.AutoRAGBedrock.timeout"><code class="docutils literal notranslate"><span class="pre">AutoRAGBedrock.timeout</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#autorag.LazyInit"><code class="docutils literal notranslate"><span class="pre">LazyInit</span></code></a></li>
 <li><a class="reference internal" href="#autorag.MockEmbeddingRandom"><code class="docutils literal notranslate"><span class="pre">MockEmbeddingRandom</span></code></a><ul>
-<li><a class="reference internal" href="#autorag.MockEmbeddingRandom.embed_dim"><code class="docutils literal notranslate"><span class="pre">MockEmbeddingRandom.embed_dim</span></code></a></li>
 <li><a class="reference internal" href="#autorag.MockEmbeddingRandom.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">MockEmbeddingRandom.model_computed_fields</span></code></a></li>
 <li><a class="reference internal" href="#autorag.MockEmbeddingRandom.model_config"><code class="docutils literal notranslate"><span class="pre">MockEmbeddingRandom.model_config</span></code></a></li>
 <li><a class="reference internal" href="#autorag.MockEmbeddingRandom.model_fields"><code class="docutils literal notranslate"><span class="pre">MockEmbeddingRandom.model_fields</span></code></a></li>

@@ -217,6 +217,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -422,6 +425,7 @@
           <h1>Source code for autorag.deploy.base</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
@@ -430,8 +434,7 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="kn">from</span> <span class="nn">autorag.support</span> <span class="kn">import</span> <span class="n">get_support_modules</span>
-<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">load_summary_file</span>
-
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">load_summary_file</span><span class="p">,</span> <span class="n">load_yaml_config</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;AutoRAG&quot;</span><span class="p">)</span>
 
@@ -527,13 +530,13 @@
 <a class="viewcode-back" href="../../../api_spec/autorag.deploy.html#autorag.deploy.base.extract_best_config">[docs]</a>
 <span class="k">def</span> <span class="nf">extract_best_config</span><span class="p">(</span><span class="n">trial_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Extract the optimal pipeline from evaluated trial.</span>
+<span class="sd">	Extract the optimal pipeline from the evaluated trial.</span>
 
 <span class="sd">	:param trial_path: The path to the trial directory that you want to extract the pipeline from.</span>
 <span class="sd">	    Must already be evaluated.</span>
 <span class="sd">	:param output_path: Output path that pipeline yaml file will be saved.</span>
 <span class="sd">	    Must be .yaml or .yml file.</span>
-<span class="sd">	    If None, it does not save yaml file and just return dict values.</span>
+<span class="sd">	    If None, it does not save YAML file and just returns dict values.</span>
 <span class="sd">	    Default is None.</span>
 <span class="sd">	:return: The dictionary of the extracted pipeline.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -547,10 +550,38 @@
 	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_yaml_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 		<span class="n">config_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 	<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">summary_df_to_yaml</span><span class="p">(</span><span class="n">trial_summary_df</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">)</span>
+	<span class="n">yaml_dict</span><span class="p">[</span><span class="s2">&quot;vectordb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extract_vectordb_config</span><span class="p">(</span><span class="n">trial_path</span><span class="p">)</span>
 	<span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 			<span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">yaml_dict</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">yaml_dict</span></div>
+
+
+
+<div class="viewcode-block" id="extract_vectordb_config">
+<a class="viewcode-back" href="../../../api_spec/autorag.deploy.html#autorag.deploy.base.extract_vectordb_config">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_vectordb_config</span><span class="p">(</span><span class="n">trial_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+	<span class="c1"># get vectordb.yaml file</span>
+	<span class="n">project_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">trial_path</span><span class="p">))</span><span class="o">.</span><span class="n">parent</span>
+	<span class="n">vectordb_config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;vectordb.yaml&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">vectordb_config_path</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;vectordb.yaml does not exist in </span><span class="si">{</span><span class="n">vectordb_config_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vectordb_config_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+		<span class="n">vectordb_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="n">vectordb_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vectordb&quot;</span><span class="p">,</span> <span class="p">[])</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">result</span>
+	<span class="c1"># return default setting of chroma</span>
+	<span class="k">return</span> <span class="p">[</span>
+		<span class="p">{</span>
+			<span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;db_type&quot;</span><span class="p">:</span> <span class="s2">&quot;chroma&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;client_type&quot;</span><span class="p">:</span> <span class="s2">&quot;persistent&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;embedding_model&quot;</span><span class="p">:</span> <span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;collection_name&quot;</span><span class="p">:</span> <span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;chroma&quot;</span><span class="p">),</span>
+		<span class="p">}</span>
+	<span class="p">]</span></div>
 
 
 
@@ -560,8 +591,7 @@
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 		<span class="n">project_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> <span class="k">if</span> <span class="n">project_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">project_dir</span>
-		<span class="c1"># self.app = Flask(__name__)</span>
-		<span class="c1"># self.__add_api_route()</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROJECT_DIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">project_dir</span>
 
 		<span class="c1"># init modules</span>
 		<span class="n">node_lines</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;node_lines&quot;</span><span class="p">])</span>
@@ -597,12 +627,7 @@
 <span class="sd">			Default is the current directory.</span>
 <span class="sd">		:return: Initialized Runner.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-			<span class="k">try</span><span class="p">:</span>
-				<span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-			<span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-				<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
-				<span class="k">raise</span> <span class="n">exc</span>
+		<span class="n">config</span> <span class="o">=</span> <span class="n">load_yaml_config</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
 		<span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">)</span></div>
 
 

@@ -217,6 +217,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -440,6 +443,7 @@
 <span class="kn">import</span> <span class="nn">tiktoken</span>
 <span class="kn">import</span> <span class="nn">unicodedata</span>
 
+<span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">llama_index.embeddings.openai</span> <span class="kn">import</span> <span class="n">OpenAIEmbedding</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span> <span class="k">as</span> <span class="n">BM</span>
 <span class="kn">from</span> <span class="nn">pydantic.v1</span> <span class="kn">import</span> <span class="n">BaseModel</span>
@@ -843,6 +847,27 @@
 
 
 
+<div class="viewcode-block" id="aflatten_apply">
+<a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.aflatten_apply">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">aflatten_apply</span><span class="p">(</span>
+	<span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">nested_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function flattens the input list and applies the function to the elements.</span>
+<span class="sd">	After that, it reconstructs the list to the original shape.</span>
+<span class="sd">	Its speciality is that the first dimension length of the list can be different from each other.</span>
+
+<span class="sd">	:param func: The function that applies to the flattened list.</span>
+<span class="sd">	:param nested_list: The nested list to be flattened.</span>
+<span class="sd">	:return: The list that is reconstructed after applying the function.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;col1&quot;</span><span class="p">:</span> <span class="n">nested_list</span><span class="p">})</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;col1&quot;</span><span class="p">)</span>
+	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;col1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+
+
 <div class="viewcode-block" id="sort_by_scores">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.sort_by_scores">[docs]</a>
 <span class="k">def</span> <span class="nf">sort_by_scores</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -1176,6 +1201,30 @@
 			<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
 	<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
 		<span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="load_yaml_config">
+<a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.load_yaml_config">[docs]</a>
+<span class="k">def</span> <span class="nf">load_yaml_config</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Load a YAML configuration file for AutoRAG.</span>
+<span class="sd">	It contains safe loading, converting string to tuple, and insert environment variables.</span>
+
+<span class="sd">	:param yaml_path: The path of the YAML configuration file.</span>
+<span class="sd">	:return: The loaded configuration dictionary.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;YAML file </span><span class="si">{</span><span class="n">yaml_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+		<span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;YAML file </span><span class="si">{</span><span class="n">yaml_path</span><span class="si">}</span><span class="s2"> could not be loaded.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+
+	<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">convert_string_to_tuple_in_dict</span><span class="p">(</span><span class="n">yaml_dict</span><span class="p">)</span>
+	<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">convert_env_in_dict</span><span class="p">(</span><span class="n">yaml_dict</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">yaml_dict</span></div>
 
 </pre></div>
         </article>

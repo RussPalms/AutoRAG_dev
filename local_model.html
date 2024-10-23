@@ -15,7 +15,7 @@
         gtag('js', new Date());
         gtag('config', 'G-T8ZKQM6RT9');
     </script>
-    <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Evaluation data creation tutorial" href="data_creation/tutorial.html" /><link rel="prev" title="TroubleShooting" href="troubleshooting.html" />
+    <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Migration Guide" href="migration.html" /><link rel="prev" title="TroubleShooting" href="troubleshooting.html" />
         <link rel="canonical" href="https://docs.auto-rag.com/local_model.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
@@ -221,6 +221,9 @@
 <li class="toctree-l1"><a class="reference internal" href="structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -588,14 +591,20 @@ To change the embedding model, you can change the <code class="docutils literal 
 </table>
 </div>
 <p>For example, if you want to use OpenAI text embedding large model, you can set <code class="docutils literal notranslate"><span class="pre">embedding_model</span></code> parameter
-to <code class="docutils literal notranslate"><span class="pre">openai_embed_3_large</span></code>.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nodes</span><span class="p">:</span>
+to <code class="docutils literal notranslate"><span class="pre">openai_embed_3_large</span></code> when setting vectordb.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">vectordb</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chroma_openai</span>
+<span class="w">    </span><span class="nt">db_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chroma</span>
+<span class="w">    </span><span class="nt">client_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persistent</span>
+<span class="w">    </span><span class="nt">embedding_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai_embed_3_large</span>
+<span class="w">    </span><span class="nt">collection_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai_embed_3_large</span>
+<span class="nt">nodes</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">node_line_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node_line_1</span>
 <span class="w">    </span><span class="nt">nodes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">node_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retrieval</span>
 <span class="w">        </span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vectordb</span>
-<span class="w">            </span><span class="nt">embedding_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<span class="w">            </span><span class="nt">vectordb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chroma_openai</span>
 </pre></div>
 </div>
 </section>
@@ -632,12 +641,12 @@ module docs.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="data_creation/tutorial.html">
+          <a class="next-page" href="migration.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Evaluation data creation tutorial</div>
+                <div class="title">Migration Guide</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>

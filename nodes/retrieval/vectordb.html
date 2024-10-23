@@ -221,6 +221,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../local_model.html">Configure LLM &amp; Embedding models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html">Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -442,27 +445,20 @@ Plus, it is open-source software.</p>
 <section id="module-parameters">
 <h2><strong>Module Parameters</strong><a class="headerlink" href="#module-parameters" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><strong>Parameter</strong>: <code class="docutils literal notranslate"><span class="pre">embedding_model</span></code></p></li>
+<li><p><strong>Parameter</strong>: <code class="docutils literal notranslate"><span class="pre">vectordb</span></code></p></li>
 <li><p><strong>Usage</strong>: Defines the model used for embedding in the VectorDB module, impacting how data is represented and retrieved.</p></li>
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Information about the Embedding model can be found <a class="reference internal" href="../../local_model.html#supporting-embedding-models"><span class="std std-ref">Supporting Embedding models</span></a>.
+<p>Information about the VectorDB can be found <a class="reference internal" href="../../vectordb/vectordb.html"><span class="std std-doc">VectorDB Section</span></a>.
 Plus, you can learn about how to add custom embedding model at <a class="reference internal" href="../../local_model.html#add-your-embedding-models"><span class="std std-ref">here</span></a>.</p>
 </div>
-<ul class="simple">
-<li><p><strong>Parameter</strong>: <code class="docutils literal notranslate"><span class="pre">embedding_batch</span></code></p></li>
-<li><p><strong>Usage</strong>: It is the batch size of the embedding model.
-It automatically set to the ingestion process using an embedding model.
-If you get error on the embedding model, try to lower this parameter.</p></li>
-</ul>
 </section>
 <section id="example-config-yaml">
 <h2><strong>Example config.yaml</strong><a class="headerlink" href="#example-config-yaml" title="Link to this heading">¶</a></h2>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vectordb</span>
-<span class="w">    </span><span class="nt">embedding_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
-<span class="w">    </span><span class="nt">embedding_batch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64</span>
+<span class="w">    </span><span class="nt">vectordb</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">default</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">openai_chroma</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">openai_milvus</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
