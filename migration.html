@@ -220,7 +220,7 @@
 <li class="toctree-l1"><a class="reference internal" href="local_model.html">Configure LLM &amp; Embedding models</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#v0-3-migration-guide">v0.3 migration guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#v0-3-7-migration-guide">v0.3.7 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -385,6 +385,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="api_spec/autorag.schema.html">autorag.schema package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api_spec/autorag.utils.html">autorag.utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_spec/autorag.vectordb.html">autorag.vectordb package</a></li>
 </ul>
 </li>
 </ul>
@@ -469,12 +470,12 @@ There are no longer <code class="docutils literal notranslate"><span class="pre"
 </div>
 </section>
 </section>
-<section id="v0-3-6-migration-guide">
-<h1>v0.3.6 migration guide<a class="headerlink" href="#v0-3-6-migration-guide" title="Link to this heading">¶</a></h1>
+<section id="v0-3-7-migration-guide">
+<h1>v0.3.7 migration guide<a class="headerlink" href="#v0-3-7-migration-guide" title="Link to this heading">¶</a></h1>
 <p>At v0.3.6, there are changes of the vectordb.
 You have to specify what vectordb you want to use at the config YAML file.</p>
 <ul class="simple">
-<li><p>v0.3.5 version (previous v0.3.6)</p></li>
+<li><p>v0.3.6 version (previous v0.3.7)</p></li>
 </ul>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">node_lines</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">node_line_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retrieve_node_line</span>
@@ -493,7 +494,7 @@ You have to specify what vectordb you want to use at the config YAML file.</p>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>v0.3.6 version</p></li>
+<li><p>v0.3.7 version</p></li>
 </ul>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">vectordb</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai_embed_3_small</span>

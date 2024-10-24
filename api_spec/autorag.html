@@ -220,7 +220,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../local_model.html">Configure LLM &amp; Embedding models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../migration.html">Migration Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-6-migration-guide">v0.3.6 migration guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-7-migration-guide">v0.3.7 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -385,6 +385,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.schema.html">autorag.schema package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="autorag.utils.html">autorag.utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.vectordb.html">autorag.vectordb package</a></li>
 </ul>
 </li>
 </ul>
@@ -815,6 +816,53 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="autorag.utils.html#module-autorag.utils">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="autorag.vectordb.html">autorag.vectordb package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="autorag.vectordb.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.vectordb.html#module-autorag.vectordb.base">autorag.vectordb.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.base.BaseVectorStore"><code class="docutils literal notranslate"><span class="pre">BaseVectorStore</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.base.BaseVectorStore.add"><code class="docutils literal notranslate"><span class="pre">BaseVectorStore.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.base.BaseVectorStore.delete"><code class="docutils literal notranslate"><span class="pre">BaseVectorStore.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.base.BaseVectorStore.fetch"><code class="docutils literal notranslate"><span class="pre">BaseVectorStore.fetch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.base.BaseVectorStore.is_exist"><code class="docutils literal notranslate"><span class="pre">BaseVectorStore.is_exist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.base.BaseVectorStore.query"><code class="docutils literal notranslate"><span class="pre">BaseVectorStore.query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.base.BaseVectorStore.support_similarity_metrics"><code class="docutils literal notranslate"><span class="pre">BaseVectorStore.support_similarity_metrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.base.BaseVectorStore.truncated_inputs"><code class="docutils literal notranslate"><span class="pre">BaseVectorStore.truncated_inputs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.vectordb.html#module-autorag.vectordb.chroma">autorag.vectordb.chroma module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.chroma.Chroma"><code class="docutils literal notranslate"><span class="pre">Chroma</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.chroma.Chroma.add"><code class="docutils literal notranslate"><span class="pre">Chroma.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.chroma.Chroma.delete"><code class="docutils literal notranslate"><span class="pre">Chroma.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.chroma.Chroma.fetch"><code class="docutils literal notranslate"><span class="pre">Chroma.fetch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.chroma.Chroma.is_exist"><code class="docutils literal notranslate"><span class="pre">Chroma.is_exist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.chroma.Chroma.query"><code class="docutils literal notranslate"><span class="pre">Chroma.query()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.vectordb.html#module-autorag.vectordb.milvus">autorag.vectordb.milvus module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.milvus.Milvus"><code class="docutils literal notranslate"><span class="pre">Milvus</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.milvus.Milvus.add"><code class="docutils literal notranslate"><span class="pre">Milvus.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.milvus.Milvus.delete"><code class="docutils literal notranslate"><span class="pre">Milvus.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.milvus.Milvus.delete_collection"><code class="docutils literal notranslate"><span class="pre">Milvus.delete_collection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.milvus.Milvus.fetch"><code class="docutils literal notranslate"><span class="pre">Milvus.fetch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.milvus.Milvus.is_exist"><code class="docutils literal notranslate"><span class="pre">Milvus.is_exist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.milvus.Milvus.query"><code class="docutils literal notranslate"><span class="pre">Milvus.query()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autorag.vectordb.html#module-autorag.vectordb">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.get_support_vectordb"><code class="docutils literal notranslate"><span class="pre">get_support_vectordb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.load_all_vectordb_from_yaml"><code class="docutils literal notranslate"><span class="pre">load_all_vectordb_from_yaml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.load_vectordb"><code class="docutils literal notranslate"><span class="pre">load_vectordb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autorag.vectordb.html#autorag.vectordb.load_vectordb_from_yaml"><code class="docutils literal notranslate"><span class="pre">load_vectordb_from_yaml()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
