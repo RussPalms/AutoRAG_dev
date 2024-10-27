@@ -448,26 +448,15 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="autorag.deploy.api.ApiRunner.run_api_server">
-<span class="sig-name descname"><span class="pre">run_api_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8000</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/deploy/api.html#ApiRunner.run_api_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.deploy.api.ApiRunner.run_api_server" title="Link to this definition">¶</a></dt>
-<dd><p>Run the pipeline as api server.
-You can send POST request to <cite>http://host:port/run</cite> with json body like below:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your query&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;result_column&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;generated_texts&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>And it returns json response like below:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your answer&quot;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
+<span class="sig-name descname"><span class="pre">run_api_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remote</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/deploy/api.html#ApiRunner.run_api_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.deploy.api.ApiRunner.run_api_server" title="Link to this definition">¶</a></dt>
+<dd><p>Run the pipeline as an api server.
+Here is api endpoint documentation =&gt; <a class="reference external" href="https://docs.auto-rag.com/deploy/api_endpoint.html">https://docs.auto-rag.com/deploy/api_endpoint.html</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>host</strong> – The host of the api server.</p></li>
 <li><p><strong>port</strong> – The port of the api server.</p></li>
+<li><p><strong>remote</strong> – Whether to expose the api server to the public internet using ngrok.</p></li>
 <li><p><strong>kwargs</strong> – Other arguments for Flask app.run.</p></li>
 </ul>
 </dd>
@@ -600,6 +589,54 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 <dl class="py attribute">
 <dt class="sig sig-object py" id="autorag.deploy.api.RunResponse.retrieved_passage">
 <span class="sig-name descname"><span class="pre">retrieved_passage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#autorag.deploy.api.RetrievedPassage" title="autorag.deploy.api.RetrievedPassage"><span class="pre">RetrievedPassage</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#autorag.deploy.api.RunResponse.retrieved_passage" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="autorag.deploy.api.StreamResponse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.deploy.api.</span></span><span class="sig-name descname"><span class="pre">StreamResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'generated_text'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'retrieved_passage'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrieved_passage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#autorag.deploy.api.RetrievedPassage" title="autorag.deploy.api.RetrievedPassage"><span class="pre">RetrievedPassage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passage_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/deploy/api.html#StreamResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.deploy.api.StreamResponse" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>When the type is generated_text, only generated_text is returned. The other fields are None.
+When the type is retrieved_passage, only retrieved_passage and passage_index are returned. The other fields are None.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.deploy.api.StreamResponse.generated_text">
+<span class="sig-name descname"><span class="pre">generated_text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.deploy.api.StreamResponse.generated_text" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.deploy.api.StreamResponse.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#autorag.deploy.api.StreamResponse.model_computed_fields" title="Link to this definition">¶</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.deploy.api.StreamResponse.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#autorag.deploy.api.StreamResponse.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.deploy.api.StreamResponse.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'generated_text':</span> <span class="pre">FieldInfo(annotation=Union[str,</span> <span class="pre">NoneType],</span> <span class="pre">required=True),</span> <span class="pre">'passage_index':</span> <span class="pre">FieldInfo(annotation=Union[int,</span> <span class="pre">NoneType],</span> <span class="pre">required=True),</span> <span class="pre">'retrieved_passage':</span> <span class="pre">FieldInfo(annotation=Union[RetrievedPassage,</span> <span class="pre">NoneType],</span> <span class="pre">required=True),</span> <span class="pre">'type':</span> <span class="pre">FieldInfo(annotation=Literal['generated_text',</span> <span class="pre">'retrieved_passage'],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#autorag.deploy.api.StreamResponse.model_fields" title="Link to this definition">¶</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.deploy.api.StreamResponse.passage_index">
+<span class="sig-name descname"><span class="pre">passage_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.deploy.api.StreamResponse.passage_index" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.deploy.api.StreamResponse.retrieved_passage">
+<span class="sig-name descname"><span class="pre">retrieved_passage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#autorag.deploy.api.RetrievedPassage" title="autorag.deploy.api.RetrievedPassage"><span class="pre">RetrievedPassage</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#autorag.deploy.api.StreamResponse.retrieved_passage" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="autorag.deploy.api.StreamResponse.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'generated_text'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'retrieved_passage'</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#autorag.deploy.api.StreamResponse.type" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -923,6 +960,16 @@ You can access the web interface at <cite>http://server_name:server_port</cite> 
 <li><a class="reference internal" href="#autorag.deploy.api.RunResponse.model_fields"><code class="docutils literal notranslate"><span class="pre">RunResponse.model_fields</span></code></a></li>
 <li><a class="reference internal" href="#autorag.deploy.api.RunResponse.result"><code class="docutils literal notranslate"><span class="pre">RunResponse.result</span></code></a></li>
 <li><a class="reference internal" href="#autorag.deploy.api.RunResponse.retrieved_passage"><code class="docutils literal notranslate"><span class="pre">RunResponse.retrieved_passage</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#autorag.deploy.api.StreamResponse"><code class="docutils literal notranslate"><span class="pre">StreamResponse</span></code></a><ul>
+<li><a class="reference internal" href="#autorag.deploy.api.StreamResponse.generated_text"><code class="docutils literal notranslate"><span class="pre">StreamResponse.generated_text</span></code></a></li>
+<li><a class="reference internal" href="#autorag.deploy.api.StreamResponse.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">StreamResponse.model_computed_fields</span></code></a></li>
+<li><a class="reference internal" href="#autorag.deploy.api.StreamResponse.model_config"><code class="docutils literal notranslate"><span class="pre">StreamResponse.model_config</span></code></a></li>
+<li><a class="reference internal" href="#autorag.deploy.api.StreamResponse.model_fields"><code class="docutils literal notranslate"><span class="pre">StreamResponse.model_fields</span></code></a></li>
+<li><a class="reference internal" href="#autorag.deploy.api.StreamResponse.passage_index"><code class="docutils literal notranslate"><span class="pre">StreamResponse.passage_index</span></code></a></li>
+<li><a class="reference internal" href="#autorag.deploy.api.StreamResponse.retrieved_passage"><code class="docutils literal notranslate"><span class="pre">StreamResponse.retrieved_passage</span></code></a></li>
+<li><a class="reference internal" href="#autorag.deploy.api.StreamResponse.type"><code class="docutils literal notranslate"><span class="pre">StreamResponse.type</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#autorag.deploy.api.VersionResponse"><code class="docutils literal notranslate"><span class="pre">VersionResponse</span></code></a><ul>

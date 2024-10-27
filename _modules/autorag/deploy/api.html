@@ -428,9 +428,10 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pyngrok</span> <span class="kn">import</span> <span class="n">ngrok</span>
 <span class="kn">from</span> <span class="nn">quart</span> <span class="kn">import</span> <span class="n">Quart</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
 <span class="kn">from</span> <span class="nn">quart.helpers</span> <span class="kn">import</span> <span class="n">stream_with_context</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span>
@@ -475,16 +476,26 @@
 
 
 
+<div class="viewcode-block" id="StreamResponse">
+<a class="viewcode-back" href="../../../api_spec/autorag.deploy.html#autorag.deploy.api.StreamResponse">[docs]</a>
+<span class="k">class</span> <span class="nc">StreamResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	When the type is generated_text, only generated_text is returned. The other fields are None.</span>
+<span class="sd">	When the type is retrieved_passage, only retrieved_passage and passage_index are returned. The other fields are None.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;generated_text&quot;</span><span class="p">,</span> <span class="s2">&quot;retrieved_passage&quot;</span><span class="p">]</span>
+	<span class="n">generated_text</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+	<span class="n">retrieved_passage</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RetrievedPassage</span><span class="p">]</span>
+	<span class="n">passage_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span></div>
+
+
+
 <div class="viewcode-block" id="VersionResponse">
 <a class="viewcode-back" href="../../../api_spec/autorag.deploy.html#autorag.deploy.api.VersionResponse">[docs]</a>
 <span class="k">class</span> <span class="nc">VersionResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 	<span class="n">version</span><span class="p">:</span> <span class="nb">str</span></div>
 
-
-
-<span class="n">empty_retrieved_passage</span> <span class="o">=</span> <span class="n">RetrievedPassage</span><span class="p">(</span>
-	<span class="n">content</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">doc_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">file_page</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_idx</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">)</span>
 
 
 <div class="viewcode-block" id="ApiRunner">
@@ -578,19 +589,28 @@
 						<span class="n">retrieved_passages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_retrieve_passage</span><span class="p">(</span>
 							<span class="n">previous_result</span>
 						<span class="p">)</span>
-						<span class="n">response</span> <span class="o">=</span> <span class="n">RunResponse</span><span class="p">(</span>
-							<span class="n">result</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">retrieved_passage</span><span class="o">=</span><span class="n">retrieved_passages</span>
-						<span class="p">)</span>
-						<span class="k">yield</span> <span class="n">response</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+						<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">retrieved_passage</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">retrieved_passages</span><span class="p">):</span>
+							<span class="k">yield</span> <span class="p">(</span>
+								<span class="n">StreamResponse</span><span class="p">(</span>
+									<span class="nb">type</span><span class="o">=</span><span class="s2">&quot;retrieved_passage&quot;</span><span class="p">,</span>
+									<span class="n">generated_text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+									<span class="n">retrieved_passage</span><span class="o">=</span><span class="n">retrieved_passage</span><span class="p">,</span>
+									<span class="n">passage_index</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+								<span class="p">)</span>
+								<span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span>
+								<span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+							<span class="p">)</span>
 						<span class="c1"># Start streaming of the result</span>
 						<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 						<span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">previous_result</span><span class="p">[</span><span class="s2">&quot;prompts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 						<span class="k">async</span> <span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="n">module_instance</span><span class="o">.</span><span class="n">astream</span><span class="p">(</span>
 							<span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span> <span class="o">**</span><span class="n">module_param</span>
 						<span class="p">):</span>
-							<span class="n">response</span> <span class="o">=</span> <span class="n">RunResponse</span><span class="p">(</span>
-								<span class="n">result</span><span class="o">=</span><span class="n">delta</span><span class="p">,</span>
-								<span class="n">retrieved_passage</span><span class="o">=</span><span class="p">[</span><span class="n">empty_retrieved_passage</span><span class="p">],</span>
+							<span class="n">response</span> <span class="o">=</span> <span class="n">StreamResponse</span><span class="p">(</span>
+								<span class="nb">type</span><span class="o">=</span><span class="s2">&quot;generated_text&quot;</span><span class="p">,</span>
+								<span class="n">generated_text</span><span class="o">=</span><span class="n">delta</span><span class="p">,</span>
+								<span class="n">retrieved_passage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+								<span class="n">passage_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 							<span class="p">)</span>
 							<span class="k">yield</span> <span class="n">response</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 
@@ -605,31 +625,23 @@
 
 <div class="viewcode-block" id="ApiRunner.run_api_server">
 <a class="viewcode-back" href="../../../api_spec/autorag.deploy.html#autorag.deploy.api.ApiRunner.run_api_server">[docs]</a>
-	<span class="k">def</span> <span class="nf">run_api_server</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">run_api_server</span><span class="p">(</span>
+		<span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span> <span class="n">remote</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+	<span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Run the pipeline as api server.</span>
-<span class="sd">		You can send POST request to `http://host:port/run` with json body like below:</span>
-
-<span class="sd">		.. Code:: json</span>
-
-<span class="sd">		    {</span>
-<span class="sd">		        &quot;query&quot;: &quot;your query&quot;,</span>
-<span class="sd">		        &quot;result_column&quot;: &quot;generated_texts&quot;</span>
-<span class="sd">		    }</span>
-
-<span class="sd">		And it returns json response like below:</span>
-
-<span class="sd">		.. Code:: json</span>
-
-<span class="sd">		    {</span>
-<span class="sd">		        &quot;answer&quot;: &quot;your answer&quot;</span>
-<span class="sd">		    }</span>
+<span class="sd">		Run the pipeline as an api server.</span>
+<span class="sd">		Here is api endpoint documentation =&gt; https://docs.auto-rag.com/deploy/api_endpoint.html</span>
 
 <span class="sd">		:param host: The host of the api server.</span>
 <span class="sd">		:param port: The port of the api server.</span>
+<span class="sd">		:param remote: Whether to expose the api server to the public internet using ngrok.</span>
 <span class="sd">		:param kwargs: Other arguments for Flask app.run.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run api server at </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">remote</span><span class="p">:</span>
+			<span class="n">http_tunnel</span> <span class="o">=</span> <span class="n">ngrok</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">),</span> <span class="s2">&quot;http&quot;</span><span class="p">)</span>
+			<span class="n">public_url</span> <span class="o">=</span> <span class="n">http_tunnel</span><span class="o">.</span><span class="n">public_url</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Public API URL: </span><span class="si">{</span><span class="n">public_url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 

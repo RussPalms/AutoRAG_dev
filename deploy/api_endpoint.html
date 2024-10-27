@@ -461,11 +461,20 @@
 </pre></div>
 </div>
 </section>
+<section id="use-ngrok-tunnel-for-public-access">
+<h2>Use NGrok Tunnel for public access<a class="headerlink" href="#use-ngrok-tunnel-for-public-access" title="Link to this heading">¶</a></h2>
+<p>For accessing the API server from the public, you can use the NGrok tunnel service.
+It automatically creates ngrok tunnel to your local server.</p>
+<p>You can see the logs of the public URL like below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span>     <span class="p">[</span><span class="n">api</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">199</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">Public</span> <span class="n">API</span> <span class="n">URL</span><span class="p">:</span>          <span class="n">api</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">199</span>
+         <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="mi">8</span><span class="n">a31</span><span class="o">-</span><span class="mi">14</span><span class="o">-</span><span class="mi">52</span><span class="o">-</span><span class="mi">132</span><span class="o">-</span><span class="mf">205.</span><span class="n">ngrok</span><span class="o">-</span><span class="n">free</span><span class="o">.</span><span class="n">app</span>
+</pre></div>
+</div>
+<p>This is the URL to your local server, so use it as the host at request.</p>
+</section>
 <section id="id1">
 <h2>API Endpoint<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
-<p>Certainly! To generate API endpoint documentation in Markdown format from the provided OpenAPI specification, we need to break down each endpoint and describe its purpose, request parameters, and response structure. Here’s how you can document the API:</p>
 </section>
-<hr class="docutils" />
 <section id="example-api-documentation">
 <h2>Example API Documentation<a class="headerlink" href="#example-api-documentation" title="Link to this heading">¶</a></h2>
 <section id="version-1-0-0">
@@ -557,8 +566,9 @@
 <ul>
 <li><p><strong>Properties</strong>:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">result</span></code> (string or array of strings): The result text or list of texts (streamed line by line).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">retrieved_passage</span></code> (array of objects): List of retrieved passages.</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code> (generated_text or retrieved_passage): If it is generated_text, you can see only the generated text. If it is retrieved_passage, you can see the retrieved passage and passage_index.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generated_text</span></code> (string): The generated text from the generator (LLM). The result of the RAG system.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retrieved_passage</span></code> (object): Retrieved passage.</p>
 <ul>
 <li><p><strong>Properties</strong>:</p>
 <ul>
@@ -572,6 +582,7 @@
 </li>
 </ul>
 </li>
+<li><p><code class="docutils literal notranslate"><span class="pre">passage_index</span></code> (integer): Index of the retrieved passage.</p></li>
 </ul>
 </li>
 </ul>
@@ -622,7 +633,7 @@
 </div>
 <p>Here’s the Python client code for each endpoint:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">autorag.utils.util</span> <span class="kn">import</span> <span class="n">decode_multiple_json_from_bytes</span>
 
 <span class="c1"># Base URL of the API</span>
 <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;http://example.com:8000&quot;</span>  <span class="c1"># Replace with the actual base URL of the API</span>
@@ -645,17 +656,24 @@
         <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
         <span class="s2">&quot;result_column&quot;</span><span class="p">:</span> <span class="n">result_column</span>
     <span class="p">}</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span>
-                <span class="c1"># Decode the chunk and print it</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">retrieved_passages</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;retrieved_passage&quot;</span><span class="p">]</span> <span class="c1"># The retrieved passages</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+      <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="n">retrieved_passages</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># This will store retrieved passages</span>
+
+      <span class="c1"># Check if the request was successful</span>
+      <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+          <span class="c1"># Process the streaming response</span>
+          <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)):</span>
+              <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span>
+                  <span class="n">data_list</span> <span class="o">=</span> <span class="n">decode_multiple_json_from_bytes</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                  <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">:</span>
+                      <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;retrieved_passage&quot;</span><span class="p">:</span>
+                          <span class="n">retrieved_passages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;retrieved_passage&quot;</span><span class="p">])</span>
+                      <span class="k">else</span><span class="p">:</span>
+                          <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;generated_text&quot;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="c1"># Stream the generated texts</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Request failed with status code: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response content: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">get_version</span><span class="p">():</span>
     <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/version&quot;</span>
@@ -768,6 +786,7 @@
             <ul>
 <li><a class="reference internal" href="#">API endpoint</a><ul>
 <li><a class="reference internal" href="#running-api-server">Running API server</a></li>
+<li><a class="reference internal" href="#use-ngrok-tunnel-for-public-access">Use NGrok Tunnel for public access</a></li>
 <li><a class="reference internal" href="#id1">API Endpoint</a></li>
 <li><a class="reference internal" href="#example-api-documentation">Example API Documentation</a><ul>
 <li><a class="reference internal" href="#version-1-0-0">Version: 1.0.0</a></li>

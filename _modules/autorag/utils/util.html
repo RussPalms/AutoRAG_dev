@@ -431,11 +431,13 @@
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecoder</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Iterable</span>
 
 <span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">AbstractEventLoop</span>
@@ -1226,6 +1228,53 @@
 	<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">convert_string_to_tuple_in_dict</span><span class="p">(</span><span class="n">yaml_dict</span><span class="p">)</span>
 	<span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">convert_env_in_dict</span><span class="p">(</span><span class="n">yaml_dict</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">yaml_dict</span></div>
+
+
+
+<div class="viewcode-block" id="decode_multiple_json_from_bytes">
+<a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.decode_multiple_json_from_bytes">[docs]</a>
+<span class="k">def</span> <span class="nf">decode_multiple_json_from_bytes</span><span class="p">(</span><span class="n">byte_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Decode multiple JSON objects from bytes received from SSE server.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		byte_data: Bytes containing one or more JSON objects</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		List of decoded JSON objects</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># Decode bytes to string</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">text_data</span> <span class="o">=</span> <span class="n">byte_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+	<span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid byte data: Unable to decode as UTF-8&quot;</span><span class="p">)</span>
+
+	<span class="c1"># Initialize decoder and result list</span>
+	<span class="n">decoder</span> <span class="o">=</span> <span class="n">JSONDecoder</span><span class="p">()</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="c1"># Keep track of position in string</span>
+	<span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">text_data</span> <span class="o">=</span> <span class="n">text_data</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+	<span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_data</span><span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="c1"># Try to decode next JSON object</span>
+			<span class="n">json_obj</span><span class="p">,</span> <span class="n">json_end</span> <span class="o">=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">raw_decode</span><span class="p">(</span><span class="n">text_data</span><span class="p">[</span><span class="n">pos</span><span class="p">:])</span>
+			<span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_obj</span><span class="p">)</span>
+
+			<span class="c1"># Move position to end of current JSON object</span>
+			<span class="n">pos</span> <span class="o">+=</span> <span class="n">json_end</span>
+
+			<span class="c1"># Skip any whitespace</span>
+			<span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_data</span><span class="p">)</span> <span class="ow">and</span> <span class="n">text_data</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+				<span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+			<span class="c1"># If we can&#39;t decode at current position, move forward one character</span>
+			<span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+
+	<span class="k">return</span> <span class="n">result</span></div>
 
 </pre></div>
         </article>
