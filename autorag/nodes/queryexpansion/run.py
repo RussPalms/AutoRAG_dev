@@ -11,6 +11,10 @@ from autorag.schema.metricinput import MetricInput
 from autorag.strategy import measure_speed, filter_by_threshold, select_best
 from autorag.support import get_support_modules
 from autorag.utils.util import make_combinations, explode
+from autorag.monitor import (
+	query_expansion_execution_counter,
+	query_expansion_progress_gauge,
+)
 
 logger = logging.getLogger("AutoRAG")
 
@@ -45,18 +49,38 @@ def run_query_expansion_node(
 		os.makedirs(node_dir)
 	project_dir = pathlib.PurePath(node_line_dir).parent.parent
 
-	# run query expansion
-	results, execution_times = zip(
-		*map(
-			lambda task: measure_speed(
-				task[0].run_evaluator,
-				project_dir=project_dir,
-				previous_result=previous_result,
-				**task[1],
-			),
-			zip(modules, module_params),
+	# Count the occurrences of each module name
+	module_counts = {module.__name__: 0 for module in modules}
+	for module in modules:
+		module_counts[module.__name__] += 1
+
+	# Run query expansion and update progress
+	results = []
+	execution_times = []
+	for module, params in zip(modules, module_params):
+		# Execute the module and measure speed
+		result, execution_time = measure_speed(
+			module.run_evaluator,
+			project_dir=project_dir,
+			previous_result=previous_result,
+			**params,
 		)
-	)
+		results.append(result)
+
+		# Increment counter
+		query_expansion_execution_counter.labels(module.__name__).inc()
+
+		# Update execution time
+		execution_times.append(execution_time)
+
+		# Calculate and update progress for the current module
+		current_count = query_expansion_execution_counter.labels(
+			module.__name__
+		).value.get()
+		total_count = module_counts[module.__name__]
+		progress = (current_count / total_count) * 100
+		query_expansion_progress_gauge.labels(module.__name__).set(progress)
+
 	average_times = list(map(lambda x: x / len(results[0]), execution_times))
 
 	# save results to folder
