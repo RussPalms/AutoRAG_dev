@@ -438,110 +438,128 @@
 <p>However, since the advent of LLM, creating synthetic data has become one of the good solutions to this problem.</p>
 <p>The following guide covers how to use LLM to create data in a form that AutoRAG can use.</p>
 <hr class="docutils" />
-<p><img alt="Data Creation" src="../_static/data_creation.png" /></p>
+<p><img alt="Data Creation" src="../_images/data_creation_pipeline.png" /></p>
 </section>
-<section id="parse">
-<h2>1. Parse<a class="headerlink" href="#parse" title="Link to this heading">¶</a></h2>
-<p>You can make different parsing results from the raw data using the parsing YAML file.
-The sample parsing YAML file looks like this.</p>
+<section id="parsing">
+<h2>1. Parsing<a class="headerlink" href="#parsing" title="Link to this heading">¶</a></h2>
+<section id="set-yaml-file">
+<h3>Set YAML File<a class="headerlink" href="#set-yaml-file" title="Link to this heading">¶</a></h3>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">langchain_parse</span>
-<span class="w">    </span><span class="nt">parse_method</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pdfminer</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pdfplumber</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">parse_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdfminer</span>
 </pre></div>
 </div>
-<p>With this YAML file, you can get the parsed data with pdfminer and pdfplumber.</p>
-<p>You can execute this parsing YAML file by using the following code.</p>
+<p>You can also use multiple Parse modules at once.
+However, in this case, you’ll need to return a new process for each parsed result.</p>
+</section>
+<section id="start-parsing">
+<h3>Start Parsing<a class="headerlink" href="#start-parsing" title="Link to this heading">¶</a></h3>
+<p>You can parse your raw documents with just a few lines of code.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.parser</span> <span class="kn">import</span> <span class="n">Parser</span>
 
-<span class="n">filepaths</span> <span class="o">=</span> <span class="s2">&quot;./data/*.pdf&quot;</span>
-<span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">filepaths</span><span class="p">,</span> <span class="s2">&quot;./parse_project_dir&quot;</span><span class="p">)</span>
-<span class="n">parser</span><span class="o">.</span><span class="n">start_parsing</span><span class="p">(</span><span class="s2">&quot;./parsing.yaml&quot;</span><span class="p">)</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">data_path_glob</span><span class="o">=</span><span class="s2">&quot;your/data/path/*&quot;</span><span class="p">,</span> <span class="n">project_dir</span><span class="o">=</span><span class="s2">&quot;./parse_project_dir&quot;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">start_parsing</span><span class="p">(</span><span class="s2">&quot;your/path/to/parse_config.yaml&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Then you can check out the parsing result in the <code class="docutils literal notranslate"><span class="pre">./parse_project_dir</span></code> directory.</p>
 <p>For more details about parsing, please refer <a class="reference internal" href="parse/parse.html"><span class="std std-doc">here</span></a>.</p>
 </section>
+</section>
+<section id="chunking">
+<h2>2. Chunking<a class="headerlink" href="#chunking" title="Link to this heading">¶</a></h2>
+<section id="id1">
+<h3>Set YAML File<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_chunk</span>
+<span class="w">    </span><span class="nt">chunk_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Token</span>
+<span class="w">    </span><span class="nt">chunk_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024</span>
+<span class="w">    </span><span class="nt">chunk_overlap</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<span class="w">    </span><span class="nt">add_file_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en</span>
+</pre></div>
+</div>
+<p>You can also use multiple Chunk modules at once.
+In this case, you need to use one corpus to create QA and then map the rest of the corpus to QA Data.</p>
+<p>If the chunk method is different, the retrieval_gt will be different, so we need to remap it to the QA dataset.</p>
+</section>
+<section id="start-chunking">
+<h3>Start Chunking<a class="headerlink" href="#start-chunking" title="Link to this heading">¶</a></h3>
+<p>You can chunk your parsed results with just a few lines of code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.chunker</span> <span class="kn">import</span> <span class="n">Chunker</span>
+
+<span class="n">chunker</span> <span class="o">=</span> <span class="n">Chunker</span><span class="o">.</span><span class="n">from_parquet</span><span class="p">(</span><span class="n">parsed_data_path</span><span class="o">=</span><span class="s2">&quot;your/parsed/data/path&quot;</span><span class="p">,</span> <span class="n">project_dir</span><span class="o">=</span><span class="s2">&quot;./chunk_project_dir&quot;</span><span class="p">)</span>
+<span class="n">chunker</span><span class="o">.</span><span class="n">start_chunking</span><span class="p">(</span><span class="s2">&quot;your/path/to/chunk_config.yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then you can check out the chunking result in the <code class="docutils literal notranslate"><span class="pre">./chunk_project_dir</span></code> directory.</p>
+<p>For more details about chunking, please refer <a class="reference internal" href="chunk/chunk.html"><span class="std std-doc">here</span></a>.</p>
+</section>
+</section>
 <section id="qa-creation">
-<h2>2. QA Creation<a class="headerlink" href="#qa-creation" title="Link to this heading">¶</a></h2>
-<p>From the parsed results, you can select the best parsed data for AutoRAG.
-After you selected, you can create QA data for the AutoRAG.</p>
-<p>The example is shown below, the <code class="docutils literal notranslate"><span class="pre">initial_raw_df</span></code> is selected raw data.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+<h2>3. QA Creation<a class="headerlink" href="#qa-creation" title="Link to this heading">¶</a></h2>
+<section id="before-you-start-qa-creation">
+<h3>Before you start QA Creation<a class="headerlink" href="#before-you-start-qa-creation" title="Link to this heading">¶</a></h3>
+<p>Corpus and QA are one set.
+If multiple corpus are created using multiple chunk methods, each corpus needs its own QA dataset that is mapped.</p>
+<p>Therefore, if you have multiple corpus, you need to create an initial QA using one corpus and remap the QA for the remaining corpus to create multiple QA - Corpus Sets.</p>
+<p>Chapter 3(QA Creation) describes how to create an Initial QA with one corpus.
+Chapter 4(QA - Corpus mapping) describes how to remap the QAs for the rest of the corpus.</p>
+<p>If you created your corpus using only one chunking method, you don’t need Chapter 4.
+However, if you have created a corpus using multiple chunking methods and want to perform chunking optimization, you should refer to Chapter 4.</p>
+</section>
+<section id="start-qa-creation">
+<h3>Start QA Creation<a class="headerlink" href="#start-qa-creation" title="Link to this heading">¶</a></h3>
+<p>You can create QA dataset with just a few lines of code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
 
 <span class="kn">from</span> <span class="nn">autorag.data.qa.filter.dontknow</span> <span class="kn">import</span> <span class="n">dontknow_filter_rule_based</span>
 <span class="kn">from</span> <span class="nn">autorag.data.qa.generation_gt.llama_index_gen_gt</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">make_basic_gen_gt</span><span class="p">,</span>
     <span class="n">make_concise_gen_gt</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">Raw</span><span class="p">,</span> <span class="n">Corpus</span>
 <span class="kn">from</span> <span class="nn">autorag.data.qa.query.llama_gen_query</span> <span class="kn">import</span> <span class="n">factoid_query_gen</span>
 <span class="kn">from</span> <span class="nn">autorag.data.qa.sample</span> <span class="kn">import</span> <span class="n">random_single_hop</span>
-<span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">Raw</span>
 
-<span class="n">initial_raw</span> <span class="o">=</span> <span class="n">Raw</span><span class="p">(</span><span class="n">initial_raw_df</span><span class="p">)</span>
-<span class="n">initial_corpus</span> <span class="o">=</span> <span class="n">initial_raw</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span>
-    <span class="s2">&quot;llama_index_chunk&quot;</span><span class="p">,</span> <span class="n">chunk_method</span><span class="o">=</span><span class="s2">&quot;token&quot;</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">5</span>
-<span class="p">)</span>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+<span class="n">raw_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">&quot;your/path/to/parsed.parquet&quot;</span><span class="p">)</span>
+<span class="n">raw_instance</span> <span class="o">=</span> <span class="n">Raw</span><span class="p">(</span><span class="n">raw_df</span><span class="p">)</span>
+
+<span class="n">corpus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">&quot;your/path/to/corpus.parquet&quot;</span><span class="p">)</span>
+<span class="n">corpus_instance</span> <span class="o">=</span> <span class="n">Corpus</span><span class="p">(</span><span class="n">corpus_df</span><span class="p">,</span> <span class="n">raw_instance</span><span class="p">)</span>
+
 <span class="n">initial_qa</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">initial_corpus</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">random_single_hop</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">corpus_instance</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">random_single_hop</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="o">.</span><span class="n">map</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">make_retrieval_gt_contents</span><span class="p">()</span>
     <span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span>
-        <span class="n">factoid_query_gen</span><span class="p">,</span>
+        <span class="n">factoid_query_gen</span><span class="p">,</span>  <span class="c1"># query generation</span>
         <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span>
-        <span class="n">make_basic_gen_gt</span><span class="p">,</span>
+        <span class="n">make_basic_gen_gt</span><span class="p">,</span>  <span class="c1"># answer generation (basic)</span>
         <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span>
-        <span class="n">make_concise_gen_gt</span><span class="p">,</span>
+        <span class="n">make_concise_gen_gt</span><span class="p">,</span>  <span class="c1"># answer generation (concise)</span>
         <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-        <span class="n">dontknow_filter_rule_based</span><span class="p">,</span>
+        <span class="n">dontknow_filter_rule_based</span><span class="p">,</span>  <span class="c1"># filter don&#39;t know</span>
         <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 <span class="p">)</span>
-<span class="n">initial_qa</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">&quot;./initial_qa.parquet&quot;</span><span class="p">,</span> <span class="s2">&quot;./initial_corpus.parquet&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>We recommend you find the optimal pipeline first from this initial data.
-Check out <a class="reference internal" href="#../../tutorial.md"><span class="xref myst">here</span></a> to see the optimization tutorial.</p>
-</section>
-<section id="chunking-optimization">
-<h2>3. Chunking Optimization<a class="headerlink" href="#chunking-optimization" title="Link to this heading">¶</a></h2>
-<p>After finding the initial optimal pipeline, this time you are to optimize the chunking method.
-First, you can create various chunking results from the parsed data.</p>
-<p>The chunking YAML file looks like this.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_chunk</span>
-<span class="w">    </span><span class="nt">chunk_method</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">Token</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Sentence</span><span class="w"> </span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">chunk_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">1024</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">512</span><span class="w"> </span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">chunk_overlap</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
-<span class="w">    </span><span class="nt">add_file_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">english</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_chunk</span>
-<span class="w">    </span><span class="nt">chunk_method</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">SentenceWindow</span><span class="w"> </span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">sentence_splitter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kiwi</span>
-<span class="w">    </span><span class="nt">window_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">    </span><span class="nt">add_file_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">english</span>
-</pre></div>
-</div>
-<p>With this YAML file, you can get the chunked data with Token, Sentence, and SentenceWindow with different chunk sizes.</p>
-<p>You can execute this chunking YAML file by using the following code.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.chunker</span> <span class="kn">import</span> <span class="n">Chunker</span>
 
-<span class="n">chunker</span> <span class="o">=</span> <span class="n">Chunker</span><span class="o">.</span><span class="n">from_parquet</span><span class="p">(</span><span class="s2">&quot;./initial_raw.parquet&quot;</span><span class="p">,</span> <span class="s2">&quot;./chunk_project_dir&quot;</span><span class="p">)</span>
-<span class="n">chunker</span><span class="o">.</span><span class="n">start_chunking</span><span class="p">(</span><span class="s2">&quot;./chunking.yaml&quot;</span><span class="p">)</span>
+<span class="n">initial_qa</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">&#39;./qa.parquet&#39;</span><span class="p">,</span> <span class="s1">&#39;./corpus.parquet&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then you can check out the chunking result in the <code class="docutils literal notranslate"><span class="pre">./chunk_project_dir</span></code> directory.</p>
-<p>For more details about chunking, please refer <a class="reference internal" href="chunk/chunk.html"><span class="std std-doc">here</span></a>.</p>
+</section>
 </section>
 <section id="qa-corpus-mapping">
 <h2>4. QA - Corpus mapping<a class="headerlink" href="#qa-corpus-mapping" title="Link to this heading">¶</a></h2>
+<p>If you have multiple corpus data, you can map the rest of the corpus to the QA dataset.</p>
 <p>For the chunking optimization, you can evaluate RAG performance with different corpus data.
 You already have the optimal pipeline from the initial QA data,
 so you can use this pipeline to evaluate the RAG performance with different corpus data.</p>
@@ -620,9 +638,21 @@ If not, you need to build <code class="docutils literal notranslate"><span class
             <ul>
 <li><a class="reference internal" href="#">Evaluation data creation tutorial</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a></li>
-<li><a class="reference internal" href="#parse">1. Parse</a></li>
-<li><a class="reference internal" href="#qa-creation">2. QA Creation</a></li>
-<li><a class="reference internal" href="#chunking-optimization">3. Chunking Optimization</a></li>
+<li><a class="reference internal" href="#parsing">1. Parsing</a><ul>
+<li><a class="reference internal" href="#set-yaml-file">Set YAML File</a></li>
+<li><a class="reference internal" href="#start-parsing">Start Parsing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#chunking">2. Chunking</a><ul>
+<li><a class="reference internal" href="#id1">Set YAML File</a></li>
+<li><a class="reference internal" href="#start-chunking">Start Chunking</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#qa-creation">3. QA Creation</a><ul>
+<li><a class="reference internal" href="#before-you-start-qa-creation">Before you start QA Creation</a></li>
+<li><a class="reference internal" href="#start-qa-creation">Start QA Creation</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#qa-corpus-mapping">4. QA - Corpus mapping</a></li>
 </ul>
 </li>
