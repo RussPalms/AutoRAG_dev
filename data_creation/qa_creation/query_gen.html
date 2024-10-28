@@ -450,6 +450,7 @@ If you want to use another model, use llama_index version instead.</p>
 <li><p><a class="reference internal" href="#1-factoid"><span class="xref myst">Factoid</span></a></p></li>
 <li><p><a class="reference internal" href="#2-concept-completion"><span class="xref myst">Concept Completion</span></a></p></li>
 <li><p><a class="reference internal" href="#3-two-hop-incremental"><span class="xref myst">Two-hop Incremental</span></a></p></li>
+<li><p><a class="reference internal" href="#4-custom"><span class="xref myst">Custom</span></a></p></li>
 </ol>
 </section>
 <section id="factoid">
@@ -566,6 +567,39 @@ After that, it evolves a question from the second document to the multi-hop ques
 </div>
 </section>
 </section>
+<section id="custom">
+<h2>4. Custom<a class="headerlink" href="#custom" title="Link to this heading">¶</a></h2>
+<p>You can generate questions with custom prompts. You can generate questions in ways other than the ones AutoRAG provides by default by creating a list of <code class="docutils literal notranslate"><span class="pre">ChatMessage</span></code> in the llama index, or you can generate questions in languages other than “en”, “ko” and “ja”.</p>
+<section id="id3">
+<h3>Usage<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>LlamaIndex</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.query.llama_gen_query</span> <span class="kn">import</span> <span class="n">custom_query_gen</span>
+<span class="kn">from</span> <span class="nn">llama_index.core.base.llms.types</span> <span class="kn">import</span> <span class="n">ChatMessage</span><span class="p">,</span> <span class="n">MessageRole</span>
+<span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ChatMessage</span><span class="p">(</span>
+        <span class="n">role</span><span class="o">=</span><span class="n">MessageRole</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span>
+        <span class="n">content</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;As an expert AI assistant, create one question that can be directly answered from the provided **Text**.</span>
+<span class="s2">Ensure question:</span>
+
+<span class="s2">- Is clearly based on information within the **Text** and avoids assumptions or external context.</span>
+<span class="s2">- Excludes any introductory phrases, such as &quot;In the given text...&quot;, &quot;Based on the context...&quot;, &quot;Here are some questions baesd on context...&quot;.</span>
+<span class="s2">- should include question sentence only.</span>
+<span class="s2">- Is concise, relevant, and encourages specific, direct answers.</span>
+<span class="s2">- has to be same as system language.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">custom_query_gen</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 
         </article>
@@ -638,6 +672,10 @@ After that, it evolves a question from the second document to the multi-hop ques
 <li><a class="reference internal" href="#two-hop-incremental">3. Two-hop Incremental</a><ul>
 <li><a class="reference internal" href="#example">Example</a></li>
 <li><a class="reference internal" href="#id2">Usage</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#custom">4. Custom</a><ul>
+<li><a class="reference internal" href="#id3">Usage</a></li>
 </ul>
 </li>
 </ul>

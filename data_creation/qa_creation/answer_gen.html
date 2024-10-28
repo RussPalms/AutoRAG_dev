@@ -438,6 +438,7 @@ It uses the LLM to generate the answer for the question and the given context (r
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#basic-generation"><span class="xref myst">Basic Generation</span></a></p></li>
 <li><p><a class="reference internal" href="#concise-generation"><span class="xref myst">Concise Generation</span></a></p></li>
+<li><p><a class="reference internal" href="#custom-generation"><span class="xref myst">Custom Generation</span></a></p></li>
 </ol>
 <section id="basic-generation">
 <h2>Basic Generation<a class="headerlink" href="#basic-generation" title="Link to this heading">¶</a></h2>
@@ -492,6 +493,29 @@ It is usually just a word that is the answer to the question.</p>
 <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
 <span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
 <span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">make_concise_gen_gt</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="custom-generation">
+<h2>Custom Generation<a class="headerlink" href="#custom-generation" title="Link to this heading">¶</a></h2>
+<p>You can generate answers with custom prompts. By adding a <code class="docutils literal notranslate"><span class="pre">system_prompt</span></code> of type <code class="docutils literal notranslate"><span class="pre">str</span></code>, you can generate answers in a different way than AutoRAG provides by default, or generate answers in languages other than “en”, “ko”, or “ja”.</p>
+<section id="id3">
+<h3>LlamaIndex<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">autorag.data.qa.schema</span> <span class="kn">import</span> <span class="n">QA</span>
+<span class="kn">from</span> <span class="nn">autorag.data.qa.generation_gt.llama_index_gen_gt</span> <span class="kn">import</span> <span class="n">make_custom_gen_gt</span>
+<span class="kn">from</span> <span class="nn">llama_index.llms.openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="n">system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;As an expert AI assistant focused on providing accurate and concise responses, generate an answer for the question based strictly on the given **Text**.</span>
+<span class="s2">Your answer should:</span>
+<span class="s2">- Be derived only from the provided **Text** without using pre-trained knowledge.</span>
+<span class="s2">- Contain only the answer itself, whether it is a full sentence or a single word, without any introductory phrases or extra commentary.</span>
+<span class="s2">- If the information is unavailable within the **Text**, respond with &quot;I don&#39;t know.&quot;</span>
+<span class="s2">- be same as query&#39;s language&quot;&quot;&quot;</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+<span class="n">qa</span> <span class="o">=</span> <span class="n">QA</span><span class="p">(</span><span class="n">qa_df</span><span class="p">)</span>
+<span class="n">result_qa</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">batch_apply</span><span class="p">(</span><span class="n">make_custom_gen_gt</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">system_prompt</span><span class="o">=</span><span class="n">system_prompt</span><span class="p">)</span>
+<span class="n">check_generation_gt</span><span class="p">(</span><span class="n">result_qa</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -562,6 +586,10 @@ It is usually just a word that is the answer to the question.</p>
 <li><a class="reference internal" href="#concise-generation">Concise Generation</a><ul>
 <li><a class="reference internal" href="#id1">OpenAI</a></li>
 <li><a class="reference internal" href="#id2">LlamaIndex</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#custom-generation">Custom Generation</a><ul>
+<li><a class="reference internal" href="#id3">LlamaIndex</a></li>
 </ul>
 </li>
 </ul>
