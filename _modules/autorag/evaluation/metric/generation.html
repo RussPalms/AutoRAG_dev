@@ -684,7 +684,7 @@
 <span class="sd">	    Default is 0.5.</span>
 <span class="sd">	:return: A list of computed metric scores.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;punkt_tab&quot;</span><span class="p">)</span>
+	<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;punkt&quot;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 	<span class="n">meteor_instance</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;meteor&quot;</span><span class="p">)</span>
 	<span class="n">result</span> <span class="o">=</span> <span class="n">huggingface_evaluate</span><span class="p">(</span>
 		<span class="n">meteor_instance</span><span class="p">,</span>

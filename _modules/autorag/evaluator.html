@@ -432,6 +432,7 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">rich.progress</span> <span class="kn">import</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">BarColumn</span><span class="p">,</span> <span class="n">TimeElapsedColumn</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
@@ -587,45 +588,64 @@
 		<span class="n">node_lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_node_lines</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__ingest_bm25_full</span><span class="p">(</span><span class="n">node_lines</span><span class="p">)</span>
 
-		<span class="c1"># Ingest VectorDB corpus</span>
-		<span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
-			<span class="nb">list</span><span class="p">(</span>
-				<span class="nb">map</span><span class="p">(</span>
-					<span class="k">lambda</span> <span class="n">nodes</span><span class="p">:</span> <span class="n">module_type_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;vectordb&quot;</span><span class="p">),</span>
-					<span class="n">node_lines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+		<span class="k">with</span> <span class="n">Progress</span><span class="p">(</span>
+			<span class="s2">&quot;[progress.description]</span><span class="si">{task.description}</span><span class="s2">&quot;</span><span class="p">,</span>
+			<span class="n">BarColumn</span><span class="p">(),</span>
+			<span class="s2">&quot;[progress.percentage]</span><span class="si">{task.percentage:&gt;3.0f}</span><span class="s2">%&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;[progress.bar]</span><span class="si">{task.completed}</span><span class="s2">/</span><span class="si">{task.total}</span><span class="s2">&quot;</span><span class="p">,</span>
+			<span class="n">TimeElapsedColumn</span><span class="p">(),</span>
+		<span class="p">)</span> <span class="k">as</span> <span class="n">progress</span><span class="p">:</span>
+			<span class="c1"># Ingest VectorDB corpus</span>
+			<span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+				<span class="nb">list</span><span class="p">(</span>
+					<span class="nb">map</span><span class="p">(</span>
+						<span class="k">lambda</span> <span class="n">nodes</span><span class="p">:</span> <span class="n">module_type_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;vectordb&quot;</span><span class="p">),</span>
+						<span class="n">node_lines</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+					<span class="p">)</span>
 				<span class="p">)</span>
+			<span class="p">):</span>
+				<span class="n">task_ingest</span> <span class="o">=</span> <span class="n">progress</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="s2">&quot;[cyan]Ingesting VectorDB...&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+				<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
+				<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__ingest_vectordb</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="n">full_ingest</span><span class="p">))</span>
+
+				<span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_ingest</span><span class="p">,</span> <span class="n">completed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+			<span class="n">trial_summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+				<span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+					<span class="s2">&quot;node_line_name&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;node_type&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;best_module_filename&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;best_module_name&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;best_module_params&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;best_execution_time&quot;</span><span class="p">,</span>
+				<span class="p">]</span>
 			<span class="p">)</span>
-		<span class="p">):</span>
-			<span class="n">loop</span> <span class="o">=</span> <span class="n">get_event_loop</span><span class="p">()</span>
-			<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__ingest_vectordb</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="n">full_ingest</span><span class="p">))</span>
-
-		<span class="n">trial_summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-			<span class="n">columns</span><span class="o">=</span><span class="p">[</span>
-				<span class="s2">&quot;node_line_name&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;node_type&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;best_module_filename&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;best_module_name&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;best_module_params&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;best_execution_time&quot;</span><span class="p">,</span>
-			<span class="p">]</span>
-		<span class="p">)</span>
-		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">node_line_name</span><span class="p">,</span> <span class="n">node_line</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">node_lines</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-			<span class="n">node_line_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">,</span> <span class="n">node_line_name</span><span class="p">)</span>
-			<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-			<span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-				<span class="n">previous_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span>
-			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running node line </span><span class="si">{</span><span class="n">node_line_name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
-			<span class="n">previous_result</span> <span class="o">=</span> <span class="n">run_node_line</span><span class="p">(</span><span class="n">node_line</span><span class="p">,</span> <span class="n">node_line_dir</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">)</span>
-
-			<span class="n">trial_summary_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_append_node_line_summary</span><span class="p">(</span>
-				<span class="n">node_line_name</span><span class="p">,</span> <span class="n">node_line_dir</span><span class="p">,</span> <span class="n">trial_summary_df</span>
+			<span class="n">task_eval</span> <span class="o">=</span> <span class="n">progress</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span>
+				<span class="s2">&quot;[cyan]Evaluating...&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">node_lines</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
 			<span class="p">)</span>
 
-		<span class="n">trial_summary_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-			<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">,</span> <span class="s2">&quot;summary.csv&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
-		<span class="p">)</span>
+			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">node_line_name</span><span class="p">,</span> <span class="n">node_line</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">node_lines</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+				<span class="n">node_line_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">,</span> <span class="n">node_line_name</span>
+				<span class="p">)</span>
+				<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+					<span class="n">previous_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span>
+				<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running node line </span><span class="si">{</span><span class="n">node_line_name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+				<span class="n">previous_result</span> <span class="o">=</span> <span class="n">run_node_line</span><span class="p">(</span>
+					<span class="n">node_line</span><span class="p">,</span> <span class="n">node_line_dir</span><span class="p">,</span> <span class="n">previous_result</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">task_eval</span>
+				<span class="p">)</span>
 
-		<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Evaluation complete.&quot;</span><span class="p">)</span></div>
+				<span class="n">trial_summary_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_append_node_line_summary</span><span class="p">(</span>
+					<span class="n">node_line_name</span><span class="p">,</span> <span class="n">node_line_dir</span><span class="p">,</span> <span class="n">trial_summary_df</span>
+				<span class="p">)</span>
+
+			<span class="n">trial_summary_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+				<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">trial_name</span><span class="p">,</span> <span class="s2">&quot;summary.csv&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+			<span class="p">)</span>
+
+			<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Evaluation complete.&quot;</span><span class="p">)</span></div>
 
 
 	<span class="k">def</span> <span class="nf">__ingest_bm25_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_lines</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Node</span><span class="p">]]):</span>

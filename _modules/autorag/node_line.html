@@ -427,6 +427,7 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">rich.progress</span> <span class="kn">import</span> <span class="n">Progress</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -456,6 +457,8 @@
 	<span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Node</span><span class="p">],</span>
 	<span class="n">node_line_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 	<span class="n">previous_result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">progress</span><span class="p">:</span> <span class="n">Progress</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">task_eval</span><span class="p">:</span> <span class="n">Progress</span><span class="o">.</span><span class="n">tasks</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Run the whole node line by running each node.</span>
@@ -464,6 +467,8 @@
 <span class="sd">	:param node_line_dir: This node line&#39;s directory.</span>
 <span class="sd">	:param previous_result: A result of the previous node line.</span>
 <span class="sd">	    If None, it loads qa data from data/qa.parquet.</span>
+<span class="sd">	:param progress: Rich Progress object.</span>
+<span class="sd">	:param task_eval: Progress task object</span>
 <span class="sd">	:return: The final result of the node line.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">previous_result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -489,6 +494,10 @@
 				<span class="s2">&quot;best_execution_time&quot;</span><span class="p">:</span> <span class="n">best_node_row</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
 			<span class="p">}</span>
 		<span class="p">)</span>
+		<span class="c1"># Update progress for each node</span>
+		<span class="k">if</span> <span class="n">progress</span><span class="p">:</span>
+			<span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_eval</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
 	<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">summary_lst</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
 		<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_line_dir</span><span class="p">,</span> <span class="s2">&quot;summary.csv&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
 	<span class="p">)</span>
