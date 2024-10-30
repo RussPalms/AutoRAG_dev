@@ -5,11 +5,13 @@ import functools
 import glob
 import inspect
 import itertools
+import json
 import logging
 import os
 import re
 import string
 from copy import deepcopy
+from json import JSONDecoder
 from typing import List, Callable, Dict, Optional, Any, Collection, Iterable
 
 from asyncio import AbstractEventLoop
@@ -18,6 +20,7 @@ import pandas as pd
 import tiktoken
 import unicodedata
 
+import yaml
 from llama_index.embeddings.openai import OpenAIEmbedding
 from pydantic import BaseModel as BM
 from pydantic.v1 import BaseModel
@@ -370,6 +373,24 @@ def flatten_apply(
 	return df.groupby(level=0, sort=False)["result"].apply(list).tolist()
 
 
+async def aflatten_apply(
+	func: Callable, nested_list: List[List[Any]], **kwargs
+) -> List[List[Any]]:
+	"""
+	This function flattens the input list and applies the function to the elements.
+	After that, it reconstructs the list to the original shape.
+	Its speciality is that the first dimension length of the list can be different from each other.
+
+	:param func: The function that applies to the flattened list.
+	:param nested_list: The nested list to be flattened.
+	:return: The list that is reconstructed after applying the function.
+	"""
+	df = pd.DataFrame({"col1": nested_list})
+	df = df.explode("col1")
+	df["result"] = await func(df["col1"].tolist(), **kwargs)
+	return df.groupby(level=0, sort=False)["result"].apply(list).tolist()
+
+
 def sort_by_scores(row, reverse=True):
 	"""
 	Sorts each row by 'scores' column.
@@ -650,3 +671,68 @@ def empty_cuda_cache():
 			torch.cuda.empty_cache()
 	except ImportError:
 		pass
+
+
+def load_yaml_config(yaml_path: str) -> Dict:
+	"""
+	Load a YAML configuration file for AutoRAG.
+	It contains safe loading, converting string to tuple, and insert environment variables.
+
+	:param yaml_path: The path of the YAML configuration file.
+	:return: The loaded configuration dictionary.
+	"""
+	if not os.path.exists(yaml_path):
+		raise ValueError(f"YAML file {yaml_path} does not exist.")
+	with open(yaml_path, "r", encoding="utf-8") as stream:
+		try:
+			yaml_dict = yaml.safe_load(stream)
+		except yaml.YAMLError as exc:
+			raise ValueError(f"YAML file {yaml_path} could not be loaded.") from exc
+
+	yaml_dict = convert_string_to_tuple_in_dict(yaml_dict)
+	yaml_dict = convert_env_in_dict(yaml_dict)
+	return yaml_dict
+
+
+def decode_multiple_json_from_bytes(byte_data: bytes) -> list:
+	"""
+	Decode multiple JSON objects from bytes received from SSE server.
+
+	Args:
+		byte_data: Bytes containing one or more JSON objects
+
+	Returns:
+		List of decoded JSON objects
+	"""
+	# Decode bytes to string
+	try:
+		text_data = byte_data.decode("utf-8").strip()
+	except UnicodeDecodeError:
+		raise ValueError("Invalid byte data: Unable to decode as UTF-8")
+
+	# Initialize decoder and result list
+	decoder = JSONDecoder()
+	result = []
+
+	# Keep track of position in string
+	pos = 0
+	text_data = text_data.strip()
+
+	while pos < len(text_data):
+		try:
+			# Try to decode next JSON object
+			json_obj, json_end = decoder.raw_decode(text_data[pos:])
+			result.append(json_obj)
+
+			# Move position to end of current JSON object
+			pos += json_end
+
+			# Skip any whitespace
+			while pos < len(text_data) and text_data[pos].isspace():
+				pos += 1
+
+		except json.JSONDecodeError:
+			# If we can't decode at current position, move forward one character
+			pos += 1
+
+	return result
