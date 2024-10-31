@@ -219,8 +219,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../local_model.html">Configure LLM &amp; Embedding models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../migration.html">Migration Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../migration.html#v0-3-7-migration-guide">v0.3.7 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul class="current">
@@ -445,6 +443,11 @@ The following guide covers how to use LLM to create data in a form that AutoRAG 
 You can use the corpus to generate the answer for the question.
 You have to make corpus data from your documents using parsing and chunking.</p></li>
 </ul>
+<p>In other words,
+<code class="docutils literal notranslate"><span class="pre">Raw</span></code> : parsed data
+<code class="docutils literal notranslate"><span class="pre">Corpus</span></code> : chunked data
+<code class="docutils literal notranslate"><span class="pre">QA</span></code> : Question &amp; Answer dataset based on the corpus</p>
+<p><img alt="" src="../_images/data_creation_schema.png" /></p>
 <p>To see the tutorial of the data creation, check <a class="reference internal" href="tutorial.html"><span class="std std-doc">here</span></a>.</p>
 <div class="toctree-wrapper compound">
 <ul>

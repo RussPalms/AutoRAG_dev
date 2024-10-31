@@ -222,8 +222,6 @@
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_model.html">Configure LLM &amp; Embedding models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migration.html">Migration Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="migration.html#v0-3-7-migration-guide">v0.3.7 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -499,6 +497,12 @@ It runs the whole optimization but only to find a system error with minimum cost
 <span class="n">validator</span> <span class="o">=</span> <span class="n">Validator</span><span class="p">(</span><span class="n">qa_data_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">corpus_data_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/corpus.parquet&#39;</span><span class="p">)</span>
 <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="s1">&#39;your/path/to/default_config.yaml&#39;</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Are you using passage augmenter? From now, the passage augmenter do not support validation. So it will occur error all time when you run validation.</p>
+<p>If you are using passage augmenter, please disable validation process.
+Here is the <a class="reference external" href="https://docs.auto-rag.com/troubleshooting.html">how to disable validation</a>.</p>
 </div>
 </section>
 <section id="run-autorag-optimization">

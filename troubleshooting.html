@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta content="AutoRAG - RAG generation metrics" name="title" />
 <meta content="Learn how to evaluate RAG generations (answers) in AutoRAG" name="description" />
-<meta content="AutoRAG,RAG,RAG evaluation,RAG metrics,RAG metric,LLM metric" name="keywords" />
+<meta content="AutoRAG,RAG,RAG evaluation,RAG metrics,RAG metric,LLM metric,event loop AutoRAG" name="keywords" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T8ZKQM6RT9"></script>
@@ -222,8 +222,6 @@
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_model.html">Configure LLM &amp; Embedding models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="migration.html">Migration Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="migration.html#v0-3-migration-guide">v0.3 migration guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="migration.html#v0-3-7-migration-guide">v0.3.7 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -435,6 +433,47 @@
         <article role="main" id="furo-main-content">
           <section id="troubleshooting">
 <h1>TroubleShooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h1>
+<section id="frequently-asked-questions">
+<h2>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading">¶</a></h2>
+<section id="error-when-using-autorag-on-jupyter-notebook-or-api-server">
+<h3>1. Error when using AutoRAG on Jupyter Notebook or API server<a class="headerlink" href="#error-when-using-autorag-on-jupyter-notebook-or-api-server" title="Link to this heading">¶</a></h3>
+<p>If you face event loop-related issue while using Jupyter notebook, please run this before using AutoRAG.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nest_asyncio</span>
+<span class="n">nest_asyncio</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="corpus-id-not-found-in-corpus-data">
+<h3>2. Corpus id not found in corpus_data.<a class="headerlink" href="#corpus-id-not-found-in-corpus-data" title="Link to this heading">¶</a></h3>
+<p>When you face error like <code class="docutils literal notranslate"><span class="pre">ValueError:</span> <span class="pre">doc_id:</span> <span class="pre">0eec7e3a-e1c0-4d33-8cc5-7e604b30339b</span> <span class="pre">not</span> <span class="pre">found</span> <span class="pre">in</span> <span class="pre">corpus_data.</span></code>
+There will be several reasons for this error.</p>
+<ol class="arabic">
+<li><p>Check there is a passage augmenter on your YAML file.</p>
+<ul>
+<li><p>The passage augmenter is not supporting a validation process now. But starting a trial runs validation process as default.
+So you need to disable running validation while starting a trial.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="kn">from</span> <span class="nn">autorag.evaluator</span> <span class="kn">import</span> <span class="n">Evaluator</span>
+
+ <span class="n">evaluator</span> <span class="o">=</span> <span class="n">Evaluator</span><span class="p">(</span><span class="n">qa_data_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/qa.parquet&#39;</span><span class="p">,</span> <span class="n">corpus_data_path</span><span class="o">=</span><span class="s1">&#39;your/path/to/corpus.parquet&#39;</span><span class="p">,</span>
+                       <span class="n">project_dir</span><span class="o">=</span><span class="s1">&#39;your/path/to/project_directory&#39;</span><span class="p">,)</span>
+ <span class="n">evaluator</span><span class="o">.</span><span class="n">start_trial</span><span class="p">(</span><span class="s1">&#39;your/path/to/config.yaml&#39;</span><span class="p">,</span> <span class="n">skip_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>autorag<span class="w"> </span>evaluate<span class="w"> </span>--config<span class="w"> </span>your/path/to/default_config.yaml<span class="w"> </span>--qa_data_path<span class="w"> </span>your/path/to/qa.parquet<span class="w"> </span>--corpus_data_path<span class="w"> </span>your/path/to/corpus.parquet<span class="w"> </span>--project_dir<span class="w"> </span>./your/project/directory<span class="w"> </span>--skip_validation<span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Delete the project directory or use another project directory</p></li>
+</ol>
+<p>It might be you changed your corpus data, but don’t use the new project directory.
+In AutoRAG, the project directory must be separated for each new corpus data or QA data.
+Which means one dataset per one project directory is needed.</p>
+<p>If you’re facing this error after you edit your corpus data, please use another project directory.</p>
+</section>
+</section>
 <section id="installation">
 <h2>1. Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
 <section id="could-not-build-wheels">
@@ -551,16 +590,8 @@ In our experiment, it occurred rate limit error when the batch size was 4.
 <p>In this case, try lowering the <code class="docutils literal notranslate"><span class="pre">batch</span></code> (which can be set as a module parameter in YAML) as much as possible,
 If that doesn’t work, we recommend using a quantized model (if available)!</p>
 </section>
-<section id="unicodedecodeerror">
-<h2>5. UnicodeDecodeError<a class="headerlink" href="#unicodedecodeerror" title="Link to this heading">¶</a></h2>
-<p>Error reading a parquet file on Windows!</p>
-<p>The workaround on Windows is to use <code class="docutils literal notranslate"><span class="pre">engine='pyarrow'</span></code>,
-This is something that needs to be fixed inside AutoRAG.</p>
-<p>We’ll try to fix it in the <a class="reference external" href="https://github.com/Marker-Inc-Korea/AutoRAG/issues/494">issue</a> :)</p>
-<p>For now, please use Mac or Linux (or WSL on Windows)!</p>
-</section>
 <section id="ollama-requesttimeout-error">
-<h2>6. Ollama <code class="docutils literal notranslate"><span class="pre">RequestTimeOut</span></code> Error<a class="headerlink" href="#ollama-requesttimeout-error" title="Link to this heading">¶</a></h2>
+<h2>5. Ollama <code class="docutils literal notranslate"><span class="pre">RequestTimeOut</span></code> Error<a class="headerlink" href="#ollama-requesttimeout-error" title="Link to this heading">¶</a></h2>
 <p>If you encounter <code class="docutils literal notranslate"><span class="pre">RequestTimeOut</span></code> error, you can adjust the <code class="docutils literal notranslate"><span class="pre">timeout</span></code> parameter in the <code class="docutils literal notranslate"><span class="pre">ollama</span></code> module.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">        </span><span class="nt">modules</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">module_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama_index_llm</span>
@@ -629,6 +660,11 @@ This is something that needs to be fixed inside AutoRAG.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">TroubleShooting</a><ul>
+<li><a class="reference internal" href="#frequently-asked-questions">Frequently Asked Questions</a><ul>
+<li><a class="reference internal" href="#error-when-using-autorag-on-jupyter-notebook-or-api-server">1. Error when using AutoRAG on Jupyter Notebook or API server</a></li>
+<li><a class="reference internal" href="#corpus-id-not-found-in-corpus-data">2. Corpus id not found in corpus_data.</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#installation">1. Installation</a><ul>
 <li><a class="reference internal" href="#could-not-build-wheels">Could not build wheels</a></li>
 </ul>
@@ -644,8 +680,7 @@ This is something that needs to be fixed inside AutoRAG.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#gpu-related-error">4. GPU-related Error</a></li>
-<li><a class="reference internal" href="#unicodedecodeerror">5. UnicodeDecodeError</a></li>
-<li><a class="reference internal" href="#ollama-requesttimeout-error">6. Ollama <code class="docutils literal notranslate"><span class="pre">RequestTimeOut</span></code> Error</a></li>
+<li><a class="reference internal" href="#ollama-requesttimeout-error">5. Ollama <code class="docutils literal notranslate"><span class="pre">RequestTimeOut</span></code> Error</a></li>
 </ul>
 </li>
 </ul>

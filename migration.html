@@ -191,7 +191,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -219,8 +219,6 @@
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">TroubleShooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_model.html">Configure LLM &amp; Embedding models</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Migration Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#v0-3-migration-guide">v0.3 migration guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#v0-3-7-migration-guide">v0.3.7 migration guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Data Creation</span></p>
 <ul>
@@ -424,7 +422,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -435,11 +433,10 @@
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#v03-migration-guide"><span class="xref myst">v0.3 migration guide</span></a></p></li>
 </ol>
-</section>
 <section id="v0-3-migration-guide">
-<h1>v0.3 migration guide<a class="headerlink" href="#v0-3-migration-guide" title="Link to this heading">¶</a></h1>
+<h2>v0.3 migration guide<a class="headerlink" href="#v0-3-migration-guide" title="Link to this heading">¶</a></h2>
 <section id="data-creation">
-<h2>Data Creation<a class="headerlink" href="#data-creation" title="Link to this heading">¶</a></h2>
+<h3>Data Creation<a class="headerlink" href="#data-creation" title="Link to this heading">¶</a></h3>
 <p>From the v0.3 version, the previous data creation library goes into the <code class="docutils literal notranslate"><span class="pre">legacy</span></code> package.
 Instead of legacy data creation, the <code class="docutils literal notranslate"><span class="pre">beta</span></code> package is introduced.
 There are no longer <code class="docutils literal notranslate"><span class="pre">beta</span></code> package at the data, and you can use it without <code class="docutils literal notranslate"><span class="pre">beta</span></code> import.</p>
@@ -471,7 +468,7 @@ There are no longer <code class="docutils literal notranslate"><span class="pre"
 </section>
 </section>
 <section id="v0-3-7-migration-guide">
-<h1>v0.3.7 migration guide<a class="headerlink" href="#v0-3-7-migration-guide" title="Link to this heading">¶</a></h1>
+<h2>v0.3.7 migration guide<a class="headerlink" href="#v0-3-7-migration-guide" title="Link to this heading">¶</a></h2>
 <p>At v0.3.6, there are changes of the vectordb.
 You have to specify what vectordb you want to use at the config YAML file.</p>
 <ul class="simple">
@@ -528,6 +525,7 @@ You have to specify what vectordb you want to use at the config YAML file.</p>
 </div>
 <p>For more information about vectordb, you can refer to the <a class="reference internal" href="vectordb/vectordb.html"><span class="std std-doc">vectordb documentation</span></a>.</p>
 </section>
+</section>
 
         </article>
       </div>
@@ -572,8 +570,31 @@ You have to specify what vectordb you want to use at the config YAML file.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Migration Guide</a><ul>
+<li><a class="reference internal" href="#v0-3-migration-guide">v0.3 migration guide</a><ul>
+<li><a class="reference internal" href="#data-creation">Data Creation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#v0-3-7-migration-guide">v0.3.7 migration guide</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
