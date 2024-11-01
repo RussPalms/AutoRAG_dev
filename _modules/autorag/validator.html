@@ -470,8 +470,18 @@
 <div class="viewcode-block" id="Validator.validate">
 <a class="viewcode-back" href="../../api_spec/autorag.html#autorag.validator.Validator.validate">[docs]</a>
 	<span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">qa_cnt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">):</span>
-		<span class="c1"># sample QA data</span>
-		<span class="n">sample_qa_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">qa_cnt</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+		<span class="c1"># Determine the sample size and log a warning if qa_cnt is larger than available records</span>
+		<span class="n">available_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="p">)</span>
+		<span class="n">safe_sample_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">qa_cnt</span><span class="p">,</span> <span class="n">available_records</span><span class="p">)</span>  <span class="c1"># 먼저 safe_sample_size 계산</span>
+		
+		<span class="k">if</span> <span class="n">safe_sample_size</span> <span class="o">&lt;</span> <span class="n">qa_cnt</span><span class="p">:</span>
+			<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+				<span class="sa">f</span><span class="s2">&quot;Minimal Requested sample size (</span><span class="si">{</span><span class="n">qa_cnt</span><span class="si">}</span><span class="s2">) is larger than available records (</span><span class="si">{</span><span class="n">available_records</span><span class="si">}</span><span class="s2">). &quot;</span>
+				<span class="sa">f</span><span class="s2">&quot;Sampling will be limited to </span><span class="si">{</span><span class="n">safe_sample_size</span><span class="si">}</span><span class="s2"> records. &quot;</span>
+			<span class="p">)</span>
+		
+		<span class="c1"># safe sample QA data</span>
+		<span class="n">sample_qa_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">safe_sample_size</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 		<span class="n">sample_qa_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 		<span class="c1"># get doc_id</span>
