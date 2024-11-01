@@ -560,6 +560,9 @@
 	<span class="kn">from</span> <span class="nn">llama_index.llms.huggingface</span> <span class="kn">import</span> <span class="n">HuggingFaceLLM</span>
 	<span class="kn">from</span> <span class="nn">llama_index.llms.ollama</span> <span class="kn">import</span> <span class="n">Ollama</span>
 
+	<span class="n">generator_models</span><span class="p">[</span><span class="s2">&quot;huggingfacellm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">HuggingFaceLLM</span>
+	<span class="n">generator_models</span><span class="p">[</span><span class="s2">&quot;ollama&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ollama</span>
+
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
 	<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
 		<span class="s2">&quot;You are using API version of AutoRAG.&quot;</span>
