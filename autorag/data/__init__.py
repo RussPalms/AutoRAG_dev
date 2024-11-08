@@ -59,6 +59,7 @@ parse_modules = {
 	# 6. All files
 	"directory": DirectoryLoader,
 	"unstructured": UnstructuredLoader,
+	# 7. OCR
 	"upstagedocumentparse": UpstageDocumentParseLoader,
 }
 
