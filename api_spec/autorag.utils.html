@@ -544,6 +544,11 @@ Its speciality is that the first dimension length of the list can be different f
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="autorag.utils.util.demojize">
+<span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">demojize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/autorag/utils/util.html#demojize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.demojize" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="autorag.utils.util.dict_to_markdown">
 <span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">dict_to_markdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autorag/utils/util.html#dict_to_markdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.dict_to_markdown" title="Link to this definition">¶</a></dt>
 <dd><p>Convert a dictionary to a Markdown formatted string.</p>
@@ -775,6 +780,11 @@ It automatically deletes the parameters like “self” or “cls”.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="autorag.utils.util.preprocess_text">
+<span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">preprocess_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/autorag/utils/util.html#preprocess_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.preprocess_text" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="autorag.utils.util.process_batch">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autorag.utils.util.</span></span><span class="sig-name descname"><span class="pre">process_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tasks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/autorag/utils/util.html#process_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#autorag.utils.util.process_batch" title="Link to this definition">¶</a></dt>
 <dd><p>Processes tasks in batches asynchronously.</p>
@@ -930,6 +940,7 @@ And its elements must be list type.</p>
 <li><a class="reference internal" href="#autorag.utils.util.convert_inputs_to_list"><code class="docutils literal notranslate"><span class="pre">convert_inputs_to_list()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.convert_string_to_tuple_in_dict"><code class="docutils literal notranslate"><span class="pre">convert_string_to_tuple_in_dict()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.decode_multiple_json_from_bytes"><code class="docutils literal notranslate"><span class="pre">decode_multiple_json_from_bytes()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.utils.util.demojize"><code class="docutils literal notranslate"><span class="pre">demojize()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.dict_to_markdown"><code class="docutils literal notranslate"><span class="pre">dict_to_markdown()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.dict_to_markdown_table"><code class="docutils literal notranslate"><span class="pre">dict_to_markdown_table()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.embedding_query_content"><code class="docutils literal notranslate"><span class="pre">embedding_query_content()</span></code></a></li>
@@ -952,6 +963,7 @@ And its elements must be list type.</p>
 <li><a class="reference internal" href="#autorag.utils.util.normalize_unicode"><code class="docutils literal notranslate"><span class="pre">normalize_unicode()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.openai_truncate_by_token"><code class="docutils literal notranslate"><span class="pre">openai_truncate_by_token()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.pop_params"><code class="docutils literal notranslate"><span class="pre">pop_params()</span></code></a></li>
+<li><a class="reference internal" href="#autorag.utils.util.preprocess_text"><code class="docutils literal notranslate"><span class="pre">preprocess_text()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.process_batch"><code class="docutils literal notranslate"><span class="pre">process_batch()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.reconstruct_list"><code class="docutils literal notranslate"><span class="pre">reconstruct_list()</span></code></a></li>
 <li><a class="reference internal" href="#autorag.utils.util.replace_value_in_dict"><code class="docutils literal notranslate"><span class="pre">replace_value_in_dict()</span></code></a></li>

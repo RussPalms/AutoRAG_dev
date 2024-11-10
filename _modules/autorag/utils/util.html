@@ -440,6 +440,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Iterable</span>
 
 <span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">AbstractEventLoop</span>
+<span class="kn">import</span> <span class="nn">emoji</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">tiktoken</span>
@@ -965,6 +966,20 @@
 
 
 
+<div class="viewcode-block" id="preprocess_text">
+<a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.preprocess_text">[docs]</a>
+<span class="k">def</span> <span class="nf">preprocess_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">return</span> <span class="n">normalize_unicode</span><span class="p">(</span><span class="n">demojize</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="demojize">
+<a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.demojize">[docs]</a>
+<span class="k">def</span> <span class="nf">demojize</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+	<span class="k">return</span> <span class="n">emoji</span><span class="o">.</span><span class="n">demojize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="normalize_unicode">
 <a class="viewcode-back" href="../../../api_spec/autorag.utils.html#autorag.utils.util.normalize_unicode">[docs]</a>
 <span class="k">def</span> <span class="nf">normalize_unicode</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -1241,10 +1256,10 @@
 <span class="sd">	Decode multiple JSON objects from bytes received from SSE server.</span>
 
 <span class="sd">	Args:</span>
-<span class="sd">		byte_data: Bytes containing one or more JSON objects</span>
+<span class="sd">	        byte_data: Bytes containing one or more JSON objects</span>
 
 <span class="sd">	Returns:</span>
-<span class="sd">		List of decoded JSON objects</span>
+<span class="sd">	        List of decoded JSON objects</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="c1"># Decode bytes to string</span>
 	<span class="k">try</span><span class="p">:</span>
