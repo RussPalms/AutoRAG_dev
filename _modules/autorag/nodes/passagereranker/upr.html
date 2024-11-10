@@ -509,7 +509,7 @@
 			<span class="p">}</span>
 		<span class="p">)</span>
 
-		<span class="n">df</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">progress_apply</span><span class="p">(</span>
+		<span class="n">df</span><span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
 			<span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scorer</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span>
 				<span class="n">query</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">],</span> <span class="n">contents</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;contents&quot;</span><span class="p">]</span>
 			<span class="p">),</span>
